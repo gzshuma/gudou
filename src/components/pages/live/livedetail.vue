@@ -1,7 +1,8 @@
 <template>
 	<section class="livedetail-wrap clearfix">
-		<player class="live-player">
+		<player class="live-player" >
 			<jujilist :getDay="getDay"  :appointData="appointData" :detailData="detailData" @dateData="dateData"></jujilist>
+			<share class="position-bottom" :collectData="collectData"></share>
 		</player>
 		<div class="wrap clearfix">
 			<div class="episodes-bd">
@@ -30,6 +31,7 @@ import player from 'components/common/player'
 import episodes from 'components/common/episodes'
 import infodiscrib from 'components/common/infodiscrib'
 import jujilist from 'components/common/jujilist'
+import share from 'components/common/share'
 import {getDay, Monday,dateComparate} from '@/util'
 
 export default {
@@ -37,10 +39,18 @@ export default {
 		player,
 		infodiscrib,
 		episodes,
+		share,
 		jujilist
 	},
 	data () {
 		return {
+			collectData:{
+				isZhibo: true,//是否直播
+				id: this.$route.params.channelid.split('_')[0],
+				columnID: '',
+          		columnName: '',
+				collectArr:[],//查看收藏的信息
+			},
 			appointData: [],//查看预定的接口
 			detailData: [],
 			episodesData: [],
@@ -56,6 +66,7 @@ export default {
 		
 	},
     mounted () {
+		this.queryCollect();
 		this.queryAppoint();
 		this._getDetailData();
 		
@@ -153,6 +164,34 @@ export default {
 						alert(res.data.errorMessage)
 					})
 		},
+		//查询直播收藏
+		queryCollect( ){
+			var self = this;
+			this.$http({
+				method: 'get',
+				url: '/api/PortalServer-App/new/ptl_ipvp_live_live026',
+						params: {
+							ptype: self.GLOBAL.config.ptype,
+							plocation: self.GLOBAL.config.plocation,
+							puser: self.puser,
+							ptoken: self.ptoken,
+							pversion: '03010',
+							pserverAddress: self.GLOBAL.config.pserverAddress,
+							pserialNumber: self.ptoken,
+							start: '',
+							end: ''
+							
+						},
+					})
+					.then((res) => {
+					if(res.data.status == 0) {
+						this.collectData.collectArr =  res.data.data.live 
+					 }
+					})
+					.catch((res) => {
+						alert(res.data.errorMessage)
+					})
+		},
 		
 	}
 }
@@ -171,5 +210,13 @@ export default {
 .palyer-box { color: #f00; }
 .yuding{
   color: #ff9c01;
+}
+.live-player{
+	position: relative;
+}
+.position-bottom{
+	position: absolute;
+	bottom: 20px;
+
 }
 </style>

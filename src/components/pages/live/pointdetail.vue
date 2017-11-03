@@ -1,6 +1,6 @@
 <template>
 	<section class="livedetail-wrap clearfix" :class="episodesData.length<2?'infodiscrib-rest-bd':''">
-		<player :detailData="detailData"></player>
+		<player ></player>
 		<div class="wrap clearfix">
 			<episodes :episodesData="episodesData" :detailData="detailData"></episodes>
 			<infodiscrib :detailData="detailData"></infodiscrib>
@@ -27,6 +27,7 @@ export default {
     mounted () {
 		this._getDetailData()
 		this._getEpisodes ()
+		
     },
     watch: {
         // '$route': '_getDetailData'
@@ -48,8 +49,10 @@ export default {
 			.then((res) => {
 				// alert(1)
         		if(res.data.status == 0) {
-					const detailData = res.data.data.programinfo
-					this.detailData = detailData
+					// const detailData =
+					this.detailData =  res.data.data.programinfo;
+					this.$store.dispatch( 'addJieMu',this.detailData );
+
 					//alert(this.detailData)
 				}
 			})

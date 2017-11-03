@@ -10,10 +10,10 @@
 			<ucenterpic :orderData="v.content" :key="v.value"></ucenterpic>
 		</el-tab-pane>
 	</el-tabs>-->
-    <div class="myorderBar">
+    <div class="myorderBar coll1">
       <ul>
-        <li v-for="(v, index) in orderList">
-			<span class="order-close" @click="deleteDom(index)"><i class="el-icon-close"></i></span>
+        <li class="collArr1" v-for="(v, index) in orderList">
+			<span class="order-close" @click="deleteDom(v,$event)"><i class="el-icon-close"></i></span>
 			<router-link tag="div" :to="{name: 'detail', params: { id: v.programID }}" :key="v.id">
 				<div class="pic-ri-top">
 					<img v-lazy="item" alt="" v-for="item in v.imageUrl[0]">
@@ -32,7 +32,7 @@
         </li>
       </ul>
     </div>
-	<!-- <pagination></pagination> -->
+
   </div>
 </template>
 
@@ -40,6 +40,7 @@
 // 排行
 import ucenterpic from 'components/common/ucenterpic'
 import pagination from 'components/common/pagination'
+import $ from 'jquery'
 export default {
 	components: {
 	    //ucenterpic,
@@ -47,6 +48,7 @@ export default {
 	},
 	data () {
 		return {
+			nowIndex:0,
 			isTrue: false,
 			hideDiv: true,
 			isShow: false,
@@ -59,10 +61,13 @@ export default {
 		}
 	},
   created(){
-	  this.init();
+	  this._getReserve();
+  },
+  mounted(){
+	  
   },
 	methods: {
-	    init(){
+	    _getReserve(){
 			let self = this
 			let url = '/api/PortalServer-App/new/ptl_ipvp_live_live023'
 			self.$http({
@@ -82,24 +87,82 @@ export default {
 				if(res.data.status == 0){
 					this.orderList = res.data.data.reminds;
 					// console.log(res.data.data.reminds);
+					
+					if( this.orderList.length == 0 ){
+						this.hideDiv = false;
+						$( 'myorderBar ' ).html( '您暂时没有预定数据' )
+					}
 				}
 			})
 	    },
-		deleteRecord () {
-			this.isTrue = true
-			this.hideDiv = false
+		deleteDom(val,el){//删除按钮  单个
+			this.delAllPlay1( val )	
+			$(el.target).closest( 'li' ).remove()
+
+		},
+		deleteRecord ( ) {
+			this.isTrue = true;
+			this.hideDiv = false;
+			$('.coll1').find('.order-close').show()
+			
+
 		},
 		completeRecord () {
 			this.isTrue = false
 			this.hideDiv = true
+			$('.order-close').hide()
+
 		},
 		deleteAllRecord () {
-			let obj = document.getElementsByTagName('el-tab-pane')
-			obj.innerHTML = ''
-		}
+
+			this.isTrue = false;
+			this.hideDiv = false;
+			$('.collArr1').remove()
+
+			this.orderList.forEach(function(item,index){
+				this.delAllPlay1( item )
+				console.log( item )
+			}.bind( this ))
+
+
+		},
+		delAllPlay1( val ){ //点播预约清空
+			 var self = this;
+			this.$http({
+				method: 'post',
+				url: '/api/PortalServer-App/new/ptl_ipvp_live_live025',
+				params: {
+						ptype: self.GLOBAL.config.ptype,
+						plocation: self.GLOBAL.config.plocation,
+						puser: self.puser,
+						ptoken: self.ptoken,
+						pversion: '03010',
+						locationName: '',
+						countyName: '',
+						hmace: '125456',
+						timestamp: new Date().getTime(),
+						nonce: Math.random().toString().slice(2),
+						pserverAddress: self.GLOBAL.config.pserverAddress,
+						pserialNumber: self.ptoken,     
+					},
+					//post用data
+					data:{
+						channelID: val.channelID,
+						remindTime: val.remindTime
+					}
+				})
+				.then((res) => {
+				if(res.data.status == 0) {
+						console.log( '取消预定' )  
+					}
+				})
+				.catch((res) => {
+					alert(res.data.errorMessage)
+				})
+		},
 	}
 }
-</script>
+</script> 
 
 <style>
 .myorder-tabs-bd { position: relative; height: auto; }
@@ -109,7 +172,7 @@ export default {
 .myorder-tabs-bd .el-tabs__active-bar { background: #ff9c01; height: 2px; }
 .myorder-tabs-bd .rank-bd li { margin-bottom: 20px; }
 .myorder-tabs-bd .live-crumb { margin-top: 10px; }
-.myorder-top-bd { position: absolute; right: 25px; top: 0px; font-size: 14px; z-index: 2; }
+.myorder-top-bd { position: absolute; right: 25px; top: 11px; font-size: 14px; z-index: 2; }
 .myorder-top-bd span { margin-left: 15px; cursor: pointer; }
 
 
@@ -118,7 +181,7 @@ export default {
 .myorderBar .mask-time { position: absolute; left: 10px; top: 0; font-size: 14px; color: #fff; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .myorderBar { width: 100%; overflow: hidden; }
-.myorderBar ul { padding: 15px 0 0 28px; }
+.myorderBar ul { padding: 50px 0 0 28px; }
 .myorderBar li { position: relative; float: left; width: 165px; height: 280px; background: #f0f0f0; margin: 0 24px 24px 0; overflow: hidden; }
 .myorderBar li:nth-child(5n+5) { margin: 0 0 24px 0; }
 .myorderBar .pic-ri-top { position: relative; width: 100%; height: 245px; }
@@ -132,4 +195,5 @@ export default {
 .myorderBar li:nth-child(4n+4) .rank-num, .rank-bd li:nth-child(5n+5) .rank-num { color: #888; }
 .myorderBar .order-close { cursor: pointer; display: none; position: absolute; right: 0; top: 0; background: #eb5031; width: 30px; height: 30px; line-height: 30px; text-align: center; color: #fff; z-index: 2; }
 .myorderBar .block { display: block; }
+
 </style>

@@ -2,25 +2,37 @@
 	<div class="player-bd clearfix">
 		<div class="wrap clearfix">
 			<div class="fl palyer-le">
-				<video-player class="vjs-custom-skin" :options="playerOptions" @ready="playerReadied">
-				</video-player>
+				<video-player class="vjs-custom-skin"  :options="playerOptions" @ready="playerReadied" 	</video-player>
 			</div>
       <slot></slot>
+      
 		</div>
-    <share></share>
+
+    <share :collectData="collectData"></share>
+
 	</div>
 </template>
 <script type="text/ecmascript-6">
 import Vue from 'vue'
 import share from 'components/common/share'
 export default {
+  
 	components: {
 		share,
 		// jujilist
 	},
     data() {
       return {
-        playerOptions: {
+        puser:sessionStorage.getItem('user'),
+        ptoken:sessionStorage.getItem('flag'),
+         
+        collectData: {
+          isZhibo: false,//是否直播
+          id: this.$route.params.id,//节目ID
+          collectArr:[],//查看收藏的信息
+        },
+
+         playerOptions: {
           // videojs and plugin options
           sources: [{
             withCredentials: false,
@@ -35,8 +47,23 @@ export default {
           flash: { hls: { withCredentials: true }},
           html5: { hls: { withCredentials: true }},
           poster: "/static/pic/2.jpg"
-        }
+         }
+
+
       }
+    },
+    computed:{
+
+    },
+    created(){
+       this.queryCollect2();
+      //  console.log( this.detailData.columnID )
+      //  console.log( this.detailData )
+      //  console.log( this.$store.state.player.clickPlayer.columnID )
+
+    },
+    mounted() {
+          
     },
     methods: {
       playerReadied(player) {
@@ -45,10 +72,37 @@ export default {
           // console.log(options)
           return options
         }
-      }
+      },
+      //查询点播收藏
+      queryCollect2( ){
+        var self = this;
+        this.$http({
+          method: 'get',
+          url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod031',
+              params: {
+                ptype: self.GLOBAL.config.ptype,
+                plocation: self.GLOBAL.config.plocation,
+                puser: self.puser,
+                ptoken: self.ptoken,
+                pversion: '03010',
+                pserverAddress: self.GLOBAL.config.pserverAddress,
+                pserialNumber: self.ptoken,
+                start: '',
+                end: ''
+              },
+            })
+            .then((res) => {
+            if(res.data.status == 0) {
+              this.collectData.collectArr =  res.data.data.vod 
+             
+            }
+            })
+            .catch((res) => {
+              alert(res.data.errorMessage)
+            })
+      },
     },
-	mounted() {
-	}
+    
 }
 </script>
 

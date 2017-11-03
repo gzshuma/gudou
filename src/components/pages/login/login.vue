@@ -108,10 +108,19 @@ export default {
     handleSubmit2(){
       //this.$md5(this.ruleForm.Pwd)
       this.isLogin();
-    }
+    },
+
   },
   created(){
 
+  },
+  mounted(){
+    var self = this;
+    window.onkeyup = function( el ){
+      if( el.keyCode == 13 ){
+        self.isLogin();
+      }
+    }
   }
 }
 </script>

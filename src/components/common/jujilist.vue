@@ -27,7 +27,7 @@
 						<span class="p-tabs-con">{{v.channelName}}：{{v.epgName}}</span>
 						<span class="icon-p-tabs  icon-undo2"  :class=" v.epgID == endTimeArr.epgID ? 'playa':'' " v-if="dateCompa(v.startTime)<0"></span>
 
-						<span class="icon-p-tabs icon-alarm"  :appoint="v.epgID"  v-if="dateCompa(v.startTime)>0"></span>
+						<span class="icon-p-tabs icon-alarm"  :appoint="v.epgID"   v-if="dateCompa(v.startTime)>0"></span>
 					</div>
 				</div>
 			</div>
@@ -91,16 +91,16 @@ export default {
           }
         }.bind(this))
         return arr;
-      // } else {
-      //   return false;
-      // }
+     
     }
 
   },
   created() {
-   
+    
   },
   mounted() {
+    
+   
    setTimeout(function() {
      this.startAppoint.forEach(function(item,index){
        $( '[appoint='+item.programID+']' ).addClass( 'yuding' )
@@ -169,6 +169,7 @@ export default {
   			.then((res) => {
           	if(res.data.status == 0) {
              this.$message( '你已成功订阅' );
+
             
    				}
   			})

@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 import App from 'components/pages/app/app'
 import routes  from './router'
 // import store from './vuex/store'
-// import store from './store/index'
+import store from './store/index'
 import Vuex from 'vuex'
 import axios from 'axios'
 import md5 from 'md5'
@@ -60,7 +60,7 @@ const router = new VueRouter({
 /* eslint-disable no-new */
 new Vue({
 	router,
-	// store,
+	store,
 	el: '#app',
 	render: h => h(App)
 })

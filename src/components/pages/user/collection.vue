@@ -1,28 +1,55 @@
 <template>
   <div class="myorder-box">
-	<div class="myorder-top-bd" v-if="orderList.length>0">
-		<span class="myorder-delete" @click="deleteRecord()" v-show="hideDiv">删除预订记录</span>
-		<span class="myorder-deleteall" v-if="isTrue" @click="deleteAllRecord()">清空</span>
-		<span class="myorder-complete" v-if="isTrue" @click="completeRecord()">完成</span>
+	<div class="search-tab">
+				<span class="tab-list" :class="{cur:1!=nowIndex}" @click="toggleTabs(0)">直播</span>
+				<span class="tab-list" :class="{cur:0!=nowIndex}" @click="toggleTabs(1)">点播</span>
+	</div>
+	<div class="myorder-top-bd" v-if="orderList.length>0||orderList2.length>0">
+		<span class="myorder-delete"  @click="deleteRecord" v-show="hideDiv">删除收藏记录</span>
+		<span class="myorder-deleteall " v-show="isTrue" @click="deleteAllRecord">清空</span>
+		<span class="myorder-complete " v-show="isTrue" @click="completeRecord">完成</span>
 	</div>
 	<!--<el-tabs class="collectionBar">
 		<el-tab-pane v-for="(v,index) in orderList" :label="v.name" :key="v.value">
 			<ucenterpic :orderData="v.content" :key="v.value"></ucenterpic>
 		</el-tab-pane>
 	</el-tabs>-->
-    <div class="collectionBar">
+    <div class="collectionBar coll1" v-show=" nowIndex== 0 ">
       <ul>
-        <li v-for="(v, index) in orderList">
-          <span class="order-close" @click="deleteDom(index)"><i class="el-icon-close"></i></span>
-          <div class="pic-ri-top">
-            <img :src="item" alt="" v-for="item in v.imageUrl[0]">
-            <span class="pic-mask">
-		  				<span class="mask-time">{{v.createTime}}</span>
-		  			</span>
-          </div>
-          <div class="pic-btm">
-            {{v.programName}}
-          </div>
+        <li class="collArr1" v-for="(v, index) in orderList">
+          <span class="order-close" @click="deleteDom(v,$event)"><i class="el-icon-close"></i></span>
+					<router-link tag="div" :to="{name: 'detail', params: { id: v.channelID }}" :key="v.id">
+						<div class="pic-ri-top">
+							<img :src="item" alt="" v-for="item in v.imageUrl[0]">
+							<span class="pic-mask">
+								<span class="mask-time">
+									{{v.updateTime.substr(4,2)}}-{{v.updateTime.substr(6,2)}}
+									{{v.updateTime.substr(8,2)}}:{{v.updateTime.substr(10,2)}}
+								</span>
+							</span>
+						</div>
+						<div class="pic-btm">
+							{{v.channelName}}
+						</div>
+					</router-link>
+        </li>
+      </ul>
+    </div>
+		<div class="collectionBar coll2"  v-show=" nowIndex== 1 ">
+      <ul>
+        <li class="collArr2" v-for="(v, index) in orderList2">
+          <span class="order-close" @click="deleteDom(v,$event)"><i class="el-icon-close"></i></span>
+					<router-link tag="div" :to="{name: 'detail', params: { id: v.programID }}" :key="v.id">
+						<div class="pic-ri-top">
+							<img :src="item" alt="" v-for="item in v.imageUrl[0]">
+							<span class="pic-mask">
+								<span class="mask-time">{{v.createTime}}</span>
+							</span>
+						</div>
+						<div class="pic-btm">
+							{{v.programName}}
+						</div>
+					</router-link>
         </li>
       </ul>
     </div>
@@ -34,6 +61,7 @@
 // 排行
 import ucenterpic from 'components/common/ucenterpic'
 import pagination from 'components/common/pagination'
+import $ from 'jquery'
 export default {
 	components: {
 	    //ucenterpic,
@@ -41,6 +69,7 @@ export default {
 	},
 	data () {
 		return {
+			nowIndex:0,
 			isTrue: false,
 			hideDiv: true,
 			isShow: false,
@@ -48,48 +77,195 @@ export default {
 			ptoken:sessionStorage.getItem('flag'),
 			start:0,
 			end:'',
-			orderList: [],
+			orderList: [],//直播
+			orderList2: [],//点播
+
 		}
 	},
 	created(){
-	  this.init()
+		
+		
+	},
+	mounted(){
+	 	 this.queryCollect();
+		 this.queryCollect2();	  
 	},
 	methods: {
-	    init(){
-			let self = this
-			let url = '/api/PortalServer-App/new/ptl_ipvp_vod_vod031'
-			self.$http({
+			toggleTabs:function(index){
+				this.nowIndex=index;
+			},
+	     //查询点播收藏
+      queryCollect2( ){
+        var self = this;
+        this.$http({
+          method: 'get',
+          url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod031',
+              params: {
+                ptype: self.GLOBAL.config.ptype,
+                plocation: self.GLOBAL.config.plocation,
+                puser: self.puser,
+                ptoken: self.ptoken,
+                pversion: '03010',
+                pserverAddress: self.GLOBAL.config.pserverAddress,
+                pserialNumber: self.ptoken,
+                start: '',
+                end: ''
+              },
+            })
+            .then((res) => {
+            if(res.data.status == 0) {
+              this.orderList2 =  res.data.data.vod 
+            }
+            })
+            .catch((res) => {
+              alert(res.data.errorMessage)
+            })
+			},
+			//查询直播收藏
+		queryCollect( ){
+			var self = this;
+			this.$http({
 				method: 'get',
-				url: url,
-				params: {
-			        ptype: self.GLOBAL.config.ptype,
-			        plocation: self.GLOBAL.config.plocation,
-			        puser: self.puser,
-			        ptoken: self.ptoken,
-			        pversion: self.GLOBAL.config.pversion,
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.GLOBAL.config.pserialNumber
+				url: '/api/PortalServer-App/new/ptl_ipvp_live_live026',
+						params: {
+							ptype: self.GLOBAL.config.ptype,
+							plocation: self.GLOBAL.config.plocation,
+							puser: self.puser,
+							ptoken: self.ptoken,
+							pversion: '03010',
+							pserverAddress: self.GLOBAL.config.pserverAddress,
+							pserialNumber: self.ptoken,
+							start: '',
+							end: ''
+							
+						},
+					})
+					.then((res) => {
+					if(res.data.status == 0) {
+						this.orderList =  res.data.data.live 
+					 }
+					})
+					.catch((res) => {
+						alert(res.data.errorMessage)
+					})
+		},
+		deleteDom( val,el ){//删除按钮  单个
+				if( this.nowIndex == 1 ){//点播
+						this.delAllPlay1( val )
+				}else{
+						this.delAllPlay2( val )
 				}
-			})
-			.then((res)=>{
-				if(res.data.status == 0){
-					this.orderList = res.data.data.vod;
-					// console.log(res.data.data.vod);
-				}
-			})
-	    },
-		deleteRecord () {
-			this.isTrue = true
-			this.hideDiv = false
+				$(el.target).closest( 'li' ).remove()
+		},
+		deleteRecord ( ) {
+			this.isTrue = true;
+			this.hideDiv = false;
+
+			if( this.nowIndex == 1 ){//点播
+				$('.coll2').find('.order-close').show()
+			}else{
+				$('.coll1').find('.order-close').show()
+			}
+
 		},
 		completeRecord () {
 			this.isTrue = false
 			this.hideDiv = true
+
+			$('.order-close').hide()
+
 		},
 		deleteAllRecord () {
-			let obj = document.getElementsByTagName('el-tab-pane')
-			obj.innerHTML = ''
-		}
+			this.isTrue = false;
+			this.hideDiv = false;
+
+	  	if( this.nowIndex == 1 ){//点播
+				$('.collArr2').remove()
+			}else{
+				$('.collArr1').remove()
+			}
+
+			if( this.nowIndex == 1 ){//点播清空
+
+				this.orderList2.forEach(function(item,index){
+					 this.delAllPlay1( item )
+				}.bind( this ))
+
+			}else{//直播清空
+
+				this.orderList.forEach(function(item,index){
+					 this.delAllPlay2( item )
+				}.bind( this ))
+
+			}
+
+		},
+		delAllPlay1( val ){//点播清空
+				var self = this;
+        this.$http({
+            method: 'post',
+            url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod033',
+            params: {
+              ptype: self.GLOBAL.config.ptype,
+              plocation: self.GLOBAL.config.plocation,
+              puser: self.puser,
+              ptoken: self.ptoken,
+              pversion: '03010',
+              pserverAddress: self.GLOBAL.config.pserverAddress,
+              pserialNumber: self.ptoken,
+                
+            },
+            //post用data
+            data:{
+              programID: val.programID,
+              columnID: val.columnID,
+            }
+          })
+          .then((res) => {
+              if(res.data.status == 0) {
+								console.log( '取消点播收藏' )
+            }
+          })
+          .catch((res) => {
+            console.log( res )
+            this.$message.warning(res.data.errorMessage)
+          })
+		},
+		delAllPlay2( val ){//直播清空
+				var self = this;
+        this.$http({
+            method: 'post',
+            url: '/api/PortalServer-App/new/ptl_ipvp_live_live028',
+            params: {
+              ptype: self.GLOBAL.config.ptype,
+              plocation: self.GLOBAL.config.plocation,
+              puser: self.puser,
+              ptoken: self.ptoken,
+              pversion: '03010',
+              locationName: '',
+              countyName: '',
+              hmace: '125456',
+              timestamp: new Date().getTime(),
+              nonce: Math.random().toString().slice(2),
+              pserverAddress: self.GLOBAL.config.pserverAddress,
+              pserialNumber: self.ptoken,
+                
+            },
+            //post用data
+            data:{
+              channelID: val.channelID,
+            }
+          })
+          .then((res) => {
+              if(res.data.status == 0) {
+								console.log( '取消直播收藏' )
+            }
+          })
+          .catch((res) => {
+            console.log( res )
+            this.$message.warning(res.data.errorMessage)
+          })
+		},
 	}
 }
 </script>
@@ -102,7 +278,7 @@ export default {
 .collectionBar .el-tabs__active-bar { background: #ff9c01; height: 2px; }
 .collectionBar .rank-bd li { margin-bottom: 20px; }
 .collectionBar .live-crumb { margin-top: 10px; }
-.myorder-top-bd { position: absolute; right: 25px; top: 0px; font-size: 14px; z-index: 2; }
+.myorder-top-bd { position: absolute; right: 25px; top: 11px; font-size: 14px; z-index: 2; }
 .myorder-top-bd span { margin-left: 15px; cursor: pointer; }
 
 
@@ -124,4 +300,9 @@ export default {
 .collectionBar li:nth-child(4n+4) .rank-num, .rank-bd li:nth-child(5n+5) .rank-num { color: #888; }
 .collectionBar .order-close { cursor: pointer; display: none; position: absolute; right: 0; top: 0; background: #eb5031; width: 30px; height: 30px; line-height: 30px; text-align: center; color: #fff; z-index: 2; }
 .collectionBar .block { display: block; }
+
+.search-tab { border-bottom: #ddd 1px solid; height: 36px; line-height: 35px; font-size: 16px; margin-left: 25px;box-sizing: border-box; }
+.search-tab span { display: inline-block; vertical-align: middle; padding: 0 10px; height: 34px; line-height: 34px; cursor: pointer; border-bottom: #ddd 1px solid; }
+.search-tab .cur { border-bottom: #ff9c01 1px solid; }
+
 </style>

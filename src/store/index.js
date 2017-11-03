@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import user from './user'
+import player from './models/player'
 Vue.use(Vuex)
 
 const state = {
@@ -26,6 +27,7 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 	modules: {
-	    user
+			// user,
+			player,
 	}
 })

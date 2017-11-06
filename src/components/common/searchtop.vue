@@ -2,7 +2,7 @@
 	<div class="search-top">
     <div class="wrap">
       <i class="el-icon-arrow-left" @click="goBack"></i>
-      <input placeholder="输入关键字" v-model="key_word" class="search-text" @keyup="key_word=key_word.replace(/\s/g,'')" @keyup.enter="clickListen(key_word)">
+      <input autofocus placeholder="输入关键字" v-model="key_word" class="search-text" @keyup="key_word=key_word.replace(/\s/g,'')" @keyup.enter="clickListen(key_word)">
       <button class="search-btn" @click="clickListen(key_word)"><i class="el-icon-search"></i></button>
     </div>
 	</div>
@@ -35,6 +35,11 @@ export default{
     goBack () {
       this.$router.back()
     }
+  },
+  mounted(){
+    setTimeout(function() {
+      $('.search-text').focus()
+    }.bind( this ), 150);
   }
 }
 </script>

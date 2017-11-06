@@ -2,34 +2,33 @@
   <header class="header">
 	<div class="wrap header-wrap">
 		<div class="logo fl"></div>
-		<div class="nav-box fl" :class="{'show-sub':isShow,'':!isShow}">
+		<div class="nav-box fl">
 			<router-link class="list hover" tag="div" to="/"><span class="m-txt">首页</span></router-link>
 			<router-link class="list hover" tag="div" to="/live"><span class="m-txt">直播</span></router-link>
 			<router-link class="list hover" tag="div" to="/point"><span class="m-txt">点播</span></router-link>
 			<router-link class="list hover" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index<3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
-			<div class="list hover more-sub" @click="showMore()">
+			<div class="list hover more-sub" @mouseenter="showMore" @mouseleave="hideMore">
 				<span class="el-dropdown-link hover">
 					更多<i class="el-icon-arrow-down"></i></i>
 				</span>
-				<div class="more-list" v-if="isShow">
-					<span class="arrow-up"></span>
-					<router-link class="sub-menu" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index>=3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
-					<!-- <div class="list hover" v-for="(item, index) in navData" v-if="index>=3" @click="linkRedirect(item.id)">
-						<span class="m-txt">{{item.columnName}}</span>
-					</div> -->
+				<div class="more-list more-hover" :class="isShow?'dis-block':''">
+					<div class="content">
+						<span class="arrow-up"></span>
+						<router-link class="sub-menu" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index>=3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="search-box fl" @click="searchButtonClick">
 			<div type="text" class="search-input"><i class="el-icon-search"></i>特洛伊</div>
 		</div>
-		<div class="header-ri fr" :class="{'show-sub':showed,'':!showed}">
+		<div class="header-ri fr">
 			<div class="list hover">
 				<div class="record-list" @click="recordEnter">
 					观看记录<i class="el-icon-arrow-down"></i>
 				</div>
 			</div>
-			<div class="list" @click="showMore1()">
+			<div class="list" @mouseenter="showMoreCenter" @mouseleave="hideMoreCenter">
 				<span v-show="!flag">
 					<span class="hover">
 						<router-link tag="a" to="/login">登录</router-link>
@@ -43,22 +42,24 @@
 					<span class="u-name">{{puser}}</span>
 					<i class="el-icon-arrow-down"></i>
 				</span>
-				<div class="more-list more-list-1" v-if="showed" v-show="flag">
+				<div class="more-list more-list-1 more-hover" :class="showed?'dis-block1':''" v-show="flag">
 					<span class="arrow-up"></span>
-					<div class="sub-u-bd">
-						<router-link tag="div" to="/user">
-							<img src="/static/common/images/tx.png" alt="">
-							<div class="user-name">{{puser}}</div>
-						</router-link>
-						<div class="checkout" @click="logout()">退出</div>
-					</div>
-					<div class="sub-btm clearfix">
-						<router-link tag="div" to="/user/collection" class="sub-btm-list">
-							<i class="el-icon-star-off"></i>我的收藏
-						</router-link>
-						<router-link tag="div" to="/user/myorder" class="sub-btm-list">
-							<i class="icon-alarm"></i>我的预订
-						</router-link>
+					<div class="content">
+						<div class="sub-u-bd">
+							<router-link tag="div" class="sub-u-le sub-u-list" to="/user">
+								<img src="/static/common/images/tx.png" alt="">
+								<div class="user-name sub-u-list">{{puser}}</div>
+							</router-link>
+							<div class="checkout sub-u-list" @click="logout()">退出</div>
+						</div>
+						<div class="sub-btm clearfix">
+							<router-link tag="div" to="/user/collection" class="sub-btm-list sub-u-list">
+								<i class="el-icon-star-off"></i>我的收藏
+							</router-link>
+							<router-link tag="div" to="/user/myorder" class="sub-btm-list sub-u-list">
+								<i class="icon-alarm"></i>我的预订
+							</router-link>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -107,10 +108,16 @@ export default {
 	},
 	methods: {
 		showMore () {
-			this.isShow=!this.isShow
+			this.isShow= true
 		},
-		showMore1 () {
-			this.showed=!this.showed
+		hideMore () {
+			this.isShow=false
+		},
+		showMoreCenter () {
+			this.showed= true
+		},
+		hideMoreCenter () {
+			this.showed=false
 		},
 		searchButtonClick () {
 			this.$router.push({
@@ -181,9 +188,12 @@ header { position: fixed; top: 0; left: 0; background: rgba(0,0,0,.7); width: 10
 .header a:active, .header a:visited, .header a:link { color: #fff; }
 .header a:hover { color: #ff9c01; }
 .header .mode-active:active, .header .mode-active:visited, .header .mode-active:link, .header .mode-active .m-txt { color: #ff9c01; }
-.more-list { position: absolute; top: 70px; right: -25px; padding: 8px 0; width: 90px; background: rgba(0,0,0,.7); color: #fff; font-size: 14px; border-radius: 5px; text-align: center; }
+.more-list { position: absolute; top: 65px; right: -25px; }
+.more-hover .content { padding: 8px 0; width: 90px; background: rgba(0,0,0,.7); color: #fff; font-size: 14px; border-radius: 5px; text-align: center; }
 .more-list-1 { width: 272px; left: -95px; right: auto; }
-.more-list .arrow-up { position: absolute; top: -8px; left: 42px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 8px solid rgba(0,0,0,.7); }
+.more-list-1 .content { text-align: left; padding: 8px 0; width: 272px; background: rgba(0,0,0,.7); color: #fff; font-size: 14px; border-radius: 5px; text-align: center; }
+.more-list-1 .content .sub-u-list:hover { color: #ff9c01; }
+.more-list .arrow-up { position: absolute; top: 7px; left: 42px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 8px solid rgba(0,0,0,.7); }
 .more-list-1 .arrow-up { left: 132px; }
 .sub-menu { line-height: 28px; }
 .sub-menu a:hover, .sub-menu:hover { color: #ff9c01; }
@@ -199,7 +209,8 @@ header .el-dropdown-menu { }
 .drop-con { padding-top: 60px; }
 .u-name { display: inline-block; vertical-align: middle; width: 60px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .more-list-1 { text-align: left; }
-.sub-u-bd { position: relative; margin: 0 15px; border-bottom: #676767 1px solid; cursor: pointer; overflow: hidden; }
+.sub-u-bd { clear: both; position: relative; margin: 0 15px; border-bottom: #676767 1px solid; cursor: pointer; overflow: hidden; }
+.sub-u-le { float: left; padding-bottom: 10px; }
 .sub-u-bd img { width: 45px; height: 45px; border-radius: 50%; }
 .sub-u-bd img, .user-name { display: inline-block; vertical-align: middle; line-height: 30px; }
 .checkout { position: absolute; top: 0; right: 5px; }
@@ -211,4 +222,6 @@ header .el-dropdown-menu { }
 .transition-view { position: relative; height: 100%; transition: all .3s cubic-bezier(.55,0,.1,1); }  
 .slide-left-enter, .slide-right-leave-active { opacity: 1; -webkit-transform: translate(100%, 0); transform: translate(100%, 0); }  
 .slide-left-leave-active, .slide-right-enter { opacity: 0; -webkit-transform: translate(-100%, 0); transform: translate(-100%, 0); }
+.more-hover { top: 55px; padding-top: 15px; display: none; }
+.dis-block, .dis-block1 { display: block; }
 </style>

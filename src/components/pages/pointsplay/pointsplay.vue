@@ -44,7 +44,7 @@ export default {
 		this._getClassic()
     },
     mounted () {
-    	$('.nav-box .list').click(function(){
+    	$('.nav-box .list').on('click', function(){
     		$('.classic-select').each(function(){
     			$(this).find('span').eq(0).click()
     		})

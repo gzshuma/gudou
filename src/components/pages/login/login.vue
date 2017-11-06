@@ -14,7 +14,7 @@
               </el-form-item>
               <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
               <el-form-item style="width:100%;">
-                <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
+                <el-button type="primary" style="width:100%;" @click="handleSubmit2" :loading="logining">登录</el-button>
                 <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
               </el-form-item>
               <div class="check">
@@ -58,14 +58,14 @@ export default {
     // ...mapActions([USER_SIGNIN]),
     //获取表单数据
     isLogin(){
-      this._init();
+      this.serialnoGet();
       let self = this
       let url = '/api0/AAA/loginFromUAP'
       self.$http({
         methods: 'get',
         url: url,
         params: {
-          LoginType: 1,
+          LoginType: '1',
           loginparam: self.ruleForm.loginparam,
           Pwd: self.$md5(self.ruleForm.Pwd),
           serialno: self.ruleForm.serialno,
@@ -74,7 +74,7 @@ export default {
       })
       .then((res)=>{
         if(res.data.status == '0'){
-          // console.log(res.data);
+          console.log(res.data);
           self.newToken = res.data.data.newToken
           self.user = res.data.data.userName;
           // self.USER_SIGNIN(self.ruleForm)
@@ -91,7 +91,7 @@ export default {
       })
     },
     //获取serialno流水号
-    _init(){
+    serialnoGet(){
       let self = this
       let url = '/api0/AAA/serialNoFromUAP'
       self.$http({

@@ -94,6 +94,7 @@ export default {
 			monday: Monday,
 			playerUrl: '',
 			jianquan: '',
+			num: 0,
 			subData: {
 				channelName: '',
 				epgName: ''
@@ -380,17 +381,20 @@ export default {
 				.then((res) => {
 					if(res.data.status == 0) {
 						let str = res.data.data.authResult.split('?')[1];
-						this.authority = 1;
 						// console.log(str)
 						let url = val.historyUrl[0]['3'].split('?')
-						let a = url[0].split('8070')
-						// let b = 'http://172.16.149.223:8060' + a[1] + '?' + url[1]
-						console.log(this.endTimeArr)
-						let b = 'http://172.16.149.223:8060' + a[1] + '?' + url[1]
-						// let b = 'http://172.16.149.223:8060' + a[1]
-						let html = b + '&' +str
+						let movieUrl = url[0].split('8070')
+						let playStr = ''
+						this.num +=1
+						if(this.num == 1) {
+							playStr = 'http://172.16.149.223:8060' + movieUrl[1] + '?' + str
+						}else {
+							playStr = 'http://172.16.149.223:8060' + movieUrl[1] + '?' + url[1] + '&' + str
+						}
+						console.log(this.num)
+
+						let html = playStr + '&' +str
 						this.playerUrl = html
-						// console.log(this.playerUrl)
 					}
 				})
 				.catch((res) => {

@@ -16,8 +16,7 @@
 		<div class="player-bd live-player clearfix">
 			<div class="wrap clearfix">
 				<div class="fl palyer-le">
-	        		<!-- <iframe name="iframeDom" src="/static/player/index.html?src=http%3A%2F%2F184.72.239.149%2Fvod%2Fsmil%3ABigBuckBunny.smil%2Fplaylist.m3u8" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe> -->
-	        		<iframe name="iframeDom" :src="'/static/player/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
+	        		<iframe name="iframeDom" :src="'/static/player_m3u8/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
 				</div>
 				<div class="fr palyer-ri">
 					<div class="player-tabs-box">
@@ -40,7 +39,7 @@
 						</div>
 						<div class="player-tabs-con">
 							<div class="player-tabchange" :class="{'block':item === nowIndex}" v-for="item in 7">
-								<div class="player-tabs-list" @click="changeMovies(v,$event)"  v-for="(v,index) in detailData"  :class=" v.epgID == endTimeArr.epgID && isok ? 'player-cur aaa':'' ">
+								<div class="player-tabs-list" @click="changeMovies(v,index,$event)"  v-for="(v,index) in detailData"  :class=" v.epgID == endTimeArr.epgID && isok ? 'player-cur aaa':'' ">
 									<span class="p-tabs-time">
 										{{v.startTime.substr(8,2)}}.{{v.startTime.substr(10,2)}}
 									</span>
@@ -53,7 +52,7 @@
 						</div>
 					</div>
 				</div>
-				<share class="position-bottom" :collectData="collectData"></share>
+				<share class="position-bottom clearfix" :collectData="collectData"></share>
 			</div>
 		</div>
 	</section>
@@ -145,13 +144,7 @@ export default {
 			}
 		}.bind(this))
 			return arr;
-		},
-		// playerUrl () {
-		// 	var url = this.$store.state.vuexStore.playerUrl
-		// 	if(url) {
-		// 		return url
-		// 	}
-		// }
+		}
     },
 	methods: {
 		_getDetailData () {
@@ -318,7 +311,7 @@ export default {
 		},
 
 		// 点击列表动作
-		changeMovies(val, el) {
+		changeMovies(val, index, el) {
 			if (this.dateCompa(val.startTime) > 0) {  //如果时间比当前时间大
 				let user = sessionStorage.getItem('user')
 				if (!user) { // 未登录跳到登录页
@@ -388,18 +381,16 @@ export default {
 					if(res.data.status == 0) {
 						let str = res.data.data.authResult.split('?')[1];
 						this.authority = 1;
-						console.log(str)
+						// console.log(str)
 						let url = val.historyUrl[0]['3'].split('?')
 						let a = url[0].split('8070')
+						// let b = 'http://172.16.149.223:8060' + a[1] + '?' + url[1]
+						console.log(this.endTimeArr)
 						let b = 'http://172.16.149.223:8060' + a[1] + '?' + url[1]
 						// let b = 'http://172.16.149.223:8060' + a[1]
-						console.log(b)
 						let html = b + '&' +str
-						// var html = 'http://172.16.149.223:8060/live/sichuan_1500.m3u8?t=&u=freeuser&p=8&pid=&cid=72&l=001&d=279001172600000184&sid=YOTSHgbYHJ9DzBwSYxiFww%3D%3D&r=20171103193126&e=20171108193131&nc=HN5guUWQD1PY&a=7&v=2'
-						// iframeDom.window.childrenFun(url)
-						// alert(html)
-						console.log(html)
 						this.playerUrl = html
+						// console.log(this.playerUrl)
 					}
 				})
 				.catch((res) => {
@@ -458,10 +449,10 @@ export default {
 .episodes-crumb span:last-child .el-icon-arrow-right { display: none; }
 .episodes-crumb .el-icon-arrow-right { font-size: 12px; color: #888; }
 .infodiscrib-rest-bd .infodiscrib-bd, .infodiscrib-rest-bd .episodes-bd, .infodiscrib-rest-bd .infodiscrib-con { display: block; float: none; width: 100%; height: auto; padding-top: 0; }
-.palyer-le { width: 812px; height: 100%; }
+.palyer-le { width: 812px; height: 100%; margin-bottom: 15px; }
 .palyer-box { color: #f00; }
 .yuding{ color: #ff9c01; }
-.player-bd { padding: 0 0 25px; background: #212121; min-width: 1200px; height: 515px; }
+.player-bd { padding: 0; background: #212121; min-width: 1200px; overflow: hidden; }
 .player-bd .wrap { padding-top: 20px; }
 .player-box, .player-box img { width: 812px; height: 455px; }
 .palyer-ri .el-tabs__item { color: #aaa; }
@@ -479,95 +470,25 @@ export default {
 .player-bd ::-webkit-scrollbar-thumb { border-radius: 2.5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #aaa; }
 .url-box { color: #fff; }
-.palyer-ri {
-  width: 370px;
-  height: 515px;
-  color: #f0f0f0;
-  overflow: hidden;
-}
-.tabs-hd-list {
-  float: left;
-  width: 14.285714%;
-  text-align: center;
-  cursor: pointer;
-}
-.tabs-hd-list.cur {
-  color: #ff9c01;
-}
-.tabs-hd-list i.cur {
-  color: #ff9c01;
-}
-.tabs-hd-list i {
-  display: block;
-  margin-bottom: 5px;
-}
-.player-tabs-list {
-  font-size: 0;
-  position: relative;
-  width: 260px;
-  line-height: 36px;
-  height: 36px;
-  padding: 0 15px 0 80px;
-  overflow: hidden;
-  cursor: pointer;
-}
-.player-tabs-list.cur {
-  color: #ff9c01;
-}
-.icon-p-tabs {
-  display: inline-block;
-  vertical-align: middle;
-  position: absolute;
-  right: 15px;
-  top: 5px;
-  font-size: 20px;
-}
-.p-tabs-time {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 14px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 80px;
-  text-align: center;
-}
-.player-tabs-re {
-  line-height: 25px;
-}
-.player-tabs-con {
-  height: 400px;
-  overflow-y: auto;
-}
-.player-bd ::-webkit-scrollbar {
-  border-radius: 2.5px;
-  width: 5px;
-  height: 5px;
-  background-color: #363636;
-}
-.p-tabs-con {
-  display: inline-block;
-  vertical-align: middle;
-  width: 230px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-size: 14px;
-}
-.player-cur.aaa {
-  color: #ff9c01;
-}
-.yuding{
-  color: #ff9c01;
-}
-.playa.icon-undo2:before {
-  content: "\ea1c";
-}
-
-.player-tabchange {
-  display: none;
-}
-.block {
-  display: block;
-}
+.palyer-ri { width: 370px; height: 495px; color: #f0f0f0; overflow: hidden; }
+.tabs-hd-list { float: left; width: 14.285714%; text-align: center; cursor: pointer; }
+.tabs-hd-list.cur { color: #ff9c01; }
+.tabs-hd-list i.cur { color: #ff9c01; }
+.tabs-hd-list i { display: block; margin-bottom: 5px; }
+.player-tabs-list { font-size: 0; position: relative; width: 260px; line-height: 36px; height: 36px; padding: 0 15px 0 80px; overflow: hidden; cursor: pointer; }
+.player-tabs-list.cur { color: #ff9c01; }
+.icon-p-tabs { display: inline-block; vertical-align: middle; position: absolute;
+  right: 15px; top: 5px; font-size: 20px; }
+.p-tabs-time { display: inline-block; vertical-align: middle; font-size: 14px;
+  position: absolute; left: 0; top: 0; width: 80px; text-align: center; }
+.player-tabs-re { line-height: 25px; }
+.player-tabs-con { height: 400px; overflow-y: auto; }
+.player-bd ::-webkit-scrollbar { border-radius: 2.5px; width: 5px; height: 5px; background-color: #363636; }
+.p-tabs-con { display: inline-block; vertical-align: middle; width: 230px; white-space: nowrap;
+  text-overflow: ellipsis; overflow: hidden; font-size: 14px; }
+.player-cur.aaa { color: #ff9c01; }
+.yuding{ color: #ff9c01; }
+.playa.icon-undo2:before { content: "\ea1c"; }
+.player-tabchange { display: none; }
+.block { display: block; }
 </style>

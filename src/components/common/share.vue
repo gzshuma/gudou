@@ -1,25 +1,25 @@
 <template>
-	<div class="player-btm">
-		<div class="p-btm-list s-hover p-btm-border coll" :class="isSelect ? 'collSelect' : ''" @click="collClick">
-			<span class="icon-btm el-icon-star-off"></span>
-			<span>收藏</span>
-		</div>
-  	<!-- <div v-if="!collectData.isZhibo" class="p-btm-list s-hover p-btm-border" @click="praise">
-			<span class="icon-btm icon-thumbs-up"></span>
-			<span>点赞(1584)</span>
-		</div>  -->
-		<div class="p-btm-list s-hover p-ri-0">
-			<span class="icon-btm icon-share2"></span>
-			<span>分享：</span>
-		</div>
-		 <div class="p-btm-list p-le-0 share-bd bdsharebuttonbox" data-tag="share_0">
-			<a href="javascript:viod(0)" class="icon-btm icon-qq2 bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
-			<a href="javascript:viod(0)" class="icon-btm icon-qq bds_sqq" data-cmd="sqq" title="分享给QQ好友"></a>
-			<a href="javascript:viod(0)" class="icon-btm icon-wechat bds_weixin" data-cmd="weixin" title="分享给微信"></a>
-			<a href="javascript:viod(0)" class="icon-btm icon-sina-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-		</div> 
+  <div class="player-btm">
+    <div class="p-btm-list s-hover p-btm-border coll" :class="isSelect ? 'collSelect' : ''" @click="collClick">
+      <span class="icon-btm el-icon-star-off"></span>
+      <span>收藏</span>
+    </div>
+    <!-- <div v-if="!collectData.isZhibo" class="p-btm-list s-hover p-btm-border" @click="praise">
+      <span class="icon-btm icon-thumbs-up"></span>
+      <span>点赞(1584)</span>
+    </div>  -->
+    <div class="p-btm-list s-hover p-ri-0">
+      <span class="icon-btm icon-share2"></span>
+      <span>分享：</span>
+    </div>
+     <div class="p-btm-list p-le-0 share-bd bdsharebuttonbox" data-tag="share_0">
+      <a class="icon-btm icon-qq2 bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+      <a class="icon-btm icon-qq bds_sqq" data-cmd="sqq" title="分享给QQ好友"></a>
+      <a class="icon-btm icon-wechat bds_weixin" data-cmd="weixin" title="分享给微信"></a>
+      <a class="icon-btm icon-sina-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    </div> 
 
-	</div>
+  </div>
 </template>
 <script type="text/ecmascript-6">
 import Vue from 'vue'
@@ -31,16 +31,16 @@ export default {
       type: Object
     }
   },
-	data () {
-		return {
+  data () {
+    return {
        
        changeColl: false,//默认没选中
        praiseData: '',
        puser:sessionStorage.getItem('user'),
-			//ptoken:'',
+      //ptoken:'',
        ptoken:sessionStorage.getItem('flag')
 
-		}
+    }
   },
   computed:{
     //是否默认收藏状态
@@ -59,7 +59,7 @@ export default {
   created(){
       
   },
-	mounted () {
+  mounted () {
     
     // console.log( this.$store.getters.getJieMu )
     console.log( this.collectData )
@@ -70,7 +70,7 @@ export default {
       }
     }.bind( this ), 150);
 
-	},
+  },
   methods: {
     
       collClick(){
@@ -293,8 +293,9 @@ export default {
 </script>
 
 <style>
-.player-btm { text-align: right; padding: 20px 0 0 0; }
+.player-btm { width: 100%; text-align: right; padding: 0; }
 .p-btm-list { padding: 0 15px; }
+.p-btm-list a:hover { color: #ff9c01; cursor: pointer; }
 .p-btm-list, .p-btm-list span { display: inline-block; vertical-align: middle; color: #aaa; }
 .p-btm-list .icon-sina-weibo { font-size: 24px; }
 .icon-btm { font-size: 20px; }

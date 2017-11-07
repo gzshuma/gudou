@@ -1,5 +1,5 @@
 <template>
-	<el-carousel class="swiper-container" trigger="click" :interval="5000" arrow="always">
+	<el-carousel class="swiper-container" trigger="click" :interval="5000" type="card" arrow="always">
       <el-carousel-item v-for="v in bannerData" :key="v.value">
         <router-link class="carousel-box" :to="{name: 'detail', params: { id: v.contentID }}">
         	<img v-lazy="v.imageUrl">
@@ -26,14 +26,30 @@ export default {
 
 <style>
 .swiper-container a { cursor: pointer; }
-.swiper-container, .swiper-container img { position: relative; width: 100%; height: 500px; z-index: 1; }
-.swiper-container .el-carousel__container { height: 100%; }
+.swiper-container, .swiper-container img { position: relative; height: 500px; z-index: 1; }
+.swiper-container .el-carousel__container { height: 100%; position: relative}
+.swiper-container .el-carousel__container:before { 
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	width: 100%;
+	background: #eee;
+	opacity: 0.5;
+	z-index: 5;
+}
 .swiper-container .el-carousel__button { width: 10px; height: 10px; border-radius: 50%; background: #fff; }
 .swiper-container .is-active .el-carousel__button { background: #f00; }
 .swiper-container .is-active .el-carousel__button:hover { background: #f00; }
-.swiper-container .el-carousel__arrow { width: 55px; height: 55px; background-color: rgba(31,45,61,.3); }
+.swiper-container .el-carousel__arrow { width: 65px; height: 65px; background-color: rgba(31,45,61,.7); }
 .swiper-container .el-carousel__arrow .el-icon-arrow-left, .swiper-container .el-carousel__arrow .el-icon-arrow-right { font-size: 20px; }
 .carousel-box { position: relative; display: block; }
-.swiper-container .el-carousel__indicators { left: auto; right: 0; }
+.swiper-container .el-carousel__indicators { left: auto; right: 0; display: none;}
 .carousel-mask { position: absolute; height: 50px; line-height: 50px; font-size: 18px; width: 100%; position: absolute; left: 0; bottom: 0; background: rgba(0,0,0,.5); color: #fff; text-align: center; z-index: 2; }
+.swiper-container .is-active{ z-index: 9; }
+
 </style>

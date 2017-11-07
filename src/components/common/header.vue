@@ -1,7 +1,7 @@
 <template>
   <header class="header">
 	<div class="wrap header-wrap">
-		<div class="logo fl"></div>
+		<div class="logo fl" @click="goStart"></div>
 		<div class="nav-box fl">
 			<router-link class="list hover" tag="div" to="/"><span class="m-txt">首页</span></router-link>
 			<router-link class="list hover" tag="div" to="/live"><span class="m-txt">直播</span></router-link>
@@ -118,6 +118,9 @@ export default {
 		},
 		hideMoreCenter () {
 			this.showed=false
+		},
+		goStart(){
+			this.$router.replace({ path: '/' })
 		},
 		searchButtonClick () {
 			this.$router.push({

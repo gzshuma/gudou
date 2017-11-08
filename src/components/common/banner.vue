@@ -1,5 +1,5 @@
 <template>
-	<el-carousel class="swiper-container" trigger="click" :interval="5000" type="card" arrow="always">
+	<el-carousel class="swiper-container" trigger="click" :interval="5000" type="card" arrow="hover">
       <el-carousel-item v-for="v in bannerData" :key="v.value">
         <router-link class="carousel-box" :to="{name: 'detail', params: { id: v.contentID }}">
         	<img v-lazy="v.imageUrl">

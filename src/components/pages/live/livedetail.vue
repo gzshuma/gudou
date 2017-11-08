@@ -330,31 +330,13 @@ export default {
 			} else {
 				// this.broadcast()
 				this.isok = false;
-				$('.player-tabs-list').removeClass('player-cur aaa')
-				$(el.target)
-					.closest('.player-tabs-list')
-					.addClass('player-cur aaa')
-					.siblings('.player-tabs-list').removeClass('player-cur aaa')
-
-				// 点播地址	
-				var data = {}
-				var data = val.historyUrl[0]
-				for(var v in data){
-				    data = data[v]
-				}
+				
 
 				// 获取媒资
-				let meizi = data.split('?')
+				let meizi = val.historyUrl[0]['3'].split('?')
 				var index = meizi[0].lastIndexOf("\/");  
 				meizi  = meizi[0].substring(index + 1, meizi[0].length);
 				meizi = meizi.split('.')[0]
-
-				// 当前直播和回播的视频源
-				let url = data.split('?')
-				let movieUrl = url[0].split('8070')
-				let playStr = '', playStr_1 = ''
-				playStr = 'http://172.16.149.223:8060' + movieUrl[1] + '?'
-				playStr_1 = 'http://172.16.149.223:8060' + movieUrl[1] + '?' + url[1] + '&'
 
 				// 鉴权获取
 				let self = this;
@@ -367,8 +349,8 @@ export default {
 						puser: self.puser,
 						ptoken: self.ptoken,
 						pversion: '030101',
-						// pserverAddress: 'portal.gcable.cn',
-						pserverAddress: this.GLOBAL.config.pserverAddress,
+						pserverAddress: 'portal.gcable.cn',
+						// pserverAddress: this.GLOBAL.config.pserverAddress,
 						pserialNumber: '862915030592170', // 必填
 						pkv: '1',
 						ptn: self.ptoken,
@@ -395,27 +377,40 @@ export default {
 				.then((res) => {
 					if(res.data.status == 0) {
 						let str = res.data.data.authResult.split('?')[1];
-						console.log(val)
+						// console.log(str)
+						let url = val.historyUrl[0]['3'].split('?')
+						let movieUrl = url[0].split('8070')
+						let playStr = ''
 						this.num +=1
-						if(val.epgID==this.endTimeArr.epgID) {
-							playStr = playStr + str
-							$(el.target).addClass('player-cur')
-						}else if(this.num == 1) {
-							playStr = playStr + str
+						if(this.num == 1) {
+							playStr = 'http://172.16.149.223:8060' + movieUrl[1] + '?' + str
 						}else {
-							playStr = playStr_1 + str
+							playStr = 'http://172.16.149.223:8060' + movieUrl[1] + '?' + url[1] + '&' + str
 						}
 						console.log(this.num)
 
-						let html = playStr
+						let html = playStr + '&' +str
 						this.playerUrl = html
+
+
+						//放到下面来
+						$('.player-tabs-list').removeClass('player-cur aaa')
+						$(el.target)
+							.closest('.player-tabs-list')
+							.addClass('player-cur aaa')
+							.siblings('.player-tabs-list').removeClass('player-cur aaa')
+
+
+
 					}
 				})
 				.catch((res) => {
 					alert(res.data.errorMessage)
 				})
-				
-				// 获取面包削标题
+
+				// 赋值给iframe
+				// iframeDom.window.childrenFun(val.historyUrl[0]['3'])
+				// alert(this.jianquan)
 				this.subData.channelName = val.channelName
 				this.subData.epgName = val.epgName
 			}

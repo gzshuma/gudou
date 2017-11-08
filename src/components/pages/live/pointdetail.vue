@@ -29,15 +29,22 @@
 									</el-tooltip>
 								</span>
 							</el-tab-pane>
-							<el-tab-pane label="25-48" v-if="episodesData.length>=24&&episodesData.length<48">
-								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=20&&index<40" :key="v.programID" @click="getNum(v,$event,index)">
+							<el-tab-pane label="25-48">
+								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=24&&index<48" :key="v.programID" @click="getUrl(v,index,$event)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
 									</el-tooltip>
 								</span>
 							</el-tab-pane>
 							<el-tab-pane label="49-72" v-if="episodesData.length>=48&&episodesData.length<72">
-								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=40&&index<60" :key="v.programID" @click="getNum(v,$event,index)">
+								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=48&&index<72" :key="v.programID" @click="getUrl(v,$event,index)">
+									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
+										<el-button>{{index+1}}</el-button>
+									</el-tooltip>
+								</span>
+							</el-tab-pane>
+							<el-tab-pane label="73-96" v-if="episodesData.length>=72&&episodesData.length<96">
+								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=72&&index<96" :key="v.programID" @click="getUrl(v,$event,index)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
 									</el-tooltip>
@@ -68,7 +75,9 @@ export default {
 			playerUrl: '',
 			puser:sessionStorage.getItem('user'),
      		ptoken:sessionStorage.getItem('flag'),
-			nowIndex: 0
+			nowIndex: 0,
+			episodesNum: [
+			]
 		}
 	},
     mounted () {
@@ -131,6 +140,16 @@ export default {
         		if(res.data.status == 0) {
 					const episodesData = res.data.data.programItems
 					this.episodesData = episodesData
+
+					// let Len = episodesData.length
+					// console.log(Len)
+					// let n = Math.ceil(Len/24)
+					// let numData = {}
+					// for(var i=0; i<n; i++) {
+					// 	a = 24*i+1, (i+1)*24
+					// 	// this.episodesNum.push(numData)
+					// }
+					// console.log(numData)
 				}
 			})
 			.catch((res) => {

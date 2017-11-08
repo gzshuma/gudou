@@ -15,6 +15,20 @@
 					{{v.extraInfo.channelName}}
 				</div>
 			</li>
+			<li v-for="(v, index) in pointConData1" @click="urlDirect(v.contentID)">
+				<div class="pic-ri-top">
+					<!-- <img v-lazy="v.liveRealImg" alt=""> -->
+					<img v-lazy="v.contentImageUrl" alt="">
+		  			<span class="pic-mask">
+		  				<span class="pic-title">{{v.contentName}}</span>
+		  				<span class="mask-time">01-22 19:35</span>
+		  				<span class="progress-bar" style="width:50%;"></span>
+		  			</span>
+				</div>
+				<div class="pic-btm">
+					{{v.extraInfo.channelName}}
+				</div>
+			</li>
 		</ul>
 	</div>
 </template>
@@ -24,6 +38,9 @@ export default {
 	name: 'pointcontent',
 	props: {
 		pointConData: {
+			type: Array
+		},
+		pointConData1: {
 			type: Array
 		}
 	},

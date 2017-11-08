@@ -9,7 +9,7 @@
 					</div>
 				</crumb>
 			</div>
-			<pointcon :pointConData="pointConData"></pointcon>
+			<pointcon :pointConData="pointConData" :pointConData1="pointConData1"></pointcon>
 		</div>
 	</section>
 </template>
@@ -39,7 +39,9 @@ export default {
 	},
 	data () {
 		return {
+			page: 0,
 			pointConData: [],
+			pointConData1: [],
 			categoryID: 46,
 			bannerList: [],
 			crumbTxt: {
@@ -49,7 +51,18 @@ export default {
 	},
     mounted () {
 		this._getpointConData()
+		this._loadMore()
 		this._getBnnerData()
+		let self = this
+		// $(window).scroll(function () {
+	 //      var scrollTop = $(this).scrollTop();
+	 //      var scrollHeight = $(document).height();
+	 //      var windowHeight = $(this).height();
+	 //      if (scrollTop + windowHeight == scrollHeight) {
+		// 	self.page += 1
+		// 	self._getpointConData()
+	 //      }
+	 //    })
 	},
     watch: {
         '$route': '_getliveConData'
@@ -91,7 +104,7 @@ export default {
 					puser: '',
 					pserverAddress: self.GLOBAL.config.pserverAddress,
 					cardID: self.$route.params.id,
-					page: 0,
+					page: this.page,
 					contentSize: '100'
 				}
 			})
@@ -105,6 +118,34 @@ export default {
 				alert(res.data.errorMessage)
 			})
 		},
+	    _loadMore() {
+	      this.page = 1;
+	      var self = this;
+	      // alert(self.categoryID)
+	      self
+	        .$http({
+	          method: "post",
+	          url: "/banner/RSWeb/gd/getCardContents",
+	          params: {
+				ptype: self.GLOBAL.config.ptype,
+				plocation: self.GLOBAL.config.plocation,
+				puser: '',
+				pserverAddress: self.GLOBAL.config.pserverAddress,
+				cardID: self.$route.params.id,
+				page: this.page,
+				contentSize: '100'
+	          }
+	        })
+	        .then(res => {
+	          if (res.data.status == 0) {
+	            self.pointConData1 = res.data.data.contents
+	            console.log(self.pointConData1.length)
+	          }
+	        })
+	        .catch(res => {
+	          alert(res.data.errorMessage);
+	        });
+	    },
 		showCategoryID (val) {
 			this.categoryID = val
 			this._getliveConData()

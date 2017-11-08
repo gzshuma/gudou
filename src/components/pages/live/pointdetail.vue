@@ -63,10 +63,12 @@
 import $ from 'jquery'
 import player from 'components/common/player'
 import infodiscrib from 'components/common/infodiscrib'
+import share from 'components/common/share'
 export default {
 	components: {
 		player,
-		infodiscrib
+		infodiscrib,
+		share
 	},
 	data () {
 		return {

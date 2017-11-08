@@ -1,9 +1,8 @@
 <template>
   <footer class="footer clearfix">
     <div class="wrap">
-    	<p>http://www.sumavision.com/ Corporation，All Rights Reserved</p>
-    	<p>北京数码视讯科技股份有限公司 版权所有</p>
-    	<p>Copyright @ 2009 京ICP备05036298号 公安局备案编号: 京公海网安备110108000884号</p>
+    	<p>版权所有：广东省广播电视网络股份有限公司</p>
+    	<p class="font-reset">网站备案号粤ICP备12040101号-1 | 增值电信业务经营许可证号粤B2-20130067 | 信息网络传播视听节目许可证号1904046 | 网络文化经营许可证号粤网文[2011]0356-053号</p>
     </div>
   </footer>
 </template>
@@ -18,5 +17,6 @@ export default {
 </script>
 
 <style scoped>
-footer { position: relative; padding: 30px 0; width: 100%; min-width: 1200px; background: #f0f0f0; text-align: center; color: #888; line-height: 25px; overflow: hidden; }
+footer { position: relative; padding: 30px 0; width: 100%; min-width: 1200px; background: rgba(0,0,0,.7); text-align: center; color: #fff; font-size: 16px; line-height: 40px; overflow: hidden; }
+.font-reset { font-size: 14px; }
 </style>

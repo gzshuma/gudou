@@ -50,7 +50,7 @@ export default {
 .pic-btm { height: 72px; line-height: 72px; color: #445560; font-size: 24px; padding: 0 20px; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .rank-bd { width: 100%; overflow: hidden; }
-.rank-bd li { float: left; width: 226px; height: 157px; background: #f0f0f0; margin: 0 17px 0 0; overflow: hidden; }
+.rank-bd li { float: left; width: 226px; height: 157px; background: #f0f0f0; margin: 0 17px 0 0; overflow: hidden; cursor:pointer;}
 .livecon li { margin-bottom: 20px; }
 .rank-bd li:nth-child(5n+5) { margin: 0; }
 .rank-bd .pic-ri-top { position: relative; width: 100%; height: 124px; }

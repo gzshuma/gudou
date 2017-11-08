@@ -8,7 +8,10 @@
       <span class="icon-btm icon-thumbs-up"></span>
       <span>点赞(1584)</span>
     </div>  -->
-    <div class="p-btm-list s-hover p-ri-0">
+
+
+
+    <!-- <div class="p-btm-list s-hover p-ri-0">
       <span class="icon-btm icon-share2"></span>
       <span>分享：</span>
     </div>
@@ -17,7 +20,9 @@
       <a class="icon-btm icon-qq bds_sqq" data-cmd="sqq" title="分享给QQ好友"></a>
       <a class="icon-btm icon-wechat bds_weixin" data-cmd="weixin" title="分享给微信"></a>
       <a class="icon-btm icon-sina-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-    </div> 
+    </div>  -->
+
+
 
   </div>
 </template>

@@ -29,8 +29,8 @@ export default {
 </script>
 
 <style scoped>
-.infodiscrib-bd { float: right; padding: 30px 0; width: 270px; height: 330px; color: #888; line-height: 20px; }
-.txt-bold { font-size: 24px; color: #333; margin-bottom: 10px; }
+.infodiscrib-bd { float: right; padding: 0; width: 100%; height: 330px; color: #ccc; line-height: 20px; }
+.txt-bold { font-size: 16px; color: #fff; padding-bottom: 5px; margin-bottom: 10px; border-bottom: #48576a 1px solid; }
 .infodiscrib-con { height: 300px; overflow-y: auto; }
  
 /*定义滚动条轨道 内阴影+圆角*/

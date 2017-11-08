@@ -22,14 +22,14 @@
 	        	<div class="fr palyer-ri">
 					<div class="episodes-reset" :class="episodesData.length>1 ? '':'dis-hide'">
 						<el-tabs class="juji-box">
-							<el-tab-pane label="'1-'index">
+							<el-tab-pane label="1-24">
 								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index<24" :key="v.programID" @click="getUrl(v,index,$event)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
 									</el-tooltip>
 								</span>
 							</el-tab-pane>
-							<!-- <el-tab-pane label="25-48" v-if="episodesData.length>=24&&episodesData.length<48">
+							<el-tab-pane label="25-48" v-if="episodesData.length>=24&&episodesData.length<48">
 								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=20&&index<40" :key="v.programID" @click="getNum(v,$event,index)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
@@ -42,7 +42,7 @@
 										<el-button>{{index+1}}</el-button>
 									</el-tooltip>
 								</span>
-							</el-tab-pane> -->
+							</el-tab-pane>
 						</el-tabs>
 					</div>
 					<infodiscrib :detailData="detailData"></infodiscrib>

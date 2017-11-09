@@ -164,3 +164,6 @@ export function dateCompa1 (date) {
     let d = year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second
     return dateComparate1(d)
 }
+
+
+

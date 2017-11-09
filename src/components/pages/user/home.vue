@@ -7,15 +7,26 @@
 						<span class="icon-info icon-user2"></span>
 						<span>头像</span>
 					</span>
-					<span class="info-ri info-pic"><img src="/static/common/images/tx.png"></span>
+					<span class="info-ri info-pic">
+            <img :src="userList.photoImg.high ">
+            <!-- <img :src="userList.photoImg.high | imgUrl"> -->
+          </span>
 				</li>
 				<li>
 					<span class="info-list-txt">
 						<span class="icon-info icon-user"></span>
 						<span>账户名</span>
 					</span>
-					<span class="info-ri" v-text="userList.user"></span>
+					<span class="info-ri noWrite" v-text="userList.user"></span>
 				</li>
+        <li>
+					<span class="info-list-txt">
+						<span class="icon-info icon-envelope"></span>
+						<span>昵称</span>
+					</span>
+					<input type="text" class="info-ri inputs" maxlength="20" :placeholder="userList.user"></input>
+				</li>
+        
 				<!-- <li>
 					<span class="info-list-txt">
 						<span class="icon-info icon-envelope"></span>
@@ -27,19 +38,19 @@
 		</div>
 		<div class="bg-info clearfix">
 			<ul>
-				<!-- <li>
+				<li>
 					<span class="info-list-txt">
 						<span class="icon-info el-icon-time"></span>
 						<span>注册时间</span>
 					</span>
-					<span class="info-ri" v-text="userList.createTime"></span>
-				</li> -->
+					<span class="info-ri noWrite" v-text="userList.createTime"></span>
+				</li>
 				<li>
 					<span class="info-list-txt">
 						<span class="icon-info icon-floppy-disk"></span>
 						<span>上次登录时间</span>
 					</span>
-					<span class="info-ri">{{lastLogin}}</span>
+					<span class="info-ri noWrite">{{userList.lastLogin}}</span>
 				</li>
 			</ul>
 		</div>
@@ -60,33 +71,18 @@ import usercenterleft from 'components/common/usercenterleft'
 import bmask from 'components/common/bmask'
 import $ from 'jquery'
 export default {
+  props:{
+    userList:{
+      type: Object,
+    }
+  },
 	components: {
 		usercenterleft,
     bmask
 	},
-  beforeCreate(){
-    this.lastLogin = sessionStorage.getItem('dateTime')
-  },
 	data () {
 		return {
       eye:false,
-		  userList:{
-        user:'',
-        phoneNumber:'',
-        email:'',
-        cardNumber:'',
-        createTime:'',
-        lastLogin:'',
-        nickname:'',
-        sex:'',
-        birthday:'',
-        personalitySignature:'',
-        photoImg:{
-          high:'',
-          low:'',
-          middle:''
-        }
-      },
       ruleForm2:{
         LoginType:'1',
         loginparam:'',
@@ -94,17 +90,9 @@ export default {
         serialno:'',
         terminalID:''
       },
-      ptype:'5',
-      plocation:'001',
-      //puser:'',
       puser:sessionStorage.getItem('user'),
-      //ptoken:'',
       ptoken:sessionStorage.getItem('flag'),
-      pversion:'030000',
-      pserverAddress:'http://172.16.149.133:8080',
-      pserialNumber:'864905033377784',
-      //pkv:'1',
-      //ptn:'Y29tLnN1bWF2aXNpb24uc2FucGluZy5ndWRvdQ',
+
       alterList:{
         nickname:'',
         sex:'',
@@ -113,25 +101,22 @@ export default {
         email:'',
         customerNum:''
       }
+
     }
-	},
+  },
+  computed:{
+    
+  },
   created(){
-    this.init();
+   
+  },
+  mounted(){
+
+      console.log( this.userList )
+
   },
 	methods:{
-    //获取用户信息
-      init(){
-        let url = '/api/PortalServer-App/new/aaa_usr_usr008';
-        url = url+'?ptype='+this.ptype+'&plocation='+this.plocation+'&puser='+this.puser+'&ptoken='+this.ptoken+'&pversion='+this.pversion+'&pserverAddress='+this.pserverAddress+'&pserialNumber='+this.pserialNumber
-        this.$http.get(url).then((res)=>{
-          if(res.data.status == 0){
-            this.userList = res.data.data;
-            console.log(this.userList.photoImg);
-          }else {
-            //this.$router.push({name:'login'})
-          }
-        })
-      },
+    
     //获取serialno流水号
       // __init(){
       //   let url = '/api0/AAA/serialNoFromUAP';
@@ -174,9 +159,6 @@ export default {
       })
     }
   },
-  mounted(){
-
-  }
 }
 </script>
 
@@ -195,4 +177,11 @@ export default {
 .info-list-txt .icon-user2, .info-list-txt .el-icon-time, .info-list-txt .icon-envelope { font-size: 22px; }
 .info-pic { top: 10px; }
 .info-pic img { width: 34px; height: 34px; border-radius: 50%; }
+.noWrite{
+  color: #aaa;
+}
+.inputs{
+  height: 99%;
+  text-align: right;
+}
 </style>

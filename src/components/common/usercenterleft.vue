@@ -1,7 +1,8 @@
 <template>
     <div class="user-leftbar">
         <router-link tag="div" class="user-pic" to="/user">
-            <img src="/static/common/images/tx.png">
+            <img :src="userList.photoImg.high">
+             <!-- <img :src="userList.photoImg.high | imgUrl"> -->
             <p>sumaviron</p>
             <p class="color-u">个人资料</p>
         </router-link>
@@ -20,11 +21,19 @@
 </template>
 <script>
     export default {
+        props:{
+            userList:{
+                type: Object,
+            }
+        },
         data() {
             return {}
         },
         methods: {
-        }
+        },
+        mounted(){
+          
+        },
     }
 </script>
 

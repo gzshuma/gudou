@@ -53,7 +53,7 @@
 						</div>
 					</div>
 				</div>
-				<share class="position-bottom clearfix" :collectData="collectData"></share>
+				<share class="position-bottom clearfix" :collectData="collectData" v-if="CA"></share>
 			</div>
 		</div>
 	</section>

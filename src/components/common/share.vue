@@ -295,6 +295,7 @@ export default {
 .p-le-0 { padding-left: 0; }
 .p-ri-0 { padding-right: 0; }
 .p-btm-border { border-right: #aaa 1px solid; cursor: pointer;}
+.p-btm-border:last-child { border-right: 0; }
 .p-btm-border:hover span{ color: #ef9914; }
 .share-bd span { margin-right: 10px; }
 .s-hover:hover { color: #ef9914; }

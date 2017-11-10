@@ -16,9 +16,7 @@ export default {
 	},
 	data () {
 		return {
-			userList: {},
-			puser:sessionStorage.getItem('user'),
-      		ptoken:sessionStorage.getItem('flag'),
+			userList: {}
 		}
 	},
 	created(){
@@ -32,14 +30,18 @@ export default {
 			method: 'get',
 			url: '/api/PortalServer-App/new/aaa_usr_usr008',
 			params: {
-				ptype: self.GLOBAL.config.ptype,
-				plocation: self.GLOBAL.config.plocation,
-				puser: self.puser,
-				ptoken: self.ptoken,
-				pversion: '03010',
-				pserverAddress: self.GLOBAL.config.pserverAddress,
-				pserialNumber: self.ptoken,
-				
+	            ptype: self.GLOBAL.config.ptype,
+	            plocation: self.GLOBAL.config.plocation,
+	            puser: self.GLOBAL.config.puser,
+	            ptoken: self.GLOBAL.config.ptoken,
+	            pserverAddress: self.GLOBAL.config.pserverAddress,
+	            pserialNumber: self.GLOBAL.config.pserialNumber,
+	            pversion:  self.GLOBAL.config.pversion,
+	            ptn: self.GLOBAL.config.ptoken,
+	            pkv: self.GLOBAL.config.pkv, 
+	            hmac: '',
+	            nonce: self.GLOBAL.config.nonce,
+	            timestamp: self.GLOBAL.config.timestamp
 			},
 				})
 				.then((res) => {

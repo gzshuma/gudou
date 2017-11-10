@@ -1,7 +1,7 @@
 <template>
     <div class="user-leftbar">
         <div class="user-pic" >
-            <img :src="userList.photoImg.high">
+            <img v-lazy="imgUrl">
              <!-- <img :src="userList.photoImg.high | imgUrl"> -->
             <p>sumaviron</p>
             <router-link class="color-u"   tag="div" to="/user">
@@ -13,13 +13,13 @@
         </div>
         <div class="u-tab-list">
             <router-link tag="div" class="u-menu" to="/user/viewrecord">
-                <i class="el-icon-time"></i>观看记录
+                <i class="iconfont icon-time"></i>观看记录
             </router-link>
             <router-link tag="div" class="u-menu" to="/user/collection">
                 <i class="el-icon-star-off"></i>我的收藏
             </router-link>
             <router-link tag="div" class="u-menu" to="/user/myorder">
-                <span class="icon-alarm"></span>我的预订
+                <span class="iconfont icon-alarm"></span>我的预订
             </router-link>
         </div>
     </div>
@@ -33,17 +33,20 @@
         },
         data() {
             return {
-                pColor: '1',
             }
         },
         methods: {
-            clicks( n ){
-                this.pColor = n;
-                console.log( this.pColor )
+        },
+        computed: {
+            // 取头像
+            imgUrl: function() {
+                let data = this.userList.photoImg
+                for(var v in data){
+                    return data[v]
+                }
             }
         },
         mounted(){
-          
         },
     }
 </script>
@@ -59,4 +62,6 @@
 .u-menu i, .u-menu span { margin-right: 15px; font-size: 16px; }
 .u-tab-list .mode-active { background: #ff9c01; color: #fff; }
 .mode-active.color-u { color: #ff9c01; }
+.u-menu i.icon-time { font-size: 18px; }
+.icon-time, .icon-alarm { font-weight: 700; }
 </style>

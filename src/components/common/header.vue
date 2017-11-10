@@ -23,11 +23,6 @@
 			<div type="text" class="search-input"><i class="el-icon-search"></i>特洛伊</div>
 		</div>
 		<div class="header-ri fr">
-			<!-- <div class="list hover">
-				<div class="record-list" @click="recordEnter">
-					观看记录<i class="el-icon-arrow-down"></i>
-				</div>
-			</div> -->
 			<div class="list" @mouseenter="showMoreCenter" @mouseleave="hideMoreCenter">
 				<span v-show="!flag">
 					<span class="hover">
@@ -38,16 +33,16 @@
 						<router-link tag="a" to="/register">注册</router-link>
 					</span>
 				</span>
-				<span class="el-dropdown-link record-more hover" v-show="flag">
+				<router-link tag="span" class="el-dropdown-link record-more hover" to="/user" v-show="flag">
 					<span class="u-name">{{puser}}</span>
 					<i class="el-icon-arrow-down"></i>
-				</span>
+				</router-link>
 				<div class="more-list more-list-1 more-hover" :class="showed?'dis-block1':''" v-show="flag">
 					<span class="arrow-up"></span>
 					<div class="content">
 						<div class="sub-u-bd">
 							<router-link tag="div" class="sub-u-le sub-u-list" to="/user">
-								<img src="/static/common/images/tx.png" alt="">
+								<img v-lazy="picUrl" alt="">
 								<div class="user-name sub-u-list">{{puser}}</div>
 							</router-link>
 							<div class="checkout sub-u-list" @click="logout()">退出</div>
@@ -60,7 +55,7 @@
 								<i class="el-icon-star-off"></i>我的收藏
 							</router-link>
 							<router-link tag="div" to="/user/myorder" class="sub-btm-list sub-u-list">
-								<i class="icon-alarm"></i>我的预订
+								<i class="iconfont icon-alarm"></i>我的预订
 							</router-link>
 						</div>
 					</div>
@@ -82,8 +77,20 @@ export default {
 	props: {
 		navData: {
 			type: Array
-		}
+		},
+        userList:{
+            type: Object,
+        }
 	},
+    computed: {
+        // 取头像
+        picUrl: function() {
+            let data = this.userList.photoImg
+            for(var v in data){
+                return data[v]
+            }
+        }
+    },
     beforeCreate(){
     	this.puser = sessionStorage.getItem('user')
     },
@@ -228,8 +235,8 @@ header .el-dropdown-menu { }
 .sub-u-bd img { width: 45px; height: 45px; border-radius: 50%; }
 .sub-u-bd img, .user-name { display: inline-block; vertical-align: middle; line-height: 30px; }
 .checkout { position: absolute; top: 0; right: 5px; }
-.sub-btm { text-align: left; }
-.sub-btm-list { width: 110px; display: inline-block; vertical-align: middle; height: 24px; overflow: hidden; line-height: 0; text-align: center; margin-right: 45px; cursor: pointer;}
+.sub-btm { text-align: left; line-height: 30px; padding-top: 10px; }
+.sub-btm-list { width: 110px; display: inline-block; vertical-align: middle; height: 30px; line-height: 30px; text-align: center; margin-right: 45px; cursor: pointer; overflow: hidden;}
 .sub-btm-list:nth-child(2n+2) { margin-right: 0; }
 .sub-btm-list i { font-size: 16px; margin-right: 5px; }
 .record-list.mode-active { color: #fff; }

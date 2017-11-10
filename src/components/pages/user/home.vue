@@ -4,26 +4,25 @@
 			<ul>
 				<li>
 					<span class="info-list-txt">
-						<span class="icon-info icon-user2"></span>
+						<span class="icon-info iconfont icon-user2"></span>
 						<span>头像</span>
 					</span>
 					<span class="info-ri info-pic" @click="fileClick()">
-            <img class="userPhoto" :src="userList.photoImg.high ">
-            <!-- <img :src="userList.photoImg.high | imgUrl"> -->
-
+            <img class="userPhoto" v-lazy="userList.photoImg.high">
+            <!-- <img class="userPhoto"  :src="userList.photoImg.high | imgUrl"> -->
             <input type="file" class="fileInput" style="display:none" @change="fileChange( $event )">
           </span>
 				</li>
 				<li>
 					<span class="info-list-txt">
-						<span class="icon-info icon-user"></span>
+						<span class="icon-info iconfont icon-user"></span>
 						<span>账户名</span>
 					</span>
 					<span class="info-ri noWrite" v-text="userList.user"></span>
 				</li>
         <li>
 					<span class="info-list-txt">
-						<span class="icon-info icon-envelope"></span>
+						<span class="icon-info iconfont icon-nickname"></span>
 						<span>昵称</span>
 					</span>
 					<input type="text" class="info-ri alias" maxlength="20" :placeholder="userList.nickname" :value="userList.nickname"></input>
@@ -49,7 +48,7 @@
 				</li>
 				<li>
 					<span class="info-list-txt">
-						<span class="icon-info icon-floppy-disk"></span>
+						<span class="icon-info iconfont icon-logintime"></span>
 						<span>上次登录时间</span>
 					</span>
 					<span class="info-ri noWrite">{{userList.lastLogin}}</span>
@@ -174,28 +173,28 @@ export default {
           hmace: '125456',
           timestamp: new Date().getTime(),
           nonce: Math.random().toString().slice(2),
-          },
-          data:{
-            nickname: this.nickname,
-            sex: '',
-            birthday: '',
-            personalitySignature: '',
-            email: '',
-            customerNum: '',
-          },
-          })
-          .then((res) => {
-          if(res.data.status == 0) {
-              this.$message.success('修改资料成功')
-              setTimeout( function(){
-                   window.location.reload();
-              },1000 )
-             
-            }  
-          })
-          .catch((res) => {
-            alert(res.data.errorMessage)
-          })
+        },
+        data:{
+          nickname: this.nickname,
+          sex: '',
+          birthday: '',
+          personalitySignature: '',
+          email: '',
+          customerNum: '',
+        },
+      })
+      .then((res) => {
+      if(res.data.status == 0) {
+          this.$message.success('修改资料成功')
+          setTimeout( function(){
+               window.location.reload();
+          },200 )
+         
+        }
+      })
+      .catch((res) => {
+        alert(res.data.errorMessage)
+      })
     },
      //上传头像
 		_setUserImg( ){
@@ -206,32 +205,33 @@ export default {
         params: {
           ptype: self.GLOBAL.config.ptype,
           plocation: self.GLOBAL.config.plocation,
-          puser: self.puser,
-          ptoken: self.ptoken,
-          pversion: '03010',
+          puser: self.GLOBAL.config.puser,
+          ptoken: self.GLOBAL.config.ptoken,
           pserverAddress: self.GLOBAL.config.pserverAddress,
-          pserialNumber: '862915030592170',
+          pserialNumber: self.GLOBAL.config.pserialNumber,
+          pversion:  self.GLOBAL.config.pversion,
+          ptn: self.GLOBAL.config.ptoken,
+          pkv: self.GLOBAL.config.pkv, 
+          hmac: '',
+          nonce: self.GLOBAL.config.nonce,
+          timestamp: self.GLOBAL.config.timestamp,
           pkv:	1,
-          ptn:  self.ptoken,
-          hmace: '125456',
-          timestamp: new Date().getTime(),
-          nonce: Math.random().toString().slice(2),
-          },
-          data:{
-            photo: this.base64Img,
-          },
-          })
-          .then((res) => {
-          if(res.data.status == 0) {
-               this.$message.success('修改资料成功')
-                setTimeout( function(){
-                    window.location.reload();
-                },1000 )
-            }
-          })
-          .catch((res) => {
-            alert(res.data.errorMessage)
-          })
+        },
+        data:{
+          photo: this.base64Img,
+        },
+      })
+      .then((res) => {
+      if(res.data.status == 0) {
+           this.$message.success('修改资料成功')
+            setTimeout( function(){
+                window.location.reload();
+            },200 )
+        }
+      })
+      .catch((res) => {
+        alert(res.data.errorMessage)
+      })
     },
     
 
@@ -249,17 +249,14 @@ export default {
 .info-list-txt { float: left; }
 .info-list-txt span { display: inline-block; vertical-align: middle; }
 .info-ri { position: absolute; right: 10px; top: 0; }
-.info-list-txt .icon-info { color: #ff9c01; font-size: 28px; margin-right: 8px; }
-.info-list-txt .icon-user { font-size: 26px; font-weight: 700; }
+.info-list-txt .icon-info { color: #ff9c01; font-size: 22px; margin-right: 8px; }
+.info-list-txt .icon-user { font-size: 20px; font-weight: 400; }
 .info-list-txt .icon-floppy-disk { font-size: 20px; }
-.info-list-txt .icon-user2, .info-list-txt .el-icon-time, .info-list-txt .icon-envelope { font-size: 22px; }
+.info-list-txt .icon-user2, .info-list-txt .el-icon-time, .info-list-txt .icon-envelope { font-size: 24px; }
+.info-list-txt .el-icon-time { font-size: 20px; }
+.info-list-txt .icon-logintime { font-size: 20px; }
 .info-pic { top: 10px; cursor: pointer}
 .info-pic img { width: 34px; height: 34px; border-radius: 50%; }
-.noWrite{
-  color: #aaa;
-}
-.alias{
-  height: 99%;
-  text-align: right;
-}
+.noWrite{ color: #aaa; }
+.alias{ height: 99%; text-align: right; }
 </style>

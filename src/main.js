@@ -46,9 +46,6 @@ Vue.filter('imgUrl',function( val ){
 	return url;
 })*/
 
-
-// Vue.use(VideoPlayer)
-
 Vue.use(VueVideoPlayer)
 Vue.use(SocialSharing)
 Vue.use(ElementUI)
@@ -62,13 +59,13 @@ Vue.use(VueLazyload, {
 	error: 'static/error.jpg',
 	//替换图片路径
 
-	/*filter:{
+	filter:{
 		imgUrl: function( val ){
 			let kou = val.src.split('//')[1].split( '/' )[0]
-			let src = val.src.replace( kou,'172.16.149.147' );  
+			let src = val.src.replace( kou,'172.16.149.147:80' );  
 			val.src = src
 		}
-	}*/
+	}
 
 })
 

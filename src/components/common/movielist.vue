@@ -52,7 +52,7 @@ export default {
 .movie-bd .pic-title { padding-left: 8px; width: 140px; }
 .movie-bd .progress-bar { height: 2px; }
 .movie-bd .mask-time { position: absolute; font-size: 14px; left: 8px; top: 2px; }
-.movie-bd .pic-btm { position: relative; height: 38px; line-height: 38px; font-size: 14px; padding-left: 8px; }
+.movie-bd .pic-btm { position: relative; height: 38px; line-height: 38px; font-size: 14px; padding-left: 8px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .movie-pos { position: absolute; right: 8px; top: 3px; }
 .movie-num { font-size: 26px; font-style: italic; }
 .movie-bd .icon-arror { color: #888; font-size: 18px; }

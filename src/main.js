@@ -31,7 +31,7 @@ import 'element-ui/lib/theme-default/index.css'
 // import 'common/js/video.js'
 // import 'common/js/videojs-contrib-hls.js'
 
-import {getCookie, GetDateDiff, getNowFormatDate} from './util'
+// import {getCookie, GetDateDiff, getNowFormatDate} from './util'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios

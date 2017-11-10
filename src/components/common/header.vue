@@ -4,8 +4,8 @@
 		<div class="logo fl" @click="goStart"></div>
 		<div class="nav-box fl">
 			<router-link class="list hover" tag="div" to="/"><span class="m-txt">首页</span></router-link>
-			<router-link class="list hover" tag="div" to="/live"><span class="m-txt">直播</span></router-link>
-			<router-link class="list hover" tag="div" to="/point"><span class="m-txt">点播</span></router-link>
+			<router-link class="list hover" tag="div" to="/tv"><span class="m-txt">电视</span></router-link>
+			<!-- <router-link class="list hover" tag="div" to="/point"><span class="m-txt">点播</span></router-link> -->
 			<router-link class="list hover" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index<3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
 			<div class="list hover more-sub" @mouseenter="showMore" @mouseleave="hideMore">
 				<span class="el-dropdown-link hover">
@@ -23,11 +23,11 @@
 			<div type="text" class="search-input"><i class="el-icon-search"></i>特洛伊</div>
 		</div>
 		<div class="header-ri fr">
-			<div class="list hover">
+			<!-- <div class="list hover">
 				<div class="record-list" @click="recordEnter">
 					观看记录<i class="el-icon-arrow-down"></i>
 				</div>
-			</div>
+			</div> -->
 			<div class="list" @mouseenter="showMoreCenter" @mouseleave="hideMoreCenter">
 				<span v-show="!flag">
 					<span class="hover">
@@ -54,6 +54,9 @@
 						</div>
 						<div class="sub-btm clearfix">
 							<router-link tag="div" to="/user/collection" class="sub-btm-list sub-u-list">
+								<i class="el-icon-time"></i>观看记录
+							</router-link>
+							<router-link tag="div" to="/user/collection" class="sub-btm-list sub-u-list">
 								<i class="el-icon-star-off"></i>我的收藏
 							</router-link>
 							<router-link tag="div" to="/user/myorder" class="sub-btm-list sub-u-list">
@@ -63,7 +66,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="list hover">aap下载</div>
+			<a target="_blank" href="http://172.16.149.150/download/index.html" class="list hover">aap下载</a>
 		</div>
 	</div>
   </header>
@@ -126,6 +129,9 @@ export default {
 			this.$router.push({
 				name: 'search'
 			})
+			setTimeout(function(){
+				location.reload()
+			}, 300)
 		},
 		logout () {
 			let self = this
@@ -134,13 +140,18 @@ export default {
 				methods: 'get',
 				url: url,
 				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.puser,
-		            ptoken: self.ptoken,
-		            pversion: self.GLOBAL.config.pversion,
+					ptype: self.GLOBAL.config.ptype,
+					plocation: self.GLOBAL.config.plocation,
+					puser: self.GLOBAL.config.puser,
+					ptoken: self.GLOBAL.config.ptoken,
 					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.GLOBAL.config.pserialNumber
+					pserialNumber: self.GLOBAL.config.pserialNumber,
+					pversion:  self.GLOBAL.config.pversion,
+					ptn: self.GLOBAL.config.ptoken,
+					pkv: self.GLOBAL.config.pkv, 
+					hmac: '',
+					nonce: self.GLOBAL.config.nonce,
+					timestamp: self.GLOBAL.config.timestamp
 				}
 			})
 			.then((res)=>{
@@ -168,9 +179,9 @@ export default {
 		recordEnter () {
 			let user = sessionStorage.getItem('user')
 			if (!user) { // 未登录跳到登录页
-				this.$router.push({path: '/login'});
+				this.$router.push({path: '/login'})
 			}else {
-				this.$router.push({path: '/user/viewrecord'});
+				this.$router.push({path: '/user/viewrecord'})
 			}
 		}
 	}
@@ -217,11 +228,12 @@ header .el-dropdown-menu { }
 .sub-u-bd img { width: 45px; height: 45px; border-radius: 50%; }
 .sub-u-bd img, .user-name { display: inline-block; vertical-align: middle; line-height: 30px; }
 .checkout { position: absolute; top: 0; right: 5px; }
-.sub-btm-list { width: 110px; display: inline-block; vertical-align: middle; line-height: 30px; text-align: center; margin-right: 45px; cursor: pointer;}
+.sub-btm { text-align: left; }
+.sub-btm-list { width: 110px; display: inline-block; vertical-align: middle; height: 24px; overflow: hidden; line-height: 0; text-align: center; margin-right: 45px; cursor: pointer;}
 .sub-btm-list:nth-child(2n+2) { margin-right: 0; }
 .sub-btm-list i { font-size: 16px; margin-right: 5px; }
 .record-list.mode-active { color: #fff; }
-.header .record-list.mode-active:active, .header .record-list.mode-active:visited, .header ..record-list.mode-active:link { color: #fff; }
+.header .record-list.mode-active:active, .header .record-list.mode-active:visited, .header .record-list.mode-active:link { color: #fff; }
 .transition-view { position: relative; height: 100%; transition: all .3s cubic-bezier(.55,0,.1,1); }  
 .slide-left-enter, .slide-right-leave-active { opacity: 1; -webkit-transform: translate(100%, 0); transform: translate(100%, 0); }  
 .slide-left-leave-active, .slide-right-enter { opacity: 0; -webkit-transform: translate(-100%, 0); transform: translate(-100%, 0); }

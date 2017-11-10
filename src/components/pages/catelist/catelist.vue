@@ -41,12 +41,20 @@ export default {
 	        method: 'post',
 	        url: '/banner/RSWeb/gd/getContentListByColumnID',
 	        params: {
-	          ptype: self.GLOBAL.config.ptype,
-	          plocation: self.GLOBAL.config.plocation,
-	          puser: '',
-	          // pserverAddress: self.GLOBAL.config.pserverAddress,
-	          columnID: '003',
-	          count: '6'
+	            ptype: self.GLOBAL.config.ptype,
+	            plocation: self.GLOBAL.config.plocation,
+	            puser: self.GLOBAL.config.puser,
+	            ptoken: self.GLOBAL.config.ptoken,
+	            pserverAddress: self.GLOBAL.config.pserverAddress,
+	            pserialNumber: self.GLOBAL.config.pserialNumber,
+	            pversion:  self.GLOBAL.config.pversion,
+	            ptn: self.GLOBAL.config.ptoken,
+	            pkv: self.GLOBAL.config.pkv, 
+	            hmac: '',
+	            nonce: self.GLOBAL.config.nonce,
+	            timestamp: self.GLOBAL.config.timestamp,
+				columnID: '003',
+				count: '6'
 	        }
 	      })
 	      .then((res) => {
@@ -65,10 +73,18 @@ export default {
 			  method: 'post',
 			  url: '/banner/RSWeb/gd/getCards',
 			  params: {
-			    ptype: self.GLOBAL.config.ptype,
-			    plocation: self.GLOBAL.config.plocation,
-			    puser: '',
-			    pserverAddress: self.GLOBAL.config.pserverAddress,
+	            ptype: self.GLOBAL.config.ptype,
+	            plocation: self.GLOBAL.config.plocation,
+	            puser: self.GLOBAL.config.puser,
+	            ptoken: self.GLOBAL.config.ptoken,
+	            pserverAddress: self.GLOBAL.config.pserverAddress,
+	            pserialNumber: self.GLOBAL.config.pserialNumber,
+	            pversion:  self.GLOBAL.config.pversion,
+	            ptn: self.GLOBAL.config.ptoken,
+	            pkv: self.GLOBAL.config.pkv, 
+	            hmac: '',
+	            nonce: self.GLOBAL.config.nonce,
+	            timestamp: self.GLOBAL.config.timestamp,
 			    parentID: self.$route.params.id,
 			    page: 0,
 			    contentSize: ''

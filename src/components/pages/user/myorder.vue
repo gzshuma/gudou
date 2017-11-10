@@ -5,11 +5,6 @@
 		<span class="myorder-deleteall" v-if="isTrue" @click="deleteAllRecord()">清空</span>
 		<span class="myorder-complete" v-if="isTrue" @click="completeRecord()">完成</span>
 	</div>
-	<!--<el-tabs class="myorder-tabs-bd">
-		<el-tab-pane v-for="(v,index) in orderList" :label="v.name" :key="v.value">
-			<ucenterpic :orderData="v.content" :key="v.value"></ucenterpic>
-		</el-tab-pane>
-	</el-tabs>-->
     <div class="myorderBar coll1">
       <ul>
         <li class="collArr1" v-for="(v, index) in orderList">
@@ -63,8 +58,7 @@ export default {
   created(){
 	  this._getReserve();
   },
-  mounted(){
-	  
+  mounted(){ 
   },
 	methods: {
 	    _getReserve(){
@@ -76,11 +70,16 @@ export default {
 				params: {
 		            ptype: self.GLOBAL.config.ptype,
 		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.puser,
-		            ptoken: self.ptoken,
-		            pversion: self.GLOBAL.config.pversion,
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.GLOBAL.config.pserialNumber
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 				}
 			})
 			.then((res)=>{
@@ -132,39 +131,39 @@ export default {
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_live_live025',
 				params: {
-						ptype: self.GLOBAL.config.ptype,
-						plocation: self.GLOBAL.config.plocation,
-						puser: self.puser,
-						ptoken: self.ptoken,
-						pversion: '03010',
-						locationName: '',
-						countyName: '',
-						hmace: '125456',
-						timestamp: new Date().getTime(),
-						nonce: Math.random().toString().slice(2),
-						pserverAddress: self.GLOBAL.config.pserverAddress,
-						pserialNumber: self.ptoken,     
-					},
-					//post用data
-					data:{
-						channelID: val.channelID,
-						remindTime: val.remindTime
-					}
-				})
-				.then((res) => {
-				if(res.data.status == 0) {
-						console.log( '取消预定' )  
-					}
-				})
-				.catch((res) => {
-					alert(res.data.errorMessage)
-				})
+					ptype: self.GLOBAL.config.ptype,
+					plocation: self.GLOBAL.config.plocation,
+					puser: self.puser,
+					ptoken: self.ptoken,
+					pversion: '03010',
+					locationName: '',
+					countyName: '',
+					hmace: '125456',
+					timestamp: new Date().getTime(),
+					nonce: Math.random().toString().slice(2),
+					pserverAddress: self.GLOBAL.config.pserverAddress,
+					pserialNumber: self.ptoken,     
+				},
+				//post用data
+				data:{
+					channelID: val.channelID,
+					remindTime: val.remindTime
+				}
+			})
+			.then((res) => {
+			if(res.data.status == 0) {
+					console.log( '取消预定' )  
+				}
+			})
+			.catch((res) => {
+				alert(res.data.errorMessage)
+			})
 		},
 	}
 }
 </script> 
 
-<style>
+<style scoped>
 .myorder-tabs-bd { position: relative; height: auto; }
 .myorder-tabs-bd .el-tabs__header { position: relative; z-index: 1; }
 .myorder-tabs-bd .el-tabs__item { float: left; line-height: 33px; height: 33px; font-size: 18px; padding: 0 15px; margin: 0; cursor: pointer; }
@@ -174,11 +173,8 @@ export default {
 .myorder-tabs-bd .live-crumb { margin-top: 10px; }
 .myorder-top-bd { position: absolute; right: 25px; top: 11px; font-size: 14px; z-index: 2; }
 .myorder-top-bd span { margin-left: 15px; cursor: pointer; }
-
-
-
 .myorderBar .pic-mask { position: absolute; left: 0; bottom: 0; height: 30px; width: 100%; background: rgba(0,0,0,.7); color: #fff; line-height: 30px; }
-.myorderBar .mask-time { position: absolute; left: 10px; top: 0; font-size: 14px; color: #fff; }
+.myorderBar .mask-time { position: absolute; right: 10px; top: 0; font-size: 14px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .myorderBar { width: 100%; overflow: hidden; }
 .myorderBar ul { padding: 50px 0 0 28px; }
@@ -188,7 +184,7 @@ export default {
 .myorderBar li img { width: 100%; height: 100%; }
 .myorderBar .pic-title { padding-left: 8px; width: 140px; }
 .myorderBar .progress-bar { height: 2px; }
-.myorderBar .pic-btm { position: relative; height: 35px; line-height: 35px; font-size: 14px; color: #445560; padding: 0 8px; }
+.pic-btm { position: relative; height: 35px; line-height: 35px; font-size: 14px; color: #445560; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
 .movie-pos { position: absolute; right: 8px; top: 3px; }
 .movie-num { font-size: 26px; font-style: italic; }
 .myorderBar .icon-arror { color: #888; font-size: 18px; }

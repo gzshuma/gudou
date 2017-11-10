@@ -44,7 +44,7 @@ export default {
 
 <style scoped>
 .ucenterpic-bd .pic-mask { position: absolute; left: 0; bottom: 0; height: 30px; width: 100%; background: rgba(0,0,0,.7); color: #fff; line-height: 30px; }
-.ucenterpic-bd .mask-time { position: absolute; left: 10px; top: 0; font-size: 14px; color: #fff; }
+.ucenterpic-bd .mask-time { position: absolute; right: 10px; top: 0; font-size: 14px; color: #fff; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .ucenterpic-bd { width: 100%; overflow: hidden; }
 .ucenterpic-bd ul { padding: 15px 0 0 28px; }
@@ -54,7 +54,7 @@ export default {
 .ucenterpic-bd li img { width: 100%; height: 100%; }
 .ucenterpic-bd .pic-title { padding-left: 8px; width: 140px; }
 .ucenterpic-bd .progress-bar { height: 2px; }
-.ucenterpic-bd .pic-btm { position: relative; height: 35px; line-height: 35px; font-size: 14px; color: #445560; padding: 0 8px; }
+.ucenterpic-bd .pic-btm { width: 100%; position: relative; height: 35px; line-height: 35px; font-size: 14px; color: #445560; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
 .movie-pos { position: absolute; right: 8px; top: 3px; }
 .movie-num { font-size: 26px; font-style: italic; }
 .ucenterpic-bd .icon-arror { color: #888; font-size: 18px; }

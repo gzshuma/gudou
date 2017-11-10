@@ -16,7 +16,8 @@
 		<div class="player-bd live-player clearfix">
 			<div class="wrap clearfix">
 				<div class="fl palyer-le">
-	        		<iframe name="iframeDom" :src="'/static/player_m3u8/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
+					<div v-if="!CA" class="tips-style">{{caText}}</div>
+	        		<iframe v-if="CA" name="iframeDom" :src="'/static/player_m3u8/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
 				</div>
 				<div class="fr palyer-ri">
 					<div class="player-tabs-box">
@@ -60,8 +61,9 @@
 
 <script>
 import $ from 'jquery'
+import { Message } from 'element-ui'
 import share from 'components/common/share'
-import {getDay, Monday,dateComparate} from '@/util'
+import {getDay, Monday,dateComparate, GetQueryString, getParamValue} from '@/util'
 
 export default {
 	components: {
@@ -69,6 +71,8 @@ export default {
 	},
 	data () {
 		return {
+			CA: false,
+			caText: '',
 			collectData:{
 				isZhibo: true,//是否直播
 				id: this.$route.params.channelid.split('_')[0],
@@ -83,8 +87,6 @@ export default {
 			getDay:getDay(),
 			startTime: Monday(getDay())+'000000',
 			endTime: Monday(getDay())+'235959',
-			puser:sessionStorage.getItem('user'),
-     		ptoken:sessionStorage.getItem('flag'),
 			authority : '', //截取后的鉴权返回值
 			isok: true,//是否默认选中
 			weekIndex: "",
@@ -149,15 +151,23 @@ export default {
     },
 	methods: {
 		_getDetailData () {
-			this.$http({
+			let self = this
+			self.$http({
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_live_live008',
 				params: {
-					ptype: this.GLOBAL.config.ptype,
-					plocation: this.GLOBAL.config.plocation,
-					puser: '',
-					pserverAddress: this.GLOBAL.config.pserverAddress,
-					// pserialNumber: '866769027850901',
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					channelID: this.$route.params.channelid.split('_')[0],
 					startTime: this.startTime,
 					endTime: this.endTime
@@ -205,17 +215,22 @@ export default {
 		//查询预定提醒
 		queryAppoint( ){
 			var self = this;
-			this.$http({
+			self.$http({
 				method: 'get',
 				url: '/api/PortalServer-App/new/ptl_ipvp_live_live023',
 				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.puser,
-					ptoken: self.ptoken,
-					pversion: '03010',
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.ptoken,
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					start: '',
 					end: ''
 					
@@ -244,20 +259,21 @@ export default {
 			this.$http({
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_live_live024',
-				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.puser,
-					ptoken: self.ptoken,
-					pversion: '03010',
+				params: {     
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					locationName: '',
 					countyName: '',
-					hmace: '125456',
-					timestamp: new Date().getTime(),
-					nonce: Math.random().toString().slice(2),
-					// pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserverAddress: 'portal.gcable.cn',
-					pserialNumber: self.ptoken
 				},
 				//post用data
 				data:{
@@ -282,18 +298,20 @@ export default {
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_live_live025',
 				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.puser,
-					ptoken: self.ptoken,
-					pversion: '03010',
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					locationName: '',
-					countyName: '',
-					hmace: '125456',
-					timestamp: new Date().getTime(),
-					nonce: Math.random().toString().slice(2),
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.ptoken   
+					countyName: '',   
 				},
 				//post用data
 				data:{
@@ -328,7 +346,6 @@ export default {
 					this.delAppoint( val )
 				}
 			} else {
-				// this.broadcast()
 				this.isok = false;
 
 				// 点播地址	
@@ -359,38 +376,38 @@ export default {
 					params: {
 						ptype: self.GLOBAL.config.ptype,
 						plocation: self.GLOBAL.config.plocation,
-						puser: self.puser,
-						ptoken: self.ptoken,
-						pversion: '030101',
-						// pserverAddress: 'portal.gcable.cn',
-						pserverAddress: this.GLOBAL.config.pserverAddress,
-						pserialNumber: '862915030592170', // 必填
-						pkv: '1',
-						ptn: self.ptoken,
+						puser: self.GLOBAL.config.puser,
+						ptoken: self.GLOBAL.config.ptoken,
+						pversion: self.GLOBAL.config.pversion,
+						pserverAddress: self.GLOBAL.config.pserverAddress,
+						pserialNumber: self.GLOBAL.config.pserialNumber, // 必填
+						pkv: self.GLOBAL.config.pkv,
+						ptn: self.GLOBAL.config.ptoken,
 						DRMtoken: '',
 						epgID: '',
-						authType: '0',
+						authType: self.GLOBAL.config.authType,
 						secondAuthid: '',
-						t: self.ptoken,
-						// pid: this.$route.params.id,
+						t: self.GLOBAL.config.ptoken,
 						pid: '',
-						cid: this.$route.params.channelid.split('_')[0],
-						u: self.puser,
-						d: '862915030592170', // 必填 跟pserialNumber一样
-						p: '5',
-						l: '001',
-						n: meizi, //dongfang_800
-						v: '2',
-						ot: '0',
+						cid: self.$route.params.channelid.split('_')[0],
+						u: self.GLOBAL.config.puser,
+						d: self.GLOBAL.config.pserialNumber, // 必填 跟pserialNumber一样
+						p: self.GLOBAL.config.ptype,
+						l: self.GLOBAL.config.plocation,
+						n: meizi, // dongfang_800
+						v: self.GLOBAL.config.v,
+						ot: self.GLOBAL.config.ot,
 						hmac: '',
-						timestamp: new Date().getTime(),
-						nonce: Math.random().toString().slice(2)
+						timestamp: self.GLOBAL.config.timestamp,
+						nonce: self.GLOBAL.config.nonce
 					}
 				})
 				.then((res) => {
 					if(res.data.status == 0) {
 						let str = res.data.data.authResult.split('?')[1];
-						console.log(val)
+						// console.log(str)
+
+						// 点击当前播放的和回播的动作操作
 						this.num +=1
 						if(val.epgID==this.endTimeArr.epgID) {
 							playStr = playStr + str
@@ -400,7 +417,6 @@ export default {
 						}else {
 							playStr = playStr_1 + str
 						}
-						console.log(this.num)
 
 						// 初始化添加直播样式
 						$('.player-tabs-list').removeClass('player-cur aaa')
@@ -409,9 +425,19 @@ export default {
 							.addClass('player-cur aaa')
 							.siblings('.player-tabs-list').removeClass('player-cur aaa')
 
-						// iframe赋值
-						let html = playStr
-						this.playerUrl = html
+						// 判断鉴权中是否有ACL
+						if(GetQueryString(str, 'a=')) {
+							this.CA = true
+							// iframe赋值
+							let html = playStr
+							this.playerUrl = html
+						}else {
+							var num = getParamValue(str, 'errorcode')[1]
+							this.CA = false
+							var txt = '无法播放错误代码 ' + num
+							this.caText = txt
+							Message.warning(txt)
+						}
 					}
 				})
 				.catch((res) => {
@@ -431,13 +457,18 @@ export default {
 				method: 'get',
 				url: '/api/PortalServer-App/new/ptl_ipvp_live_live026',
 				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.puser,
-					ptoken: self.ptoken,
-					pversion: '03010',
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.ptoken,
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					start: '',
 					end: ''
 					
@@ -510,4 +541,5 @@ export default {
 .playa.icon-undo2:before { content: "\ea1c"; }
 .player-tabchange { display: none; }
 .block { display: block; }
+.tips-style { width: 90%; height: 415px; padding: 0 10%; line-height: 415px; font-size: 20px; color: #fff; text-align: center; }
 </style>

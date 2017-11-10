@@ -93,25 +93,30 @@ export default {
     },
     init() {
       let self = this;
-      let url = "/api/PortalServer-App/new/ptl_ipvp_vod_vod028";
+      let url = "/api/PortalServer-App/new/ptl_ipvp_vod_vod028"
       self
         .$http({
           method: "get",
           url: url,
           params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.puser,
-            ptoken: self.ptoken,
-            pversion: self.GLOBAL.config.pversion,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber
+              ptype: self.GLOBAL.config.ptype,
+              plocation: self.GLOBAL.config.plocation,
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
+              pserverAddress: self.GLOBAL.config.pserverAddress,
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp,
           }
         })
         .then(res => {
-          if (res.data.status === "0") {
-            this.recordData = res.data.data.historys;
-            console.log(this.recordData);
+          if (res.data.status === '0') {
+            this.recordData = res.data.data.historys
+            // console.log(this.recordData)
           }
         });
     }

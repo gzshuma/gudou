@@ -26,8 +26,8 @@ export default [
     component: resolve => require(['components/pages/home/home'], resolve)
   },
   {
-    path: '/live',
-    name:'live',
+    path: '/tv',
+    name:'tv',
     meta: {
       title: '直播首页'
     },

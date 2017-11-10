@@ -5,7 +5,7 @@
 			<crumb :crumbTxt="crumbTxt.txtList1">
 				<submenu :subList="liveSubList" @showCategoryID="showCategoryID"></submenu>
 			</crumb>
-			<tvcon :liveConData="liveContent"></tvcon>
+			<livecon :liveConData="liveContent"></livecon>
 		</div>
 	</section>
 </template>
@@ -19,14 +19,14 @@ import crumb from 'components/common/crumb'
 // 关联菜单
 import submenu from 'components/common/submenu'
 // 排行
-import tvcon from 'components/common/tvcon'
+import livecon from 'components/common/livecon'
 
 export default {
 	components: {
 	    banner,
 	    crumb,
 	    submenu,
-	    tvcon
+	    livecon
 	},
 	data () {
 		return {
@@ -36,10 +36,10 @@ export default {
 			liveConData: [],
 			liveContent: [],
 			liveSubList: [],
-			categoryID: 0,
+			categoryID: 46,
 			bannerList: [],
 			crumbTxt: {
-				'txtList1': '电视'
+				'txtList1': '直播'
 			}
 		}
 	},
@@ -59,20 +59,12 @@ export default {
 	        method: 'post',
 	        url: '/banner/RSWeb/gd/getContentListByColumnID',
 	        params: {
-	            ptype: self.GLOBAL.config.ptype,
-	            plocation: self.GLOBAL.config.plocation,
-	            puser: self.GLOBAL.config.puser,
-	            ptoken: self.GLOBAL.config.ptoken,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
-	            pserialNumber: self.GLOBAL.config.pserialNumber,
-	            pversion:  self.GLOBAL.config.pversion,
-	            ptn: self.GLOBAL.config.ptoken,
-	            pkv: self.GLOBAL.config.pkv, 
-	            hmac: '',
-	            nonce: self.GLOBAL.config.nonce,
-	            timestamp: self.GLOBAL.config.timestamp,
-				columnID: '003',
-				count: '6'
+	          ptype: self.GLOBAL.config.ptype,
+	          plocation: self.GLOBAL.config.plocation,
+	          puser: '',
+	          pserverAddress: self.GLOBAL.config.pserverAddress,
+	          columnID: '003',
+	          count: '6'
 	        }
 	      })
 	      .then((res) => {
@@ -91,18 +83,10 @@ export default {
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_live_live003',
 				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
+					ptype: self.GLOBAL.config.ptype,
+					plocation: self.GLOBAL.config.plocation,
+					puser: '',
+					pserverAddress: self.GLOBAL.config.pserverAddress
 				}
 			})
 			//this.$http.post('/api/PortalServer-App/new/ptl_ipvp_vod_vod011', paramPointList)
@@ -117,31 +101,31 @@ export default {
 			})
 		},
       _getLiveContentInfo () {
-      	// '/PortalServer-App/new/ptl_ipvp_live_live003?ptype=24&amp;plocation=001&amp;puser=freeuser&amp;ptoken=222&amp;pserverAddress=http://172.16.149.133:8080/PortalServer-App/&amp;pserialNumber=866769027850901'
         var self = this
         self.$http({
           method: 'post',
-          url: '/api/PortalServer-App/new/ptl_ipvp_live_live003',
+          url: '/banner/RSWeb/gd/getCards',
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
+            puser: '',
             page: 0,
+            pserverAddress: self.GLOBAL.config.pserverAddress,
+            parentID: '003'
           }
         })
         .then((res) => {
           if(res.data.status == 0) {
-            self.liveSubList = res.data.data.liveCategoryList
-            // console.log(self.liveSubList)
+            const dataCard = res.data.data.cards
+            dataCard.forEach(function (value, key) {
+              if(value.type === 'category') {
+                self.liveSubList = value.contents
+              }
+              if(value.type === 'live') {
+                self.liveContent = value.contents
+                // alert(self.liveContent)
+              }
+            })
           }
         })
         .catch((res) => {
@@ -153,32 +137,21 @@ export default {
 			// alert(self.categoryID)
 			self.$http({
 				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live005',
+				url: '/banner/RSWeb/gd/getCardContents',
 				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					start: '0',
-					end: '1000',
-					channelName: '',
-					programName: '',
-					sortType: '2',
-					categoryID: this.categoryID
+					ptype: self.GLOBAL.config.ptype,
+					plocation: self.GLOBAL.config.plocation,
+					puser: '',
+					pserverAddress: self.GLOBAL.config.pserverAddress,
+					cardID: self.$route.params.id,
+					page: 0,
+					contentSize: '100'
 				}
 			})
 			.then((res) => {
-				if(res.data.status == 0) {
-					self.liveContent = res.data.data.channelInfos
-					// console.log(self.liveConData)
+        		if(res.data.status == 0) {
+					self.liveConData = res.data.data.contents
+					// alert(self.liveConData)
 				}
 			})
 			.catch((res) => {
@@ -186,7 +159,6 @@ export default {
 			})
 		},
 		showCategoryID (val) {
-        	// console.log(val)
 			this.categoryID = val
 			this._getliveConData()
 		}

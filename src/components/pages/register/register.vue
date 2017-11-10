@@ -50,15 +50,12 @@ export default {
       rules: {
         phoneNum: [
           { required: true, message: "请输入手机号", trigger: "blur" }
-          //{ validator: validaePass }
         ],
         Pwd: [
           { required: true, message: "请输入密码", trigger: "blur" }
-          //{ validator: validaePass2 }
         ],
         token: [
           { required: true, message: "请输入验证码", trigger: "blur" }
-          //{ validator: validaePass2 }
         ]
       },
       checked: true
@@ -149,7 +146,6 @@ export default {
       }
       let self = this;
       let url = "/api0/AAA/aaaSendRandomCodeUAP";
-      // url = url + '?phoneNum='+this.ruleForm.phoneNum;
       self
         .$http({
           methods: "get",

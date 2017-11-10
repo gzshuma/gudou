@@ -164,3 +164,20 @@ export function dateCompa1 (date) {
     let d = year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second
     return dateComparate1(d)
 }
+
+// 判断地址栏是否含有某元素
+export function GetQueryString(r, name){
+   var reg=eval("/"+name+"/g")
+   var flag=reg.test(r)
+   if(flag){
+        return true
+   }else{
+       return false
+   }
+}
+
+// 获取字符串某元素等于后面的值
+export function getParamValue(src, name){
+    var patt = new RegExp( name+'=([^&]*)' );
+    return src.match( patt,patt[1] );
+}

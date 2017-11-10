@@ -18,14 +18,14 @@
 import Vuex from 'vuex'
 import $ from 'jquery'
 // banner
-import banner from 'components/common/bannerlive'
+import banner from 'components/common/banner'
 // 面包title
 import crumb from 'components/common/crumb'
 // 图文组件
 import piclist from 'components/common/piclist'
 import piclistpoint from 'components/common/piclistpoint'
 // 关联菜单
-import submenu from 'components/common/submenu'
+import submenu from 'components/common/submenuindex'
 import submenupoint from 'components/common/submenupoint'
 
 export default {
@@ -56,11 +56,6 @@ export default {
     this._getBnnerData()
     this._getLiveContentInfo()
     this._getPointContentInfo()
-    // this._getMode ()
-    // alert(this.dateCompa('201710241610','201710241409'))
-    // alert(this.dateCompa('201710241610','201710241409'))
-    // alert(percentNum(this.dateCompa1('201710241409'),this.dateCompa('201710241610','201710241409')))
-    // alert(percentNum(2,3))
   },
   methods: {
       showCategoryID (val) {
@@ -70,16 +65,24 @@ export default {
         this.showMoreID = val
       },
       _getBnnerData () {
-        let self = this
+        var self = this
         self.$http({
           method: 'post',
           url: '/banner/RSWeb/gd/getContentListByColumnID',
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: '',
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
-            columnID: '003',
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
+            columnID: '002',
             count: '6'
           }
         })
@@ -101,9 +104,17 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: '',
-            page: 0,
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
+            page: 0,
             parentID: '003'
           }
         })
@@ -132,9 +143,18 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
+            pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
             puser: '',
             page: 0,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
             parentID: '002'
           }
         })

@@ -82,27 +82,30 @@ export default {
               params: {
                 ptype: self.GLOBAL.config.ptype,
                 plocation: self.GLOBAL.config.plocation,
-                puser: self.puser,
-                ptoken: self.ptoken,
-                pversion: '03010',
+                puser: self.GLOBAL.config.puser,
+                ptoken: self.GLOBAL.config.ptoken,
                 pserverAddress: self.GLOBAL.config.pserverAddress,
-                pserialNumber: self.ptoken,
+                pserialNumber: self.GLOBAL.config.pserialNumber,
+                pversion:  self.GLOBAL.config.pversion,
+                ptn: self.GLOBAL.config.ptoken,
+                pkv: self.GLOBAL.config.pkv, 
+                hmac: '',
+                nonce: self.GLOBAL.config.nonce,
+                timestamp: self.GLOBAL.config.timestamp,
                 start: '',
                 end: ''
               },
             })
             .then((res) => {
             if(res.data.status == 0) {
-              this.collectData.collectArr =  res.data.data.vod 
-             
+              this.collectData.collectArr =  res.data.data.vod
             }
             })
             .catch((res) => {
               alert(res.data.errorMessage)
             })
       },
-    },
-    
+    } 
 }
 </script>
 

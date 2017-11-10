@@ -54,7 +54,7 @@ export default {
 .pic-le-top { position: relative; width: 100%; height: 260px; }
 .pic-le-top img { width: 100%; height: 100%; }
 .pic-mask { position: absolute; left: 0; bottom: 0; height: 48px; width: 100%; background: rgba(0,0,0,.7); font-size: 18px; color: #fff; line-height: 50px; }
-.pic-title { display: block; width: 300px; padding-left: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pic-title { display: block; width: 300px; padding-left: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
 .mask-time { position: absolute; right: 15px; top: 5px; font-size: 20px; color: #fff; }
 .pic-btm { height: 72px; line-height: 72px; color: #445560; font-size: 24px; padding: 0 20px; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }

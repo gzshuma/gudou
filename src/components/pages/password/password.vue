@@ -34,17 +34,6 @@
 <script>
 export default {
   data() {
-    // var validatePass = (rule, value, callback) => {
-    //   if (value === '') {
-    //     callback(new Error('请输入账号'));
-    //   } else {
-    //     if (this.ruleForm.checkPass !== '') {
-    //       this.$refs.ruleForm.validateField('checkPass');
-    //     }
-    //     callback();
-    //   }
-    // };
-
     return {
       checkTime: 60,
       isDisabled: 1,
@@ -54,7 +43,6 @@ export default {
         newPwd: "",
         serialNo: ""
       },
-
       rules: {
         phoneNum: [{ required: true, message: "请输入手机号", trigger: "blur" }],
         newPwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
@@ -79,21 +67,6 @@ export default {
       el.target.value = el.target.value.replace(patt, "");
     },
 
-    // submitForm(formName) {
-    //   this.$refs[formName].validate(valid => {
-    //     if (valid) {
-    //       alert("submit!");
-    //     } else {
-    //       console.log("error submit!!");
-    //       return false;
-    //     }
-    //   });
-    // },
-
-    // resetForm(formName) {
-    //   this.$refs[formName].resetFields();
-    // },
-
     //点击调用验证码
     getNumber() {
       if (this.ruleForm.phoneNum == "") {
@@ -112,7 +85,6 @@ export default {
         return;
       }
       let self = this;
-      // let url = '/api/PortalServer-App/new/aaa_usr_usr005'
       let url = "/api0/AAA/aaaSendRandomCodeUAP";
       self
         .$http({
@@ -134,6 +106,7 @@ export default {
           }
         });
     },
+
     //禁用按钮 倒计时
     getverifytime() {
       this.checkTime--;
@@ -173,6 +146,7 @@ export default {
         return false;
       }
     },
+
     //提交数据
     isRegister() {
       if (!this.checkPwd(this.ruleForm.newPwd)) {
@@ -180,8 +154,6 @@ export default {
         this.ruleForm.newPwd = "";
         return false;
       }
-
-      // let url = "/api/PortalServer-App/new/aaa_usr_usr007";
       let url = "/api0/AAA/aaaResetPasswordUAP";
       let self = this;
       self

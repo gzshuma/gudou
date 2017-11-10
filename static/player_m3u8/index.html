@@ -11,14 +11,19 @@
 <script type="text/javascript">
 $(function() {
     var videoUrl = location.href.split('src=')[1];
-    console.log(location.href.split('src=')[1])
+    // console.log(location.href.split('src=')[1])
     // new ckplayer(videoObject);
     var videoObject = {
         container: '.video', // 容器
         variable: 'player', //该属性必需设置，值等于下面的new chplayer()的对象
         autoplay: true, // 自动播放
         live: false, // 去掉直播文字
-        video: videoUrl //视频地址
+        volume: '0.5', // 初始音量设置
+        poster: '', // 封面图设置
+        seek: 0, // 视频开始播放时要跳转的时间，该值主要用来做跳过片头等功能
+        duration: 0, // 视频在默认不加载的情况下显示总时间
+        rotation: 0, // 该功能只支持90，180，270，-90，-180，-270。如果视频的所在域相对于播放器域没有权限，则不能使用该属性
+        video: videoUrl, //视频地址
     };
     var player = new ckplayer(videoObject);
 })

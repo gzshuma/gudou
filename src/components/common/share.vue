@@ -65,10 +65,6 @@ export default {
       
   },
   mounted () {
-    
-    // console.log( this.$store.getters.getJieMu )
-    console.log( this.collectData )
-
     setTimeout(function() {
       if(  $( '.collSelect' ).length > 0){
         this.changeColl = true;
@@ -77,11 +73,7 @@ export default {
 
   },
   methods: {
-    
       collClick(){
-       
-        
-
         if (!this.puser) { // 未登录跳到登录页
           this.$message.warning( '您还没有登录请先登录！' );
           return false;
@@ -96,8 +88,6 @@ export default {
 
           this.collectData.isZhibo ?  this.delCollect() : this.delDian();
         }
-
-       
       },
       //添加直播收藏
       addCollect(){
@@ -108,17 +98,16 @@ export default {
             params: {
               ptype: self.GLOBAL.config.ptype,
               plocation: self.GLOBAL.config.plocation,
-              puser: self.puser,
-              ptoken: self.ptoken,
-              pversion: '03010',
-              locationName: '',
-              countyName: '',
-              hmace: '125456',
-              timestamp: new Date().getTime(),
-              nonce: Math.random().toString().slice(2),
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
               pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.ptoken,
-                
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp,
             },
             //post用data
             data:{
@@ -132,7 +121,7 @@ export default {
             }
           })
           .catch((res) => {
-            console.log( res )
+            // console.log( res )
             this.$message.warning(res.data.errorMessage)
           })
 
@@ -147,17 +136,16 @@ export default {
             params: {
               ptype: self.GLOBAL.config.ptype,
               plocation: self.GLOBAL.config.plocation,
-              puser: self.puser,
-              ptoken: self.ptoken,
-              pversion: '03010',
-              locationName: '',
-              countyName: '',
-              hmace: '125456',
-              timestamp: new Date().getTime(),
-              nonce: Math.random().toString().slice(2),
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
               pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.ptoken,
-                
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp,
             },
             //post用data
             data:{
@@ -171,7 +159,7 @@ export default {
             }
           })
           .catch((res) => {
-            console.log( res )
+            // console.log( res )
             this.$message.warning(res.data.errorMessage)
           })
 
@@ -185,17 +173,16 @@ export default {
             params: {
               ptype: self.GLOBAL.config.ptype,
               plocation: self.GLOBAL.config.plocation,
-              puser: self.puser,
-              ptoken: self.ptoken,
-              pversion: '03010',
-             /* locationName: '',
-              countyName: '',
-              hmace: '125456',
-              timestamp: new Date().getTime(),
-              nonce: Math.random().toString().slice(2),*/
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
               pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.ptoken,
-                
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp,
             },
             //post用data
             data:{
@@ -225,17 +212,16 @@ export default {
             params: {
               ptype: self.GLOBAL.config.ptype,
               plocation: self.GLOBAL.config.plocation,
-              puser: self.puser,
-              ptoken: self.ptoken,
-              pversion: '03010',
-             /* locationName: '',
-              countyName: '',
-              hmace: '125456',
-              timestamp: new Date().getTime(),
-              nonce: Math.random().toString().slice(2),*/
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
               pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.ptoken,
-                
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp,
             },
             //post用data
             data:{
@@ -268,17 +254,20 @@ export default {
               params: {
                 ptype: self.GLOBAL.config.ptype,
                 plocation: self.GLOBAL.config.plocation,
-                puser: self.puser,
-                ptoken: self.ptoken,
-                pversion: '03010',
+                puser: self.GLOBAL.config.puser,
+                ptoken: self.GLOBAL.config.ptoken,
                 pserverAddress: self.GLOBAL.config.pserverAddress,
-                pserialNumber: self.ptoken,
-               
+                pserialNumber: self.GLOBAL.config.pserialNumber,
+                pversion:  self.GLOBAL.config.pversion,
+                ptn: self.GLOBAL.config.ptoken,
+                pkv: self.GLOBAL.config.pkv, 
+                hmac: '',
+                nonce: self.GLOBAL.config.nonce,
+                timestamp: self.GLOBAL.config.timestamp,
                 operateType: '1',
                 programID: '520',
                 channelID: '68',
                 programItemID: '-1'
-               
               }
             })
             .then((res) => {
@@ -291,8 +280,6 @@ export default {
               alert(res.data.errorMessage)
             })
       } 
-
-
   }
 }
 </script>

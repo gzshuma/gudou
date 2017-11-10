@@ -17,7 +17,8 @@
 		<div class="player-bd clearfix">
 			<div class="wrap clearfix">
 				<div class="fl palyer-le">
-	        		<iframe name="iframeDom" :src="'/static/player_m3u8/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
+					<div v-if="!CA" class="tips-style">{{caText}}</div>
+	        		<iframe v-if="CA" name="iframeDom" :src="'/static/player_m3u8/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
 	        	</div>
 	        	<div class="fr palyer-ri">
 					<div class="episodes-reset" :class="episodesData.length>1 ? '':'dis-hide'">
@@ -61,9 +62,11 @@
 
 <script>
 import $ from 'jquery'
+import { Message } from 'element-ui'
 import player from 'components/common/player'
 import infodiscrib from 'components/common/infodiscrib'
 import share from 'components/common/share'
+import {GetQueryString, getParamValue} from '@/util'
 export default {
 	components: {
 		player,
@@ -72,11 +75,11 @@ export default {
 	},
 	data () {
 		return {
+			CA: false,
+			caText: '',
 			detailData: {},
 			episodesData: [],
 			playerUrl: '',
-			puser:sessionStorage.getItem('user'),
-     		ptoken:sessionStorage.getItem('flag'),
 			nowIndex: 0,
 			episodesNum: [
 			]
@@ -98,15 +101,23 @@ export default {
 
 		// 获取详情信息
 		_getDetailData () {
-			this.$http({
+			let self = this
+			self.$http({
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod013',
 				params: {
-					ptype: this.GLOBAL.config.ptype,
-					plocation: this.GLOBAL.config.plocation,
-					puser: this.puser,
-					pserverAddress: this.GLOBAL.config.pserverAddress,
-					// pserialNumber: '866769027850901',
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					programID: this.$route.params.id
 				}
 			})
@@ -125,33 +136,30 @@ export default {
 
 		// 获取集数
 		_getEpisodes () {
-			this.$http({
+			let self = this
+			self.$http({
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod012',
 				params: {
-					ptype: this.GLOBAL.config.ptype,
-					plocation: this.GLOBAL.config.plocation,
-					puser: '',
-					pserverAddress: this.GLOBAL.config.pserverAddress,
-					// pserialNumber: '866769027850901',
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					programID: this.$route.params.id
 				}
 			})
 			.then((res) => {
-				// alert(1)
         		if(res.data.status == 0) {
 					const episodesData = res.data.data.programItems
 					this.episodesData = episodesData
-
-					// let Len = episodesData.length
-					// console.log(Len)
-					// let n = Math.ceil(Len/24)
-					// let numData = {}
-					// for(var i=0; i<n; i++) {
-					// 	a = 24*i+1, (i+1)*24
-					// 	// this.episodesNum.push(numData)
-					// }
-					// console.log(numData)
 				}
 			})
 			.catch((res) => {
@@ -179,7 +187,7 @@ export default {
 
 			let pid = this.$route.params.id.split('_')
 			pid = pid[1]
-			console.log(pid)
+			// console.log(pid)
 
 			// 鉴权获取
 			let self = this;
@@ -189,41 +197,53 @@ export default {
 				params: {
 					ptype: self.GLOBAL.config.ptype,
 					plocation: self.GLOBAL.config.plocation,
-					puser: self.puser,
-					ptoken: self.ptoken,
-					pversion: '030101',
-					// pserverAddress: 'portal.gcable.cn',
-					pserverAddress: this.GLOBAL.config.pserverAddress,
-					pserialNumber: '862915030592170', // 必填
-					pkv: '1',
-					ptn: self.ptoken,
+					puser: self.GLOBAL.config.puser,
+					ptoken: self.GLOBAL.config.ptoken,
+					pversion: self.GLOBAL.config.pversion,
+					pserverAddress: self.GLOBAL.config.pserverAddress,
+					pserialNumber: self.GLOBAL.config.pserialNumber, // 必填
+					pkv: self.GLOBAL.config.pkv,
+					ptn: self.GLOBAL.config.ptoken,
 					DRMtoken: '',
 					epgID: '',
-					authType: '0',
+					authType: self.GLOBAL.config.zero,
 					secondAuthid: '',
-					t: self.ptoken,
+					t: self.GLOBAL.config.ptoken,
 					pid: pid,
 					cid: '',
-					u: self.puser,
+					u: self.GLOBAL.config.puser,
 					p: self.GLOBAL.config.ptype,
-					l: '001',
-					d: '862915030592170', // 必填 跟pserialNumber一样
+					l: self.GLOBAL.config.plocation,
+					d: self.GLOBAL.config.pserialNumber, // 必填 跟pserialNumber一样
 					n: meizi, //dongfang_800
-					v: '2',
-					ot: '0',
+					v:  self.GLOBAL.config.v,
+					ot: self.GLOBAL.config.ot,
 					hmac: '',
-					timestamp: new Date().getTime(),
-					nonce: Math.random().toString().slice(2)
+					timestamp: self.GLOBAL.config.timestamp,
+					nonce: self.GLOBAL.config.nonce
 				}
 			})
 			.then((res) => {
 				if(res.data.status == 0) {
 					let str = res.data.data.authResult.split('?')[1]
 					// console.log(str)
-					this.playerUrl = b+'?'+str
+
+					// 判断是否存在ACL
+					if(GetQueryString(str, 'a=')) {
+						// console.log('0')
+						this.CA = true
+						// iframe赋值
+						this.playerUrl = b+'?'+str
+					}else {
+						// console.log(getParamValue(str, 'errorcode')[1])
+						var num = getParamValue(str, 'errorcode')[1]
+						this.CA = false
+						var txt = '无法播放错误代码 ' + num
+						this.caText = txt
+						Message.warning(txt)
+					}
 					// console.log(this.playerUrl)
-				}else {
-					alert(1)
+						// this.playerUrl = b+'?'+str
 				}
 			})
 			.catch((res) => {
@@ -293,4 +313,5 @@ export default {
 .juji-box .el-tabs__active-bar { background: #ff9c01; height: 2px; }
 .el-tabs__content { width: 365px; border: #363636 2px solid; border-bottom-width: 1px; overflow: hidden; }
 .el-tabs__header { border-bottom-color: #48576a; }
+.tips-style { width: 90%; height: 415px; padding: 0 10%; line-height: 415px; font-size: 16px; color: #fff; text-align: center; }
 </style>

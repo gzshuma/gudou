@@ -77,8 +77,6 @@ export default {
           console.log(res.data);
           self.newToken = res.data.data.newToken
           self.user = res.data.data.userName;
-          // self.USER_SIGNIN(self.ruleForm)
-          // console.log(self.USER_SIGNIN(self.ruleForm))
           sessionStorage.setItem('flag',self.newToken)
           sessionStorage.setItem('user',self.user)
           self.$router.replace({ path: '/' })

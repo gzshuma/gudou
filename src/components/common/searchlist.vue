@@ -5,10 +5,6 @@
 	        <li v-for="v in bookData" @click="urlDirect(v.id)">
 	          <div class="pic-ri-top">
 	            <img v-lazy="v.images.large">
-	              <!-- <span class="pic-mask">
-	                <span class="mask-time">01-22 19:35</span>
-	                <span class="icon-alarm"></span>
-	              </span> -->
 	          </div>
 	          <div class="pic-btm">
 	          	{{v.title}}
@@ -36,8 +32,6 @@ export default {
 	methods: {
 	    urlDirect ($id) {
 			this.$router.push({
-				// path: '/live/detail/',
-				// query:{$id}
 				name: 'detail',
 				params: { id: $id }
 			})

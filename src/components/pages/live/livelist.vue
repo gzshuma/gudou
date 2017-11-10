@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     _getBnnerData() {
-      var self = this;
+      let self = this;
       self
         .$http({
           method: "post",
@@ -66,8 +66,16 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: "",
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
             columnID: "003",
             count: "6"
           }
@@ -83,8 +91,7 @@ export default {
         });
     },
     _getliveConData() {
-      var self = this;
-      // alert(self.categoryID)
+      let self = this
       self
         .$http({
           method: "post",
@@ -92,8 +99,16 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: "",
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
             cardID: self.$route.params.id,
             page: this.page,
             contentSize: "10"
@@ -124,8 +139,16 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: "",
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
             cardID: self.$route.params.id,
             page: this.page,
             contentSize: "10"
@@ -133,11 +156,7 @@ export default {
         })
         .then(res => {
           if (res.data.status == 0) {
-            self.liveConData1 = res.data.data.contents;
-            // alert(self.liveConData)
-            // res.data.data.contents.forEach(function(val, index){
-            // 	self.liveConData.push(val)
-            // })
+            self.liveConData1 = res.data.data.contents
           }
         })
         .catch(res => {

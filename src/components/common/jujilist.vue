@@ -91,16 +91,11 @@ export default {
           }
         }.bind(this))
         return arr;
-     
     }
-
   },
   created() {
-    
   },
-  mounted() {
-    
-   
+  mounted() { 
    setTimeout(function() {
      this.startAppoint.forEach(function(item,index){
        $( '[appoint='+item.programID+']' ).addClass( 'yuding' )
@@ -146,19 +141,18 @@ export default {
   				method: 'post',
           url: '/api/PortalServer-App/new/ptl_ipvp_live_live024',
   				params: {
-  				  ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.puser,
-            ptoken: self.ptoken,
-            pversion: '03010',
-            locationName: '',
-            countyName: '',
-            hmace: '125456',
-            timestamp: new Date().getTime(),
-            nonce: Math.random().toString().slice(2),
-  					pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.ptoken,
-               
+              ptype: self.GLOBAL.config.ptype,
+              plocation: self.GLOBAL.config.plocation,
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
+              pserverAddress: self.GLOBAL.config.pserverAddress,
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp    
           },
           //post用data
           data:{
@@ -168,9 +162,7 @@ export default {
   			})
   			.then((res) => {
           	if(res.data.status == 0) {
-             this.$message( '你已成功订阅' );
-
-            
+             this.$message( '你已成功订阅' )
    				}
   			})
   			.catch((res) => {
@@ -185,18 +177,18 @@ export default {
   				method: 'post',
           url: '/api/PortalServer-App/new/ptl_ipvp_live_live025',
   				params: {
-  				  ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.puser,
-            ptoken: self.ptoken,
-            pversion: '03010',
-            locationName: '',
-            countyName: '',
-            hmace: '125456',
-            timestamp: new Date().getTime(),
-            nonce: Math.random().toString().slice(2),
-  					pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.ptoken,     
+              ptype: self.GLOBAL.config.ptype,
+              plocation: self.GLOBAL.config.plocation,
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
+              pserverAddress: self.GLOBAL.config.pserverAddress,
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp   
           },
           //post用data
           data:{
@@ -237,9 +229,7 @@ export default {
           }
 
       } else {
-
         this.broadcast()
-
         this.isok = false;
         $(".player-tabs-list ").removeClass("player-cur aaa");
         $(el.target)
@@ -257,29 +247,29 @@ export default {
             params: {
               ptype: self.GLOBAL.config.ptype,
               plocation: self.GLOBAL.config.plocation,
-              puser: self.puser,
-              ptoken: self.ptoken,
-              pversion: '030101',
-              timestamp: new Date().getTime(),
-              v: '2',
-              u: self.puser,
-              d: '',
-              nonce: Math.random().toString().slice(2),
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
+              pserverAddress: self.GLOBAL.config.pserverAddress,
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
               hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp,
+              v: self.GLOBAL.config.v,
+              u: self.GLOBAL.config.puser,
+              d: self.GLOBAL.config.pserialNumber,
               DRMtoken: '',
-              p: '3',
+              p: self.GLOBAL.config.ptype,
               n: '',
-              l: '001',
-              cid: this.$route.params.channelid.split('_')[0],
-              pserverAddress: this.GLOBAL.config.pserverAddress,
-              pserialNumber: self.ptoken,
-
+              l: self.GLOBAL.config.plocation,
+              cid: this.$route.params.channelid.split('_')[0]
             }
           })
           .then((res) => {
               if(res.data.status == 0) {
                 let str = res.data.data.authResult.split('?')[1];
-                
                 // console.log( str )
                 this.authority = 1;
             }

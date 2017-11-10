@@ -59,24 +59,30 @@ export default {
     },
 	methods: {
 	    _getBnnerData () {
-	      var self = this
+	      let self = this
 	      self.$http({
 	        method: 'post',
 	        url: '/banner/RSWeb/gd/getContentListByColumnID',
 	        params: {
-	          ptype: self.GLOBAL.config.ptype,
-	          plocation: self.GLOBAL.config.plocation,
-	          puser: '',
-	          // pserverAddress: self.GLOBAL.config.pserverAddress,
-	          columnID: '002',
-	          count: '6'
+	            ptype: self.GLOBAL.config.ptype,
+	            plocation: self.GLOBAL.config.plocation,
+	            puser: self.GLOBAL.config.puser,
+	            ptoken: self.GLOBAL.config.ptoken,
+	            pserverAddress: self.GLOBAL.config.pserverAddress,
+	            pserialNumber: self.GLOBAL.config.pserialNumber,
+	            pversion:  self.GLOBAL.config.pversion,
+	            ptn: self.GLOBAL.config.ptoken,
+	            pkv: self.GLOBAL.config.pkv, 
+	            hmac: '',
+	            nonce: self.GLOBAL.config.nonce,
+	            timestamp: self.GLOBAL.config.timestamp,
+				columnID: '002',
+				count: '6'
 	        }
 	      })
-	      //this.$http.post('/api/PortalServer-App/new/ptl_ipvp_vod_vod011', paramPointList)
 	      .then((res) => {
 	        if(res.data.status == 0) {
 	          self.bannerList = res.data.data.contentInfos
-	          // alert(self.bannerList)
 	        }
 	      })
 	      .catch((res) => {
@@ -84,17 +90,23 @@ export default {
 	      })
 	    },
 		_getPointData () {
-			var self = this
-			// alert(self.categoryID)
+			let self = this
 			self.$http({
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod011',
 				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: '',
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					// pserialNumber: '866769027850901',
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					columnID: 0? '' : self.$route.params.id,
 					categoryID: self.categoryID,
 					start: (self.currentPage-1) * self.currentSizeChange,
@@ -102,14 +114,12 @@ export default {
 					sortType: 0
 				}
 			})
-			//this.$http.post('/api/PortalServer-App/new/ptl_ipvp_vod_vod011', paramPointList)
 			.then((res) => {
         		if(res.data.status == 0) {
 					const pointData = res.data.data
 					const count = res.data.data.count
 					self.pointData = pointData
 					self.count = count
-					//alert(this.pointData[0].imageUrl[0]['74d9a882ebf54afe989243fd4bc939e4'])
 				}
 			})
 			.catch((res) => {
@@ -118,14 +128,12 @@ export default {
 		},
 		showCurrentPage (val) {
 			this.currentPage = val
-			// alert(this.currentPage)
 		},
 		showCurrentSizeChange (val) {
 			this.currentSizeChange = val
 		},
 		showCategoryID (val) {
 			this.categoryID = val
-			// alert(this.categoryID)
 		},
       _getPointContentInfo () {
         var self = this
@@ -135,9 +143,17 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: '',
-            page: 0,
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
+            page: 0,
             parentID: '002'
           }
         })

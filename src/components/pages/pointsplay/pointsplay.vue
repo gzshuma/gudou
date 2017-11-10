@@ -59,23 +59,30 @@ export default {
     },
 	methods: {
 	    _getBnnerData () {
-	      var self = this
+	      let self = this
 	      self.$http({
 	        method: 'post',
 	        url: '/banner/RSWeb/gd/getContentListByColumnID',
 	        params: {
-	          ptype: self.GLOBAL.config.ptype,
-	          plocation: self.GLOBAL.config.plocation,
-	          puser: '',
-	          // pserverAddress: self.GLOBAL.config.pserverAddress,
-	          columnID: '002',
-	          count: '6'
+	            ptype: self.GLOBAL.config.ptype,
+	            plocation: self.GLOBAL.config.plocation,
+	            puser: self.GLOBAL.config.puser,
+	            ptoken: self.GLOBAL.config.ptoken,
+	            pserverAddress: self.GLOBAL.config.pserverAddress,
+	            pserialNumber: self.GLOBAL.config.pserialNumber,
+	            pversion:  self.GLOBAL.config.pversion,
+	            ptn: self.GLOBAL.config.ptoken,
+	            pkv: self.GLOBAL.config.pkv, 
+	            hmac: '',
+	            nonce: self.GLOBAL.config.nonce,
+	            timestamp: self.GLOBAL.config.timestamp,
+				columnID: '002',
+				count: '6'
 	        }
 	      })
 	      .then((res) => {
 	        if(res.data.status == 0) {
 	          self.bannerList = res.data.data.contentInfos
-	          // alert(self.bannerList)
 	        }
 	      })
 	      .catch((res) => {
@@ -83,17 +90,23 @@ export default {
 	      })
 	    },
 		_getPointData () {
-			var self = this
-			// alert(self.categoryID)
+			let self = this
 			self.$http({
 				method: 'post',
 				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod011',
 				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: '',
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					// pserialNumber: '866769027850901',
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					columnID: 0? '' : self.$route.params.id,
 					categoryID: self.categoryID,
 					start: (self.currentPage-1) * self.currentSizeChange,
@@ -116,17 +129,23 @@ export default {
 			})
 		},
 		_getClassic () {
-			var self = this
-			// alert(self.categoryID)
+			let self = this
 			self.$http({
 				method: 'get',
 				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod010',
 				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: '',
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					// pserialNumber: '866769027850901',
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
 					columnID: self.$route.params.id
 				}
 			})
@@ -134,7 +153,7 @@ export default {
         		if(res.data.status == 0) {
 					const classicData = res.data.data
 					self.classicData = classicData
-					// alert(self.classicData)
+					// console.log(self.classicData)
 				}
 			})
 			.catch((res) => {

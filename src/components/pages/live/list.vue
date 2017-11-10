@@ -54,15 +54,6 @@ export default {
 		this._loadMore()
 		this._getBnnerData()
 		let self = this
-		// $(window).scroll(function () {
-	 //      var scrollTop = $(this).scrollTop();
-	 //      var scrollHeight = $(document).height();
-	 //      var windowHeight = $(this).height();
-	 //      if (scrollTop + windowHeight == scrollHeight) {
-		// 	self.page += 1
-		// 	self._getpointConData()
-	 //      }
-	 //    })
 	},
     watch: {
         '$route': '_getliveConData'
@@ -74,12 +65,20 @@ export default {
 	        method: 'post',
 	        url: '/banner/RSWeb/gd/getContentListByColumnID',
 	        params: {
-	          ptype: self.GLOBAL.config.ptype,
-	          plocation: self.GLOBAL.config.plocation,
-	          puser: '',
-	          pserverAddress: self.GLOBAL.config.pserverAddress,
-	          columnID: '003',
-	          count: '6'
+				ptype: self.GLOBAL.config.ptype,
+				plocation: self.GLOBAL.config.plocation,
+				puser: self.GLOBAL.config.puser,
+				ptoken: self.GLOBAL.config.ptoken,
+				pserverAddress: self.GLOBAL.config.pserverAddress,
+				pserialNumber: self.GLOBAL.config.pserialNumber,
+				pversion:  self.GLOBAL.config.pversion,
+				ptn: self.GLOBAL.config.ptoken,
+				pkv: self.GLOBAL.config.pkv, 
+				hmac: '',
+				nonce: self.GLOBAL.config.nonce,
+				timestamp: self.GLOBAL.config.timestamp,
+				columnID: '003',
+				count: '6'
 	        }
 	      })
 	      .then((res) => {
@@ -101,8 +100,16 @@ export default {
 				params: {
 					ptype: self.GLOBAL.config.ptype,
 					plocation: self.GLOBAL.config.plocation,
-					puser: '',
+					puser: self.GLOBAL.config.puser,
+					ptoken: self.GLOBAL.config.ptoken,
 					pserverAddress: self.GLOBAL.config.pserverAddress,
+					pserialNumber: self.GLOBAL.config.pserialNumber,
+					pversion:  self.GLOBAL.config.pversion,
+					ptn: self.GLOBAL.config.ptoken,
+					pkv: self.GLOBAL.config.pkv, 
+					hmac: '',
+					nonce: self.GLOBAL.config.nonce,
+					timestamp: self.GLOBAL.config.timestamp,
 					cardID: self.$route.params.id,
 					page: this.page,
 					contentSize: '100'
@@ -127,10 +134,18 @@ export default {
 	          method: "post",
 	          url: "/banner/RSWeb/gd/getCardContents",
 	          params: {
-				ptype: self.GLOBAL.config.ptype,
-				plocation: self.GLOBAL.config.plocation,
-				puser: '',
-				pserverAddress: self.GLOBAL.config.pserverAddress,
+	            ptype: self.GLOBAL.config.ptype,
+	            plocation: self.GLOBAL.config.plocation,
+	            puser: self.GLOBAL.config.puser,
+	            ptoken: self.GLOBAL.config.ptoken,
+	            pserverAddress: self.GLOBAL.config.pserverAddress,
+	            pserialNumber: self.GLOBAL.config.pserialNumber,
+	            pversion:  self.GLOBAL.config.pversion,
+	            ptn: self.GLOBAL.config.ptoken,
+	            pkv: self.GLOBAL.config.pkv, 
+	            hmac: '',
+	            nonce: self.GLOBAL.config.nonce,
+	            timestamp: self.GLOBAL.config.timestamp,
 				cardID: self.$route.params.id,
 				page: this.page,
 				contentSize: '100'

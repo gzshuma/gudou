@@ -1,32 +1,19 @@
 <template>
 	<div class="rank-bd livecon">
 		<ul>
-			<li v-for="(v, index) in pointConData" @click="urlDirect(v.contentID)">
+			<li v-for="(v, index) in liveConData" @click.stop="urlDirect(v.serviceID, v.channelID)">
 				<div class="pic-ri-top">
-					<!-- <img v-lazy="v.liveRealImg" alt=""> -->
-					<img v-lazy="v.contentImageUrl" alt="">
-		  			<span class="pic-mask">
+					<img :src="item" v-for="item in v.imageUrl[0]">
+		  			<!-- <span class="pic-mask">
 		  				<span class="pic-title">{{v.contentName}}</span>
-		  				<span class="mask-time">01-22 19:35</span>
-		  				<!-- <span class="progress-bar" style="width:50%;"></span> -->
-		  			</span>
+		  				<span class="mask-time">
+		  				{{v.extraInfo.epgStartTime.substr(4,2)}}-{{v.extraInfo.epgStartTime.substr(6,2)}}
+						{{v.extraInfo.epgStartTime.substr(8,2)}}:{{v.extraInfo.epgStartTime.substr(10,2)}}
+		  				</span>
+		  			</span> -->
 				</div>
 				<div class="pic-btm">
-					{{v.extraInfo.channelName}}
-				</div>
-			</li>
-			<li v-for="(v, index) in pointConData1" @click="urlDirect(v.contentID)">
-				<div class="pic-ri-top">
-					<!-- <img v-lazy="v.liveRealImg" alt=""> -->
-					<img v-lazy="v.contentImageUrl" alt="">
-		  			<span class="pic-mask">
-		  				<span class="pic-title">{{v.contentName}}</span>
-		  				<span class="mask-time">01-22 19:35</span>
-		  				<!-- <span class="progress-bar" style="width:50%;"></span> -->
-		  			</span>
-				</div>
-				<div class="pic-btm">
-					{{v.extraInfo.channelName}}
+					{{v.channelName}}
 				</div>
 			</li>
 		</ul>
@@ -34,28 +21,39 @@
 </template>
 
 <script>
+import {dateComparate1,ComparateDiff, percentNum, dateCompa, dateCompa1} from '@/util'
 export default {
-	name: 'pointcontent',
+	name: 'livecontent',
 	props: {
-		pointConData: {
+		liveConData: {
 			type: Array
 		},
-		pointConData1: {
+		liveConData1: {
 			type: Array
 		}
 	},
 	data () {
 		return {}
 	},
-	created () {
-	},
 	methods: {
-		urlDirect ($id) {
+		urlDirect ($id, $channelId) {
 			this.$router.push({
-				name: 'detail',
-				params: { id: $id }
+				name: 'livedetail',
+				params: {
+					id: this.$md5($id),
+					channelid: $channelId + '_channel'
+				}
 			})
-		}
+		},
+	    dateCompa (date1,date2) {
+	      return dateCompa(date1,date2)
+	    },
+	    dateCompa1 (date) {
+	      return dateCompa1(date)
+	    },
+	    percentNum (d1,d2) {
+	      return percentNum(d1,d2)
+	    }
 	}
 }
 </script>
@@ -67,16 +65,16 @@ export default {
 .pic-btm { height: 72px; line-height: 72px; color: #445560; font-size: 24px; padding: 0 20px; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .rank-bd { width: 100%; overflow: hidden; }
-.rank-bd li { float: left; width: 226px; height: 157px; background: #f0f0f0; margin: 0 17px 0 0; overflow: hidden; cursor:pointer;}
-.livecon li { margin-bottom: 20px; }
+.rank-bd li { float: left; width: 226px; height: 157px; background: #f0f0f0; margin: 0 17px 0 0; overflow: hidden; }
+.livecon li { margin-bottom: 20px; cursor: pointer; }
 .rank-bd li:nth-child(5n+5) { margin: 0; }
-.rank-bd .pic-ri-top { position: relative; width: 100%; height: 124px; }
-.rank-bd li img { width: 100%; height: 124px; }
+.rank-bd .pic-ri-top { position: relative; width: 224px; height: 122px; background: #fff; border: #f0f0f0 1px solid; text-align: center; }
+.rank-bd li img { height: 122px; }
 .rank-bd .pic-mask { height: 25px; line-height: 25px; font-size: 12px; }
 .rank-bd .pic-title { padding-left: 8px; width: 140px; }
 .rank-bd .progress-bar { height: 2px; }
 .rank-bd .mask-time { font-size: 12px; right: 5px; top: 2px; }
-.rank-bd .pic-btm { position: relative; height: 30px; line-height: 30px; font-size: 14px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-bd .pic-btm { position: relative; height: 30px; line-height: 30px; font-size: 14px; padding-left: 8px; text-align: center; }
 .rank-pos { position: absolute; right: 8px; top: 3px; }
 .rank-num { font-size: 26px; font-style: italic; }
 .rank-bd .icon-arror { color: #888; font-size: 18px; }

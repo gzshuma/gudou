@@ -24,7 +24,7 @@
       </div>
       <div class="search-con search-live-con" v-show="nowIndex===0">
         <ul>
-          <li v-for="v, index in liveSearch">
+          <li v-for="v, index in liveSearch" @click="urlDirect(v.epgID, v.id)">
             <span class="search-live-link">
               {{v.name}}-{{v.epgName}}
               <!-- {{v.epgStartTime}} -->
@@ -33,13 +33,12 @@
               {{v.epgStartTime.substr(8,2)}}:{{v.epgStartTime.substr(10,2)}}
               </span>
             </span>
-            <span class="icon-alarm"></span>
+            <!-- <span class="icon-alarm"></span> -->
           </li>
         </ul>
       </div>
       <div class="search-con search-point-con" v-show="nowIndex===1">
         <ul>
-          <!-- <li v-for="v in pointSearch" @click=""> -->
           <router-link tag="li" :to="{name: 'detail', params: { id: v.id }}" v-for="v in pointSearch" :key="v.id">
             <div class="pic">
               <img v-lazy="item" alt="" v-for="item in v.imageUrl[0]">
@@ -63,8 +62,6 @@
 
 <script>
 // import $ from 'jquery'
-// banner
-import banner from 'components/common/banner'
 // 图文
 import searchlist from 'components/common/searchlist'
 import pagination from 'components/common/pagination'
@@ -119,15 +116,22 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: '',
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
             count: '30'
           }
         })
         .then((res) => {
           if(res.data.status == 0) {
             self.hotData = res.data.data.hotSearchInfo
-            // alert(self.hotData)
           }
         })
         .catch((res) => {
@@ -142,8 +146,16 @@ export default {
           params: {
             ptype: self.GLOBAL.config.ptype,
             plocation: self.GLOBAL.config.plocation,
-            puser: '',
+            puser: self.GLOBAL.config.puser,
+            ptoken: self.GLOBAL.config.ptoken,
             pserverAddress: self.GLOBAL.config.pserverAddress,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            ptn: self.GLOBAL.config.ptoken,
+            pkv: self.GLOBAL.config.pkv, 
+            hmac: '',
+            nonce: self.GLOBAL.config.nonce,
+            timestamp: self.GLOBAL.config.timestamp,
             keyword: self.keyword,
             start: 0,
             resultSize: 20,
@@ -156,19 +168,8 @@ export default {
             self.pointSearch = []
             const hotSearchCon = res.data.data.mediaList
             hotSearchCon.forEach(function (value,m) {
-              // alert(value.categoryName)value.data
               if(!value.categoryName) {
                 self.liveSearch = value.data
-                // self.liveSearchName.push(value.data.id)
-                // for(var n=0; n<value.data.length; n++) {
-                //   if(value.data[n].id === value.data[n+1].id) {
-                //     // alert(1)
-                //     this.sameId = true
-                //     // self.liveSearchName = value.data[0].name
-                //   }else {
-
-                //   }
-                // }
               }else {
                 value.data.forEach(function (val,n) {
                   self.pointSearch.push(val)
@@ -180,7 +181,16 @@ export default {
         .catch((res) => {
           alert(res.data.errorMessage)
         })
-      }
+      },
+      urlDirect ($id, $channelId) {
+        this.$router.push({
+          name: 'livedetail',
+          params: {
+            id: $id,
+            channelid: $channelId + '_channel'
+          }
+        })
+      },
   }
 }
 </script>

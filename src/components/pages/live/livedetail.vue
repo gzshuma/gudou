@@ -45,9 +45,9 @@
 										{{v.startTime.substr(8,2)}}.{{v.startTime.substr(10,2)}}
 									</span>
 									<span class="p-tabs-con">{{v.channelName}}：{{v.epgName}}</span>
-									<span class="icon-p-tabs  icon-undo2"  :class=" v.epgID == endTimeArr.epgID ? 'playa':'' " v-if="dateCompa(v.startTime)<0"></span>
+									<span class="icon-p-tabs icon-info iconfont icon-back"  :class=" v.epgID == endTimeArr.epgID ? 'playa':'' " v-if="dateCompa(v.startTime)<0"></span>
 
-									<span class="icon-p-tabs icon-alarm"  :appoint="v.epgID"  v-if="dateCompa(v.startTime)>0"></span>
+									<span class="icon-p-tabs icon-info iconfont icon-alarm"  :appoint="v.epgID"  v-if="dateCompa(v.startTime)>0"></span>
 								</div>
 							</div>
 						</div>
@@ -538,7 +538,8 @@ export default {
   text-overflow: ellipsis; overflow: hidden; font-size: 14px; }
 .player-cur.aaa { color: #ff9c01; }
 .yuding{ color: #ff9c01; }
-.playa.icon-undo2:before { content: "\ea1c"; }
+.playa.icon-back:before { content: "\e608"; font-size: 28px; }
+.playa.icon-back { right: 10px; }
 .player-tabchange { display: none; }
 .block { display: block; }
 .tips-style { width: 90%; height: 415px; padding: 0 10%; line-height: 415px; font-size: 20px; color: #fff; text-align: center; }

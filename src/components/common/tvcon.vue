@@ -3,7 +3,7 @@
 		<ul>
 			<li v-for="(v, index) in liveConData" @click.stop="urlDirect(v.serviceID, v.channelID)">
 				<div class="pic-ri-top">
-					<img :src="item" v-for="item in v.imageUrl[0]">
+					<img v-lazy="item" v-for="item in v.imageUrl[0]">
 		  			<!-- <span class="pic-mask">
 		  				<span class="pic-title">{{v.contentName}}</span>
 		  				<span class="mask-time">

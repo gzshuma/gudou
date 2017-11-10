@@ -15,7 +15,7 @@
 			<span class="order-close" @click="deleteDom(v,$event)"><i class="el-icon-close"></i></span>
 			<router-link tag="div" :to="{name: 'detail', params: { id: v.channelID }}" :key="v.id">
 				<div class="pic-ri-top">
-					<img :src="item" alt="" v-for="item in v.imageUrl[0]">
+					<img v-lazy="item" alt="" v-for="item in v.imageUrl[0]">
 					<span class="pic-mask">
 						<span class="mask-time">
 							{{v.updateTime.substr(4,2)}}-{{v.updateTime.substr(6,2)}}

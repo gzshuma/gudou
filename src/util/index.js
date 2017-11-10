@@ -164,6 +164,14 @@ export function dateCompa1 (date) {
     let d = year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second
     return dateComparate1(d)
 }
-
+//获得base64数据
+export function gen_base64( file ) {
+    let r = new FileReader();  //本地预览
+    r.readAsDataURL(file);    //Base64
+    r.onload = function(){
+        let str = r.result.split('base64,')[1];
+        return str
+    }
+}
 
 

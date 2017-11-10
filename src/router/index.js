@@ -163,11 +163,21 @@ export default [
         component: resolve => require(['components/pages/user/home'], resolve)
       },
       {
+        path: 'password',
+        beforeEnter: routerIntercept,
+        meta: {
+          title: '修改密码-个人中心页',
+          requireAuth: true
+        }, 
+        // component: viewrecord
+        component: resolve => require(['components/pages/user/password'], resolve)
+      },
+      {
         path: 'viewrecord',
         beforeEnter: routerIntercept,
         meta: {
           title: '观看记录-个人中心页',
-          requireAuth: false
+          requireAuth: true
         }, 
         // component: viewrecord
         component: resolve => require(['components/pages/user/viewrecord'], resolve)

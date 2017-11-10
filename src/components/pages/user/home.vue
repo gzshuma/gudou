@@ -7,9 +7,11 @@
 						<span class="icon-info icon-user2"></span>
 						<span>头像</span>
 					</span>
-					<span class="info-ri info-pic">
-            <img :src="userList.photoImg.high ">
+					<span class="info-ri info-pic" @click="fileClick()">
+            <img class="userPhoto" :src="userList.photoImg.high ">
             <!-- <img :src="userList.photoImg.high | imgUrl"> -->
+
+            <input type="file" class="fileInput" style="display:none" @change="fileChange( $event )">
           </span>
 				</li>
 				<li>
@@ -24,7 +26,7 @@
 						<span class="icon-info icon-envelope"></span>
 						<span>昵称</span>
 					</span>
-					<input type="text" class="info-ri inputs" maxlength="20" :placeholder="userList.user"></input>
+					<input type="text" class="info-ri alias" maxlength="20" :placeholder="userList.nickname" :value="userList.nickname"></input>
 				</li>
         
 				<!-- <li>
@@ -62,7 +64,7 @@
 			</ul>
 		</div> -->
 		<button class="info-reset" @click.stop="btnMask">修改资料</button>
-    <bmask v-show="eye" :alterListData="alterList"></bmask>
+    <!-- <bmask v-show="eye" :alterListData="alterList"></bmask> -->
 	</div>
 </template>
 
@@ -70,6 +72,8 @@
 import usercenterleft from 'components/common/usercenterleft'
 import bmask from 'components/common/bmask'
 import $ from 'jquery'
+import {gen_base64} from "@/util";
+
 export default {
   props:{
     userList:{
@@ -82,17 +86,12 @@ export default {
 	},
 	data () {
 		return {
-      eye:false,
-      ruleForm2:{
-        LoginType:'1',
-        loginparam:'',
-        Pwd:'',
-        serialno:'',
-        terminalID:''
-      },
+      statePhoto: 0,//是否修改头像
+      stateInfo: 0,//是否修改资料
+      base64Img: '',
       puser:sessionStorage.getItem('user'),
       ptoken:sessionStorage.getItem('flag'),
-
+      nickname: '',
       alterList:{
         nickname:'',
         sex:'',
@@ -112,52 +111,131 @@ export default {
   },
   mounted(){
 
-      console.log( this.userList )
+      // console.log( this.userList )
 
   },
 	methods:{
-    
-    //获取serialno流水号
-      // __init(){
-      //   let url = '/api0/AAA/serialNoFromUAP';
-      //   this.$http.get(url).then((res)=>{
-      //     this.ruleForm2.serialno = res.data.data.serialno;
-      //     //console.log(this.ruleForm2.serialno)
-      //   })
-      // },
-    //获取用户名和登录牌
-     // _init(){
-     //   this.__init();
-     //   let url = '/api0/AAA/loginFromUAP';
-     //   url = url +'?LoginType='+1 + '&loginparam=' +this.ruleForm2.loginparam +'&Pwd=' + this.$md5(this.ruleForm2.Pwd) +'&serialno=' + this.ruleForm2.serialno+'&terminalID='+'';
-     //   this.$http.get(url).then((res)=>{
-     //     if(res.data.status == 0){
-     //       this.ptoken = res.data.data.newToken;
-     //       this.puser = res.data.data.userName;
-     //     }else{
-     //       //this.$router.push({name:'login'})
-     //     }
-     //   })
-     // },
-    btnMask(){
-      this.eye = true;
+    fileClick(){
+      $('.fileInput').click();
     },
-    //获取修改的信息
-    alter(){
-      let url = '/api/PortalServer-App/new/aaa_usr_usr009'
-      url = url+'?ptype='+this.ptype+'&plocation='+this.plocation+'&puser='+this.puser+'&ptoken='+this.ptoken+'&pversion='+this.pversion+'&pserverAddress='+this.pserverAddress+'&pserialNumber='+this.pserialNumber
-      let pramas = {
-        nickname:this.alterList.nickname,
-        sex:this.alterList.sex,
-        birthday:this.alterList.birthday,
-        personalitySignature:this.alterList.personalitySignature,
-        email:this.alterList.email,
-        customerNum:this.alterList.customerNum
+    fileChange( el ){
+      var self = this;
+      let file = el.target.files[0];
+      if(!/image/.test(file.type)){
+          this.$message( '你选择的不图片' );
+          return false;
       }
-      this.$http.post(url,pramas).then((res)=>{
-        this.alterList = res.data.data;
-      })
-    }
+      let r = new FileReader();  //本地预览
+      r.readAsDataURL(file);    //Base64
+      r.onload = function(){
+          let str = r.result.split('base64,')[1];
+          self.base64Img = str;
+          self.statePhoto = 1;
+          $( '.userPhoto' ).attr( 'src', r.result )
+
+      }
+    },
+    
+    
+    btnMask(){//点击修改提交
+    
+      this.statePhoto == 1 ? this._setUserImg() : '';
+
+      let val = $( '.alias' )[0].value;
+      if( val == this.userList.nickname ){
+          return;
+      }
+      this.stateInfo = 1;
+      this.nickname = val;
+      if( this.statePhoto == 1 && this.stateInfo == 1 ){
+          this._setUserData();
+          this._setUserImg();
+      }
+      this.stateInfo == 1 ? this._setUserData() : '';
+      
+      
+    },
+     //修改资料
+		_setUserData( ){
+      var self = this;
+      this.$http({
+        method: 'post',
+        url: '/api/PortalServer-App/new/aaa_usr_usr009',
+        params: {
+          ptype: self.GLOBAL.config.ptype,
+          plocation: self.GLOBAL.config.plocation,
+          puser: self.puser,
+          ptoken: self.ptoken,
+          pversion: '03010',
+          pserverAddress: self.GLOBAL.config.pserverAddress,
+          pserialNumber: '862915030592170',
+          pkv:	1,
+          ptn:  self.ptoken,
+          hmace: '125456',
+          timestamp: new Date().getTime(),
+          nonce: Math.random().toString().slice(2),
+          },
+          data:{
+            nickname: this.nickname,
+            sex: '',
+            birthday: '',
+            personalitySignature: '',
+            email: '',
+            customerNum: '',
+          },
+          })
+          .then((res) => {
+          if(res.data.status == 0) {
+              this.$message.success('修改资料成功')
+              setTimeout( function(){
+                   window.location.reload();
+              },1000 )
+             
+            }  
+          })
+          .catch((res) => {
+            alert(res.data.errorMessage)
+          })
+    },
+     //上传头像
+		_setUserImg( ){
+      var self = this;
+      this.$http({
+        method: 'post',
+        url: '/api/PortalServer-App/new/aaa_usr_usr010',
+        params: {
+          ptype: self.GLOBAL.config.ptype,
+          plocation: self.GLOBAL.config.plocation,
+          puser: self.puser,
+          ptoken: self.ptoken,
+          pversion: '03010',
+          pserverAddress: self.GLOBAL.config.pserverAddress,
+          pserialNumber: '862915030592170',
+          pkv:	1,
+          ptn:  self.ptoken,
+          hmace: '125456',
+          timestamp: new Date().getTime(),
+          nonce: Math.random().toString().slice(2),
+          },
+          data:{
+            photo: this.base64Img,
+          },
+          })
+          .then((res) => {
+          if(res.data.status == 0) {
+               this.$message.success('修改资料成功')
+                setTimeout( function(){
+                    window.location.reload();
+                },1000 )
+            }
+          })
+          .catch((res) => {
+            alert(res.data.errorMessage)
+          })
+    },
+    
+
+
   },
 }
 </script>
@@ -175,12 +253,12 @@ export default {
 .info-list-txt .icon-user { font-size: 26px; font-weight: 700; }
 .info-list-txt .icon-floppy-disk { font-size: 20px; }
 .info-list-txt .icon-user2, .info-list-txt .el-icon-time, .info-list-txt .icon-envelope { font-size: 22px; }
-.info-pic { top: 10px; }
+.info-pic { top: 10px; cursor: pointer}
 .info-pic img { width: 34px; height: 34px; border-radius: 50%; }
 .noWrite{
   color: #aaa;
 }
-.inputs{
+.alias{
   height: 99%;
   text-align: right;
 }

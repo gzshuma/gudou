@@ -9,6 +9,7 @@
 
 <script>
 import usercenterleft from 'components/common/usercenterleft'
+
 export default {
 	components: {
 		usercenterleft

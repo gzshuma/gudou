@@ -31,11 +31,21 @@ import 'element-ui/lib/theme-default/index.css'
 // import 'common/js/video.js'
 // import 'common/js/videojs-contrib-hls.js'
 
-// import {getCookie, GetDateDiff, getNowFormatDate} from './util'
+import {getCookie, GetDateDiff, getNowFormatDate} from './util'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 Vue.prototype.GLOBAL = global_
+
+/*
+//全局替换图片路径
+Vue.filter('imgUrl',function( val ){
+    let kou = val.split('//')[1].split( '/' )[0]
+	let url =  val.replace( kou,'172.16.149.147' );  
+	console.log( url )
+	return url;
+})*/
+
 
 // Vue.use(VideoPlayer)
 
@@ -48,7 +58,19 @@ Vue.use(VueAwesomeSwiper)
 
 Vue.use(require('vue-wechat-title')); //实例化参数
 
-Vue.use(VueLazyload, {error: 'static/error.jpg'})
+Vue.use(VueLazyload, {
+	error: 'static/error.jpg',
+	//替换图片路径
+
+	/*filter:{
+		imgUrl: function( val ){
+			let kou = val.src.split('//')[1].split( '/' )[0]
+			let src = val.src.replace( kou,'172.16.149.147' );  
+			val.src = src
+		}
+	}*/
+
+})
 
 const router = new VueRouter({
 	mode: 'history',

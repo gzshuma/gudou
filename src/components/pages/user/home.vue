@@ -8,8 +8,8 @@
 						<span>头像</span>
 					</span>
 					<span class="info-ri info-pic" @click="fileClick()">
-            <img class="userPhoto" v-lazy="userList.photoImg.high">
-            <!-- <img class="userPhoto"  :src="userList.photoImg.high | imgUrl"> -->
+            <!-- <img class="userPhoto" v-lazy="userList.photoImg.high"> -->
+            <img class="userPhoto"  :src="userList.photoImg.high | imgFilter">
             <input type="file" class="fileInput" style="display:none" @change="fileChange( $event )">
           </span>
 				</li>

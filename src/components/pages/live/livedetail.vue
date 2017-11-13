@@ -6,7 +6,6 @@
 					<div class="episodes-crumb" v-if="subData.channelName">
 						<span class="txt-bold">正在播放：</span>
 						<router-link tag="span" to="/" class="cursor-style">首页 <i class="el-icon-arrow-right"></i></router-link>
-						<router-link tag="span" to="/live" class="cursor-style">直播 <i class="el-icon-arrow-right"></i></router-link>
 						<span>{{subData.channelName}} <i class="el-icon-arrow-right"></i></span>
 						<span>{{subData.epgName}} <i class="el-icon-arrow-right"></i></span>
 					</div>

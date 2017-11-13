@@ -24,6 +24,20 @@ $(function() {
         duration: 0, // 视频在默认不加载的情况下显示总时间
         rotation: 0, // 该功能只支持90，180，270，-90，-180，-270。如果视频的所在域相对于播放器域没有权限，则不能使用该属性
         video: videoUrl, //视频地址
+        // video: [
+        //     [
+        //         "temp01.mp4",
+        //         "video/mp4",
+        //         "高清",
+        //         0
+        //     ],
+        //     [
+        //         "temp02.mp4",
+        //         "video/mp4",
+        //         "标清",
+        //         0
+        //     ]
+        // ]
     };
     var player = new ckplayer(videoObject);
 })

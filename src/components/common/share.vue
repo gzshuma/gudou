@@ -1,6 +1,6 @@
 <template>
   <div class="player-btm">
-    <div class="p-btm-list s-hover p-btm-border coll" :class="isSelect ? 'collSelect' : ''" @click="collClick">
+    <div class="p-btm-list s-hover p-btm-border coll" :class="isSelect && puser ? 'collSelect' : ''" @click="collClick">
       <span class="icon-btm el-icon-star-off"></span>
       <span>收藏</span>
     </div>

@@ -7,7 +7,6 @@
 					<div class="episodes-crumb" v-if="detailData.columnName">
 						<span class="txt-bold">正在播放：</span>
 						<router-link tag="span" to="/" class="cursor-style">首页 <i class="el-icon-arrow-right"></i></router-link>
-						<router-link tag="span" to="/point" class="cursor-style">点播 <i class="el-icon-arrow-right"></i></router-link>
 						<span>{{detailData.columnName}}<i class="el-icon-arrow-right"></i></span>
 						<span>{{detailData.programName}}<i class="el-icon-arrow-right"></i></span>
 					</div>

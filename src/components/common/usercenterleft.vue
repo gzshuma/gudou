@@ -1,8 +1,8 @@
 <template>
     <div class="user-leftbar">
         <div class="user-pic" >
-            <img v-lazy="imgUrl">
-             <!-- <img :src="userList.photoImg.high | imgUrl"> -->
+            <!-- <img v-lazy="imgUrl"> -->
+            <img :src="userList.photoImg.high | imgFilter">
             <p>sumaviron</p>
             <router-link class="color-u"   tag="div" to="/user">
                  <p>个人资料</p>

@@ -37,14 +37,14 @@ Vue.config.productionTip = false
 Vue.prototype.$http = axios
 Vue.prototype.GLOBAL = global_
 
-/*
 //全局替换图片路径
-Vue.filter('imgUrl',function( val ){
+Vue.filter('imgFilter',function( val ){
+	let domain = document.domain + ':8088'
     let kou = val.split('//')[1].split( '/' )[0]
-	let url =  val.replace( kou,'172.16.149.147' );  
-	console.log( url )
-	return url;
-})*/
+	let url =  val.replace( kou, domain) 
+	// console.log( url )
+	return url
+})
 
 Vue.use(VueVideoPlayer)
 Vue.use(SocialSharing)
@@ -61,8 +61,9 @@ Vue.use(VueLazyload, {
 
 	filter:{
 		imgUrl: function( val ){
+			let domain = document.domain + ':8088'
 			let kou = val.src.split('//')[1].split( '/' )[0]
-			let src = val.src.replace( kou,'172.16.149.147:80' );  
+			let src = val.src.replace( kou, domain) 
 			val.src = src
 		}
 	}

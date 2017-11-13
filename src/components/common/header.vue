@@ -42,13 +42,14 @@
 					<div class="content">
 						<div class="sub-u-bd">
 							<router-link tag="div" class="sub-u-le sub-u-list" to="/user">
-								<img v-lazy="picUrl" alt="">
+								<!-- <img v-lazy="picUrl" alt=""> -->
+								<img :src="picUrl | imgFilter">
 								<div class="user-name sub-u-list">{{puser}}</div>
 							</router-link>
 							<div class="checkout sub-u-list" @click="logout()">退出</div>
 						</div>
 						<div class="sub-btm clearfix">
-							<router-link tag="div" to="/user/collection" class="sub-btm-list sub-u-list">
+							<router-link tag="div" to="/user/viewrecord" class="sub-btm-list sub-u-list">
 								<i class="el-icon-time"></i>观看记录
 							</router-link>
 							<router-link tag="div" to="/user/collection" class="sub-btm-list sub-u-list">

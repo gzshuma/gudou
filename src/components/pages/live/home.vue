@@ -48,6 +48,9 @@ export default {
 		this._getliveConData()
 		this._getBnnerData()
 		this._getLiveContentInfo()
+		setTimeout(function() {
+			$('.sub-menu-bd').find('span').eq(0).click()
+		}, 500)
 	},
     watch: {
         // '$route': '_getliveConData'
@@ -117,7 +120,6 @@ export default {
 			})
 		},
       _getLiveContentInfo () {
-      	// '/PortalServer-App/new/ptl_ipvp_live_live003?ptype=24&amp;plocation=001&amp;puser=freeuser&amp;ptoken=222&amp;pserverAddress=http://172.16.149.133:8080/PortalServer-App/&amp;pserialNumber=866769027850901'
         var self = this
         self.$http({
           method: 'post',
@@ -168,7 +170,7 @@ export default {
 		            nonce: self.GLOBAL.config.nonce,
 		            timestamp: self.GLOBAL.config.timestamp,
 					start: '0',
-					end: '1000',
+					end: '200',
 					channelName: '',
 					programName: '',
 					sortType: '2',

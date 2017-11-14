@@ -1,8 +1,8 @@
 <template>
   <div class="sub-menu-bd">
-	<span @click="categoryIDChange(0, '-1')" :class="{cur:'-1' === nowIndex}">全部</span>
-	<span v-for="(v, index) in subList" v-if="subList" @click="categoryIDChange(v.categoryID, index)" :class="{cur:index === nowIndex}">
-		{{v.categoryName}}
+	<span @click="categoryIDChange(0, 0)" :class="{cur:0 === nowIndex}">全部</span>
+	<span v-for="(v, index) in subList" v-if="subList" @click="categoryIDChange(v.categoryID, index+1)" :class="{cur:index+1 === nowIndex}">
+		{{v.categoryName}}-{{index+1}}
 	</span>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
 	},
 	data () {
 		return {
-			nowIndex: '-1'
+			nowIndex: 0
 		}
 	},
 	methods: {

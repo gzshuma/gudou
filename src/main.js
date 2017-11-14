@@ -39,11 +39,13 @@ Vue.prototype.GLOBAL = global_
 
 //全局替换图片路径
 Vue.filter('imgFilter',function( val ){
-	let domain = document.domain + ':8088'
-    let kou = val.split('//')[1].split( '/' )[0]
-	let url =  val.replace( kou, domain) 
-	// console.log( url )
-	return url
+	if(val) {
+		let domain = document.domain + ':8088'
+	    let kou = val.split('//')[1].split( '/' )[0]
+		let url =  val.replace( kou, domain) 
+		// console.log( url )
+		return url
+	}
 })
 
 Vue.use(VueVideoPlayer)
@@ -56,15 +58,17 @@ Vue.use(VueAwesomeSwiper)
 Vue.use(require('vue-wechat-title')); //实例化参数
 
 Vue.use(VueLazyload, {
-	error: 'static/error.jpg',
+	error: '/static/error.jpg',
 	//替换图片路径
 
 	filter:{
 		imgUrl: function( val ){
-			let domain = document.domain + ':8088'
-			let kou = val.src.split('//')[1].split( '/' )[0]
-			let src = val.src.replace( kou, domain) 
-			val.src = src
+			if(val.src) {
+				let domain = document.domain + ':8088'
+				let kou = val.src.split('//')[1].split( '/' )[0]
+				let src = val.src.replace( kou, domain) 
+				val.src = src
+			}
 		}
 	}
 

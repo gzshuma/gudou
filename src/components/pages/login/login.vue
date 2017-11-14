@@ -15,7 +15,6 @@
               <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
               <el-form-item style="width:100%;">
                 <el-button type="primary" style="width:100%;" @click="handleSubmit2" :loading="logining">登录</el-button>
-                <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
               </el-form-item>
               <div class="check">
                 <router-link tag="span" to="/password" class="check-list">忘记密码?</router-link>
@@ -35,8 +34,9 @@ export default {
   data() {
     return {
       logining: false,
-      newToken:'',
-      user:'',
+      puser:sessionStorage.getItem('user'),
+      // newToken:'',
+      // user:'',
       ruleForm: {
         LoginType:'1',
         loginparam:'',
@@ -58,12 +58,10 @@ export default {
     // ...mapActions([USER_SIGNIN]),
     //获取表单数据
     isLogin(){
-      this.serialnoGet();
       let self = this
-      let url = '/api0/AAA/loginFromUAP'
       self.$http({
-        methods: 'get',
-        url: url,
+        method: 'get',
+        url: '/api0/AAA/loginFromUAP',
         params: {
           LoginType: '1',
           loginparam: self.ruleForm.loginparam,
@@ -74,11 +72,8 @@ export default {
       })
       .then((res)=>{
         if(res.data.status == '0'){
-          console.log(res.data);
-          self.newToken = res.data.data.newToken
-          self.user = res.data.data.userName;
-          sessionStorage.setItem('flag',self.newToken)
-          sessionStorage.setItem('user',self.user)
+          sessionStorage.setItem('flag',res.data.data.newToken)
+          sessionStorage.setItem('user',res.data.data.userName)
           self.$router.replace({ path: '/' })
           setTimeout(() => {
             location.reload()
@@ -90,33 +85,31 @@ export default {
     },
     //获取serialno流水号
     serialnoGet(){
+      if( this.puser ){
+         return false;
+      }
       let self = this
       let url = '/api0/AAA/serialNoFromUAP'
       self.$http({
         methods: 'get',
         url: url,
-        params: {
-        }
+        params: {}
       })
       .then((res)=>{
           this.ruleForm.serialno = res.data.data.serialno;
-          console.log(this.ruleForm.serialno)
+          this.isLogin();
       })
     },
     handleSubmit2(){
       //this.$md5(this.ruleForm.Pwd)
-      this.isLogin();
+      this.serialnoGet();
     },
-
-  },
-  created(){
-
   },
   mounted(){
     var self = this;
     window.onkeyup = function( el ){
       if( el.keyCode == 13 ){
-        self.isLogin();
+        self.serialnoGet();
       }
     }
   }

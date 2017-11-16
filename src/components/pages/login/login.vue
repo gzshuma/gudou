@@ -71,7 +71,7 @@ export default {
         }
       })
       .then((res)=>{
-        if(res.data.status == '0'){
+        if(res.data.status == '0' || res.data.status == '0000'){
           sessionStorage.setItem('flag',res.data.data.newToken)
           sessionStorage.setItem('user',res.data.data.userName)
           self.$router.replace({ path: '/' })

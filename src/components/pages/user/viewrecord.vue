@@ -1,168 +1,194 @@
 <template>
-	<div class="view-record">
-		<div class="times-box">
-
-			<div class="myorder-top-bd" v-if="recordData.length>0">
-				<span class="myorder-delete" @click="deleteRecord($event)">删除观看记录</span>
-				<span class="myorder-deleteall unfold-div hide" @click="deleteAllRecord($event)">清空</span>
-				<span class="myorder-complete unfold-div hide" @click="completeRecord($event)">完成</span>
-			</div>
-		</div>
-		<ucenterpic :orderData="recordData"></ucenterpic>
-
+  <div class="myorder-box">
+	<div class="myorder-top-bd" v-if="orderList.length>0">
+		 <span class="myorder-delete" @click="deleteRecord()" v-show="hideDiv">删除观看记录</span>
+		<span class="myorder-deleteall" v-if="isTrue" @click="deleteAllRecord()">清空</span>
+		<span class="myorder-complete" v-if="isTrue" @click="completeRecord()">完成</span>
 	</div>
+    <div class="myorderBar coll1">
+      <ul>
+        <li class="collArr1" v-for="(v, index) in orderList">
+			<span class="order-close" @click="deleteDom(v,$event)"><i class="el-icon-close"></i></span>
+			<router-link tag="div" :to="{name: 'detail', params: { id: v.programID }}" :key="v.id">
+				<div class="pic-ri-top">
+					<img v-lazy="item" alt="" v-for="item in v.imageUrl[0]">
+					<span class="pic-mask">
+						<span class="mask-time">
+							<!-- {{v.createTime}} -->
+							{{v.updateTime.substr(4,2)}}-{{v.updateTime.substr(6,2)}}
+							{{v.updateTime.substr(8,2)}}:{{v.updateTime.substr(10,2)}}
+						</span>
+					</span>
+				</div>
+				<div class="pic-btm">
+				{{v.programName}}
+				</div>
+			</router-link>
+        </li>
+      </ul>
+    </div>
+
+  </div>
 </template>
 
 <script>
-import ucenterpic from "components/common/ucenterpic";
-import $ from "jquery";
+// 排行
+import ucenterpic from 'components/common/ucenterpic'
+import pagination from 'components/common/pagination'
+import $ from 'jquery'
 export default {
-  components: {
-    ucenterpic
+	components: {
+	    //ucenterpic,
+	    pagination
+	},
+	data () {
+		return {
+			nowIndex:0,
+			isTrue: false,
+			hideDiv: true,
+			isShow: false,
+			puser:sessionStorage.getItem('user'),
+			//ptoken:'',
+			ptoken:sessionStorage.getItem('flag'),
+			start:0,
+			end:'',
+			orderList: [],
+		}
+	},
+  created(){
+	  this._getReserve();
   },
-  props: {
-    status: {
-      type: Boolean,
-      default: false,
-      toWay: true
-    }
+  mounted(){ 
   },
-  data() {
-    return {
-      nowIndex: 0,
-      isTrue: false,
-      hideDiv: true,
-      isShow: false,
-      activeName: "",
-      //nowIndex:0,
-      puser: sessionStorage.getItem("user"),
-      ptoken: sessionStorage.getItem("flag"),
-      // pserverAddress:'http://172.16.149.133:8080',
-      start: 0,
-      end: "",
-      recordData: []
-    };
-  },
-  created() {
-    this.init();
-  },
-  methods: {
-    toggleTabs: function(index) {
-      this.nowIndex = index;
-    },
-    deleteRecord(event) {
-      $(event.target)
-        .siblings(".hide")
-        .show();
-      $(event.target).hide();
-      $(event.target)
-        .parent()
-        .parent()
-        .next(".ucenterpic-bd")
-        .find(".order-close")
-        .show();
-    },
-    completeRecord(event) {
-      $(event.target)
-        .siblings(".unfold-div")
-        .hide();
-      $(event.target)
-        .siblings(".myorder-delete")
-        .show();
-      $(event.target).hide();
-      $(event.target)
-        .parent()
-        .parent()
-        .next(".ucenterpic-bd")
-        .find(".order-close")
-        .hide();
-    },
-    deleteAllRecord(event) {
-      $(event.target)
-        .siblings(".unfold-div")
-        .hide();
-      $(event.target)
-        .siblings(".myorder-delete")
-        .show();
-      $(event.target)
-        .parent()
-        .parent()
-        .next(".ucenterpic-bd")
-        .remove();
-      $(event.target).hide();
-    },
-    init() {
-      let self = this;
-      let url = "/api/PortalServer-App/new/ptl_ipvp_vod_vod028"
-      self
-        .$http({
-          method: "get",
-          url: url,
-          params: {
-              ptype: self.GLOBAL.config.ptype,
-              plocation: self.GLOBAL.config.plocation,
-              puser: self.GLOBAL.config.puser,
-              ptoken: self.GLOBAL.config.ptoken,
-              pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.GLOBAL.config.pserialNumber,
-              pversion:  self.GLOBAL.config.pversion,
-              ptn: self.GLOBAL.config.ptoken,
-              pkv: self.GLOBAL.config.pkv, 
-              hmac: '',
-              nonce: self.GLOBAL.config.nonce,
-              timestamp: self.GLOBAL.config.timestamp,
-          }
-        })
-        .then(res => {
-          if (res.data.status === '0') {
-            this.recordData = res.data.data.historys
-            // console.log(this.recordData)
-          }
-        });
-    }
-  }
-};
-</script>
+	methods: {
+	    _getReserve(){
+			let self = this
+			let url = '/api/PortalServer-App/new/ptl_ipvp_vod_vod028'
+			self.$http({
+				method: 'get',
+				url: url,
+				params: {
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
+				}
+			})
+			.then((res)=>{
+				if(res.data.status == 0){
+					this.orderList = res.data.data.historys ;
+	
+					if( this.orderList.length == 0 ){
+						this.hideDiv = false;
+						$( 'myorderBar ' ).html( '您暂时没有观看记录' )
+					}
+				}
+			})
+	    },
+		deleteDom(val,el){//删除按钮  单个
+			this.delAllPlay1( val )	
+			$(el.target).closest( 'li' ).remove()
+
+		},
+		deleteRecord ( ) {
+			this.isTrue = true;
+			this.hideDiv = false;
+			$('.coll1').find('.order-close').show()
+			
+
+		},
+		completeRecord () {
+			this.isTrue = false
+			this.hideDiv = true
+			$('.order-close').hide()
+
+		},
+		deleteAllRecord () {
+
+			this.isTrue = false;
+			this.hideDiv = false;
+			$('.collArr1').remove()
+
+			this.orderList.forEach(function(item,index){
+				this.delAllPlay1( item )
+				console.log( item )
+			}.bind( this ))
+
+
+		},
+		delAllPlay1( val ){ //点播预约清空
+			 var self = this;
+			this.$http({
+				method: 'post',
+				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod030',
+				params: {
+					ptype: self.GLOBAL.config.ptype,
+					plocation: self.GLOBAL.config.plocation,
+					puser: self.puser,
+					ptoken: self.ptoken,
+					pversion: '03010',
+					locationName: '',
+					countyName: '',
+					hmace: '125456',
+					timestamp: new Date().getTime(),
+					nonce: Math.random().toString().slice(2),
+					pserverAddress: self.GLOBAL.config.pserverAddress,
+					pserialNumber: self.ptoken,     
+				},
+				//post用data
+				data:{
+					assertID: val.assertID,
+					providerID: val.providerID
+				}
+			})
+			.then((res) => {
+			if(res.data.status == 0) {
+					console.log( '删除观看记录' )  
+				}
+			})
+			.catch((res) => {
+				alert(res.data.errorMessage)
+			})
+		},
+	}
+}
+</script> 
 
 <style scoped>
-.view-record {
-}
+.myorder-tabs-bd { position: relative; height: auto; }
+.myorder-tabs-bd .el-tabs__header { position: relative; z-index: 1; }
+.myorder-tabs-bd .el-tabs__item { float: left; line-height: 33px; height: 33px; font-size: 18px; padding: 0 15px; margin: 0; cursor: pointer; }
+.myorder-tabs-bd .is-active{ color: #ff9c01; }
+.myorder-tabs-bd .el-tabs__active-bar { background: #ff9c01; height: 2px; }
+.myorder-tabs-bd .rank-bd li { margin-bottom: 20px; }
+.myorder-tabs-bd .live-crumb { margin-top: 10px; }
+.myorder-top-bd { position: absolute; right: 25px; top: 11px; font-size: 14px; z-index: 2; }
+.myorder-top-bd span { margin-left: 15px; cursor: pointer; }
+.myorderBar .pic-mask { position: absolute; left: 0; bottom: 0; height: 30px; width: 100%; background: rgba(0,0,0,.7); color: #fff; line-height: 30px; }
+.myorderBar .mask-time { position: absolute; right: 10px; top: 0; font-size: 14px; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
+.myorderBar { width: 100%; overflow: hidden; }
+.myorderBar ul { padding: 50px 0 0 28px; }
+.myorderBar li { position: relative; float: left; width: 165px; height: 280px; background: #f0f0f0; margin: 0 24px 24px 0; overflow: hidden; }
+.myorderBar li:nth-child(5n+5) { margin: 0 0 24px 0; }
+.myorderBar .pic-ri-top { position: relative; width: 100%; height: 245px; }
+.myorderBar li img { width: 100%; height: 100%; }
+.myorderBar .pic-title { padding-left: 8px; width: 140px; }
+.myorderBar .progress-bar { height: 2px; }
+.pic-btm { position: relative; height: 35px; line-height: 35px; font-size: 14px; color: #445560; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+.movie-pos { position: absolute; right: 8px; top: 3px; }
+.movie-num { font-size: 26px; font-style: italic; }
+.myorderBar .icon-arror { color: #888; font-size: 18px; }
+.myorderBar li:nth-child(4n+4) .rank-num, .rank-bd li:nth-child(5n+5) .rank-num { color: #888; }
+.myorderBar .order-close { cursor: pointer; display: none; position: absolute; right: 0; top: 0; background: #eb5031; width: 30px; height: 30px; line-height: 30px; text-align: center; color: #fff; z-index: 2; }
+.myorderBar .block { display: block; }
 
-.times-box {
-  position: relative;
-  font-size: 18px;
-  height: 40px;
-  line-height: 40px;
-}
-.point-style,
-.sj-txt {
-  display: inline-block;
-  vertical-align: middle;
-}
-.point-style {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #14b871;
-  margin-right: 5px;
-}
-.reset-style-1 {
-  background: #ff9c01;
-}
-.reset-style-2 {
-  background: #ed332a;
-}
-.myorder-top-bd {
-  position: absolute;
-  right: 20px;
-  top: -2px;
-  font-size: 14px;
-  z-index: 2;
-}
-.myorder-top-bd span {
-  margin-left: 15px;
-  cursor: pointer;
-}
-.active-del .hide {
-}
 </style>

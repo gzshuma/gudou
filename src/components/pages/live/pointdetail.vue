@@ -17,7 +17,7 @@
 			<div class="wrap clearfix">
 				<div class="fl palyer-le">
 					<div v-if="!CA" class="tips-style">{{caText}}</div>
-	        		<iframe v-if="CA" name="iframeDom" :src="'/static/player_m3u8/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
+	        		<iframe name="iframeDom" src="/static/player_m3u8/index.html" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
 	        	</div>
 	        	<div class="fr palyer-ri">
 					<div class="episodes-reset" :class="episodesData.length>1 ? '':'dis-hide'">
@@ -233,6 +233,9 @@ export default {
 						this.CA = true
 						// iframe赋值
 						this.playerUrl = b+'?'+str
+
+						// 赋值给iframe
+						iframeDom.window.childrenFun(b+'?'+str)
 					}else {
 						// console.log(getParamValue(str, 'errorcode')[1])
 						var num = getParamValue(str, 'errorcode')[1]
@@ -266,7 +269,7 @@ export default {
 .episodes-crumb span:last-child .el-icon-arrow-right { display: none; }
 .episodes-crumb .el-icon-arrow-right { font-size: 12px; color: #888; }
 .infodiscrib-rest-bd .infodiscrib-bd, .infodiscrib-rest-bd .episodes-bd, .infodiscrib-rest-bd .infodiscrib-con { display: block; float: none; width: 100%; height: auto; padding-top: 0; }
-.palyer-le { width: 812px; height: 100%; }
+.palyer-le { position: relative; width: 812px; height: 100%; }
 .palyer-box { color: #f00; }
 .yuding{ color: #ff9c01; }
 .player-bd { padding: 10px 0 25px; background: #212121; min-width: 1200px; overflow: hidden;}
@@ -312,5 +315,5 @@ export default {
 .juji-box .el-tabs__active-bar { background: #ff9c01; height: 2px; }
 .el-tabs__content { width: 365px; border: #363636 2px solid; border-bottom-width: 1px; overflow: hidden; }
 .el-tabs__header { border-bottom-color: #48576a; }
-.tips-style { width: 90%; height: 415px; padding: 0 10%; line-height: 415px; font-size: 16px; color: #fff; text-align: center; }
+.tips-style { position: absolute; top: 0; left: 0; width: 100%; height: 415px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; }
 </style>

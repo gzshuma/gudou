@@ -59,7 +59,7 @@ export default {
 	},
   methods: {
     urlDirect ($id, $channelId) {
-      console.log($id)
+      // console.log($id)
       this.$router.push({
         name: 'livedetail',
         params: {

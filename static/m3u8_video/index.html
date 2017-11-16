@@ -7,10 +7,9 @@
 </head>
 <body>
 <script src="jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="ckplayer.js?t=123"></script>
+<script type="text/javascript" src="ckplayer/ckplayer.js?t=123"></script>
 <div class="video"></div>
 <input type="hidden" id="url-val">
-<!-- <div class="fiilScreen"></div> -->
 <!-- <div class="video-malv" id="videoMalv">
     <ul>
         <li onclick="videoChange(0)">标清</li>
@@ -34,17 +33,15 @@ function videoNew(videoUrl) {
         variable: 'player', //该属性必需设置，值等于下面的new chplayer()的对象
         autoplay: true, // 自动播放
         flashplayer: true,
-        html5m3u8: false,
-        live: false, // 去掉直播文字
-        volume: '0.5', // 初始音量设置
-        poster: '', // 封面图设置
-        seek: 0, // 视频开始播放时要跳转的时间，该值主要用来做跳过片头等功能
-        duration: 0, // 视频在默认不加载的情况下显示总时间
-        rotation: 0, // 该功能只支持90，180，270，-90，-180，-270。如果视频的所在域相对于播放器域没有权限，则不能使用该属性
-        loaded:'loadedHandler',//监听播放器加载成功
-        controlBarShow: true,
-        allowFullscreen: true,
-        // definition:false,
+        // html5m3u8: false,
+        // live: false, // 去掉直播文字
+        // volume: '0.5', // 初始音量设置
+        // poster: '', // 封面图设置
+        // seek: 0, // 视频开始播放时要跳转的时间，该值主要用来做跳过片头等功能
+        // duration: 0, // 视频在默认不加载的情况下显示总时间
+        // rotation: 0, // 该功能只支持90，180，270，-90，-180，-270。如果视频的所在域相对于播放器域没有权限，则不能使用该属性
+        // loaded:'loadedHandler',//监听播放器加载成功
+        // definition:true,
         video: videoUrl, //视频地址
         // video: [
         //     [
@@ -89,10 +86,6 @@ function timeHandler(t){
     return t;
     // console.log('当前播放的时间：'+t);
 }
-function quitFullScreenHandler(){
-    $( '.video' ).css({'height':'415px','width':'100%'})
-    alert(1)
-}
 
 // function videoChange(index, src) {
 //     src=$(this).attr('data-src');
@@ -122,50 +115,11 @@ function iframeMouseover() {
 function iframeMouseleave() {
     $('.video-malv').hide()
 }
-
-
-//进入全屏
- function launchFullscreen(element) 
- {
-     if(element.requestFullscreen) {
-       element.requestFullscreen();
-     } else if(element.mozRequestFullScreen) {
-       element.mozRequestFullScreen();
-     } else if(element.msRequestFullscreen){ 
-       element.msRequestFullscreen(); 
-     } else if(element.oRequestFullscreen){
-        element.oRequestFullscreen();
-    }else if(element.webkitRequestFullscreen){
-       element.webkitRequestFullScreen();
-     }
-}
-var isFull = false;
- //判断是否全屏
-document.addEventListener('webkitfullscreenchange', function(el){ 
-    isFull = !isFull;
-    isFull ? $( '.video' ).css({'height':'100%','width':'100%'}) : $( '.video' ).css({'height':'415px','width':'100%'})
-}); 
-document.addEventListener('fullscreenchange', function(){ 
-    isFull = !isFull;
-});
-
-document.addEventListener('mozfullscreenchange', function(){ 
-    isFull = !isFull;
-});
-
-document.addEventListener('MSFullscreenChange', function(){ 
-    isFull = !isFull;
-});
-
-$('.fiilScreen').click(function() {
-    launchFullscreen( $( '.video' )[0] )
-});
 </script>
 <style type="text/css">
 .video { width: 812px;height: 415px; }
 .video-malv { display: none; position: absolute; bottom: 10px; right: 49px; z-index: 100; }
 .videoMalv-selected { background: #f00; border-radius: 3px; width: 70px; height: 27px; line-height: 27px; text-align: center; font-size: 14px; color: #fff; }
-.fiilScreen { background: rgba(0,0,0,0); width: 50px; height: 50px; position: absolute; bottom: 0; right: 0; }
 </style>
 </body>
-</html>  
+</html> 

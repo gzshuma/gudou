@@ -51,6 +51,7 @@ export default {
   created () {
     this._getNavData()
     this._getUserInfo()
+    this._getBitrate()
   },
   methods: {
     _getNavData () {
@@ -108,6 +109,39 @@ export default {
           alert(res.data.errorMessage)
         })
     },
+
+    //获取用户信息
+    _getBitrate( ){
+    var self = this;
+    this.$http({
+      method: 'get',
+      url: '/api/PortalServer-App/new/ptl_ipvp_cmn_cmn009',
+      params: {
+              ptype: self.GLOBAL.config.ptype,
+              plocation: self.GLOBAL.config.plocation,
+              puser: self.GLOBAL.config.puser,
+              ptoken: self.GLOBAL.config.ptoken,
+              pserverAddress: self.GLOBAL.config.pserverAddress,
+              pserialNumber: self.GLOBAL.config.pserialNumber,
+              pversion:  self.GLOBAL.config.pversion,
+              ptn: self.GLOBAL.config.ptoken,
+              pkv: self.GLOBAL.config.pkv, 
+              hmac: '',
+              nonce: self.GLOBAL.config.nonce,
+              timestamp: self.GLOBAL.config.timestamp
+      },
+        })
+        .then((res) => {
+        if(res.data.status == 0) {
+            // console.log(res.data.data.resolutions)
+            localStorage.setItem('bitrateValue',JSON.stringify(res.data.data.resolutions))
+
+          }
+        })
+        .catch((res) => {
+          alert(res.data.errorMessage)
+        })
+    }
   },
   watch: {
     '$route' (to, from) {  

@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import 'babel-polyfill'
 import App from 'components/pages/app/app'
 import routes  from './router'
 // import store from './vuex/store'
@@ -18,12 +19,12 @@ import $ from 'jquery'
 import global_ from 'components/globle/globle'
 import VueLazyload from "vue-lazyload"
 import VueAwesomeSwiper from 'vue-awesome-swiper'
-import SocialSharing from 'vue-social-sharing'
-import VueVideoPlayer from 'vue-video-player'
-import 'video.js/dist/video-js.css'
-import 'vue-video-player/src/custom-theme.css'
-import 'videojs-flash'
-import 'videojs-contrib-hls/dist/videojs-contrib-hls'
+// import SocialSharing from 'vue-social-sharing'
+// import VueVideoPlayer from 'vue-video-player'
+// import 'video.js/dist/video-js.css'
+// import 'vue-video-player/src/custom-theme.css'
+// import 'videojs-flash'
+// import 'videojs-contrib-hls/dist/videojs-contrib-hls'
 // import VideoPlayer from 'vue-video-player'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
@@ -38,18 +39,18 @@ Vue.prototype.$http = axios
 Vue.prototype.GLOBAL = global_
 
 //全局替换图片路径
-Vue.filter('imgFilter',function( val ){
-	if(val) {
-		let domain = document.domain + ':8088'
-	    let kou = val.split('//')[1].split( '/' )[0]
-		let url =  val.replace( kou, domain) 
-		// console.log( url )
-		return url
-	}
-})
+// Vue.filter('imgFilter',function( val ){
+// 	if(val) {
+// 		let domain = document.domain + ':8088'
+// 	    let kou = val.split('//')[1].split( '/' )[0]
+// 		let url =  val.replace( kou, domain) 
+// 		// console.log( url )
+// 		return url
+// 	}
+// })
 
-Vue.use(VueVideoPlayer)
-Vue.use(SocialSharing)
+// Vue.use(VueVideoPlayer)
+// Vue.use(SocialSharing)
 Vue.use(ElementUI)
 
 Vue.use(VueRouter)
@@ -62,14 +63,14 @@ Vue.use(VueLazyload, {
 	//替换图片路径
 
 	filter:{
-		imgUrl: function( val ){
-			if(val.src) {
-				let domain = document.domain + ':8088'
-				let kou = val.src.split('//')[1].split( '/' )[0]
-				let src = val.src.replace( kou, domain) 
-				val.src = src
-			}
-		}
+		// imgUrl: function( val ){
+		// 	if(val.src) {
+		// 		let domain = document.domain + ':8088'
+		// 		let kou = val.src.split('//')[1].split( '/' )[0]
+		// 		let src = val.src.replace( kou, domain) 
+		// 		val.src = src
+		// 	}
+		// }
 	}
 
 })

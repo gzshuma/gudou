@@ -8,8 +8,6 @@
       
 		</div>
 
-    <share :collectData="collectData"></share>
-
 	</div>
 </template>
 <script type="text/ecmascript-6">
@@ -21,49 +19,24 @@ export default {
 		share,
 		// jujilist
 	},
-    data() {
+      data() {
       return {
-        puser:sessionStorage.getItem('user'),
-        ptoken:sessionStorage.getItem('flag'),
-         
-        collectData: {
-          isZhibo: false,//是否直播
-          id: this.$route.params.id,//节目ID
-          collectArr:[],//查看收藏的信息
-        },
-
-         playerOptions: {
+        playerOptions: {
           // videojs and plugin options
           sources: [{
             withCredentials: false,
             type: "application/x-mpegURL",
-            src: "http://cg5.rifestone.com:8060/live/10017_1200.m3u8?ci=123"
+            src: "http://172.16.149.223:8060/vod/11000_MOVE2320170710000301_1500.m3u8?ci=123"
           }],
-          // controlBar: {
-          //   timeDivider: false,
-          //   durationDisplay: false
-          // },
-          live:true,
-          flash: { hls: { withCredentials: true }},
-          html5: { hls: { withCredentials: true }},
-          poster: "/static/pic/2.jpg"
-         }
-
-
+          controlBar: {
+            timeDivider: false,
+            durationDisplay: false
+          },
+          flash: { hls: { withCredentials: false }},
+          html5: { hls: { withCredentials: false }},
+          poster: "/static/images/author-5.jpg"
+        }
       }
-    },
-    computed:{
-
-    },
-    created(){
-       this.queryCollect2();
-      //  console.log( this.detailData.columnID )
-      //  console.log( this.detailData )
-      //  console.log( this.$store.state.player.clickPlayer.columnID )
-
-    },
-    mounted() {
-          
     },
     methods: {
       playerReadied(player) {
@@ -72,40 +45,8 @@ export default {
           // console.log(options)
           return options
         }
-      },
-      //查询点播收藏
-      queryCollect2( ){
-        var self = this;
-        this.$http({
-          method: 'get',
-          url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod031',
-              params: {
-                ptype: self.GLOBAL.config.ptype,
-                plocation: self.GLOBAL.config.plocation,
-                puser: self.GLOBAL.config.puser,
-                ptoken: self.GLOBAL.config.ptoken,
-                pserverAddress: self.GLOBAL.config.pserverAddress,
-                pserialNumber: self.GLOBAL.config.pserialNumber,
-                pversion:  self.GLOBAL.config.pversion,
-                ptn: self.GLOBAL.config.ptoken,
-                pkv: self.GLOBAL.config.pkv, 
-                hmac: '',
-                nonce: self.GLOBAL.config.nonce,
-                timestamp: self.GLOBAL.config.timestamp,
-                start: '',
-                end: ''
-              },
-            })
-            .then((res) => {
-            if(res.data.status == 0) {
-              this.collectData.collectArr =  res.data.data.vod
-            }
-            })
-            .catch((res) => {
-              alert(res.data.errorMessage)
-            })
-      },
-    } 
+      }
+    }
 }
 </script>
 

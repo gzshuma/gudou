@@ -13,10 +13,18 @@
 			</div>
 		</div>
 		<div class="player-bd live-player clearfix">
+
+			<!-- <player></player> -->
 			<div class="wrap clearfix">
-				<div class="fl palyer-le">
+				<div class="fl palyer-le" @mouseover="iframeMouseover" @mouseleave="iframeMouseleave">
 					<div v-if="!CA" class="tips-style">{{caText}}</div>
-	        		<iframe v-if="CA" name="iframeDom" :src="'/static/player_m3u8/index.html?src='+playerUrl" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
+	        		<iframe name="iframeDom" :src="'/static/player_m3u8/index.html'+playerUrl" id="iframeBox" width="100%" height="415" scrolling="no" frameborder="0"></iframe>
+					<div class="video-malv" id="videoMalv" v-if="OK">
+					    <ul>
+					        <li v-for="v in playerStr" @click="malvClick(v.url)">{{v.text}}</li>
+					    </ul>
+					    <div class="videoMalv-selected">标清</div>
+					</div>
 				</div>
 				<div class="fr palyer-ri">
 					<div class="player-tabs-box">
@@ -63,13 +71,16 @@ import $ from 'jquery'
 import { Message } from 'element-ui'
 import share from 'components/common/share'
 import {getDay, Monday,dateComparate, GetQueryString, getParamValue} from '@/util'
+import player from 'components/common/player'
 
 export default {
 	components: {
-		share
+		share,
+		player
 	},
 	data () {
 		return {
+			OK: false,
 			CA: false,
 			caText: '',
 			collectData:{
@@ -99,7 +110,9 @@ export default {
 			subData: {
 				channelName: '',
 				epgName: ''
-			}
+			},
+			bitrateValue: JSON.parse(localStorage.getItem('bitrateValue')),
+			playerStr: []
 		}
 	},
 	created () {
@@ -347,12 +360,17 @@ export default {
 			} else {
 				this.isok = false;
 
+				// 点击当前播放的和回播的动作操作
+				this.num +=1
+
+				var self = this
 				// 点播地址	
 				var data = {}
-				var data = val.historyUrl[0]
+				var data = val.historyUrl[1]
 				for(var v in data){
 				    data = data[v]
 				}
+				// console.log(data)
 
 				// 获取媒资
 				let meizi = data.split('?')
@@ -366,6 +384,71 @@ export default {
 				let playStr = '', playStr_1 = ''
 				playStr = 'http://172.16.149.223:8060' + movieUrl[1] + '?'
 				playStr_1 = 'http://172.16.149.223:8060' + movieUrl[1] + '?' + url[1] + '&'
+
+				// 
+				this.playerStr = []
+				// 循环播放源
+				var dataStr = {
+					url: '',
+					text: ''
+				}
+				for(var v in val.historyUrl) {
+						// console.log(v)
+					for(var value in val.historyUrl[v]) {
+						var dataAdress = val.historyUrl[v][value]
+						// console.log(dataAdress)
+						let url_1 = dataAdress.split('?')
+						// console.log(url_1[1])
+						let movieUrl_1 = url_1[0].split('8070')
+						let movieSource = '', movieSource_1 = ''
+						movieSource = 'http://172.16.149.223:8060' + movieUrl_1[1] + '?'
+						movieSource_1 = 'http://172.16.149.223:8060' + movieUrl_1[1] + '?' + url_1[1] + '&'
+
+						// console.log(movieSource)
+
+						if(val.epgID==self.endTimeArr.epgID) {
+							playStr = movieSource
+							$(el.target).addClass('player-cur')
+						}else if(self.num == 1) {
+							playStr = movieSource
+						}else {
+							playStr = movieSource_1
+						}
+
+						// console.log(playStr)
+
+						self.bitrateValue.forEach(function(item, n) {
+							if(value==item.resolutionID) {
+								if(item.bitrate==1) {
+									dataStr = {
+										url: playStr,
+										text: '流畅'
+									}
+									self.playerStr.push(dataStr)
+								}else if(item.bitrate==2) {
+									dataStr = {
+										url: playStr,
+										text: '标清'
+									}
+									self.playerStr.push(dataStr)
+								}else if(item.bitrate==3) {
+									dataStr = {
+										url: playStr,
+										text: '高清'
+									}
+									self.playerStr.push(dataStr)
+								}else if(item.bitrate==4) {
+									dataStr = {
+										url: playStr,
+										text: '超清'
+									}
+									self.playerStr.push(dataStr)
+								}
+							}
+						})
+					}
+				}
+				console.log(self.playerStr)
 
 				// 鉴权获取
 				let self = this;
@@ -406,8 +489,6 @@ export default {
 						let str = res.data.data.authResult.split('?')[1];
 						// console.log(str)
 
-						// 点击当前播放的和回播的动作操作
-						this.num +=1
 						if(val.epgID==this.endTimeArr.epgID) {
 							playStr = playStr + str
 							$(el.target).addClass('player-cur')
@@ -427,9 +508,8 @@ export default {
 						// 判断鉴权中是否有ACL
 						if(GetQueryString(str, 'a=')) {
 							this.CA = true
-							// iframe赋值
-							let html = playStr
-							this.playerUrl = html
+							// 赋值给iframe
+							iframeDom.window.childrenFun(playStr)
 						}else {
 							var num = getParamValue(str, 'errorcode')[1]
 							this.CA = false
@@ -437,6 +517,8 @@ export default {
 							this.caText = txt
 							Message.warning(txt)
 						}
+						// console.log(self.playerStr)
+						iframeDom.window.childrenUrl(self.playerStr)
 					}
 				})
 				.catch((res) => {
@@ -481,6 +563,66 @@ export default {
 			.catch((res) => {
 				alert(res.data.errorMessage)
 			})
+		},
+		iframeMouseover() {
+			this.OK = true
+		},
+		iframeMouseleave() {
+			this.OK = false
+		},
+		malvClick(src) {
+			let meizi = src.split('.m3u8')[0]
+			// console.log(meizi) 
+			var index = meizi.lastIndexOf("\/");
+			// console.log(index) 
+			meizi  = meizi.substring(index + 1, meizi.length);
+			meizi = meizi.split('.')[0]
+			// console.log(meizi)
+			// 鉴权获取
+			let self = this;
+			this.$http({
+				method: 'get',
+				url: '/api/PortalServer-App/new/aaa_aut_aut002',
+				params: {
+					ptype: self.GLOBAL.config.ptype,
+					plocation: self.GLOBAL.config.plocation,
+					puser: self.GLOBAL.config.puser,
+					ptoken: self.GLOBAL.config.ptoken,
+					pversion: self.GLOBAL.config.pversion,
+					pserverAddress: self.GLOBAL.config.pserverAddress,
+					pserialNumber: self.GLOBAL.config.pserialNumber, // 必填
+					pkv: self.GLOBAL.config.pkv,
+					ptn: self.GLOBAL.config.ptoken,
+					DRMtoken: '',
+					epgID: '',
+					authType: self.GLOBAL.config.authType,
+					secondAuthid: '',
+					t: self.GLOBAL.config.ptoken,
+					pid: '',
+					cid: self.$route.params.channelid.split('_')[0],
+					u: self.GLOBAL.config.puser,
+					d: self.GLOBAL.config.pserialNumber, // 必填 跟pserialNumber一样
+					p: self.GLOBAL.config.ptype,
+					l: self.GLOBAL.config.plocation,
+					n: meizi, // dongfang_800
+					v: self.GLOBAL.config.v,
+					ot: self.GLOBAL.config.ot,
+					hmac: '',
+					timestamp: self.GLOBAL.config.timestamp,
+					nonce: self.GLOBAL.config.nonce
+				}
+			})
+			.then((res) => {
+				if(res.data.status == 0) {
+					let str = res.data.data.authResult.split('?')[1];
+					// console.log(str)
+					var playStr = src +str
+					iframeDom.window.childrenFun(playStr)
+				}
+			})
+			.catch((res) => {
+				alert(res.data.errorMessage)
+			})
 		}
 	}
 }
@@ -498,7 +640,7 @@ export default {
 .episodes-crumb span:last-child .el-icon-arrow-right { display: none; }
 .episodes-crumb .el-icon-arrow-right { font-size: 12px; color: #888; }
 .infodiscrib-rest-bd .infodiscrib-bd, .infodiscrib-rest-bd .episodes-bd, .infodiscrib-rest-bd .infodiscrib-con { display: block; float: none; width: 100%; height: auto; padding-top: 0; }
-.palyer-le { width: 812px; height: 100%; margin-bottom: 15px; }
+.palyer-le { position: relative; width: 812px; height: 100%; margin-bottom: 15px; background: #000; }
 .palyer-box { color: #f00; }
 .yuding{ color: #ff9c01; }
 .player-bd { padding: 0; background: #212121; min-width: 1200px; overflow: hidden; }
@@ -541,5 +683,9 @@ export default {
 .playa.icon-back { right: 10px; }
 .player-tabchange { display: none; }
 .block { display: block; }
-.tips-style { width: 90%; height: 415px; padding: 0 10%; line-height: 415px; font-size: 20px; color: #fff; text-align: center; }
+.tips-style { position: absolute; top: 0; left: 0; width: 100%; height: 425px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; background: #000; }
+iframe { background: #000; }
+.video-malv { /*display: none;*/ position: absolute; bottom: 7px; right: 49px; z-index: 100; }
+.videoMalv-selected { background: #f00; border-radius: 3px; width: 70px; height: 27px; line-height: 27px; text-align: center; font-size: 14px; color: #fff; }
+.fiilScreen { background: rgba(0,0,0,0); width: 50px; height: 50px; position: absolute; bottom: 0; right: 0; }
 </style>

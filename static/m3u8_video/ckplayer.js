@@ -21,7 +21,7 @@ function ckplayerConfig() {
 			timeFrequency: 100, //计算当前播放时间和加载量的时间频率，单位：毫秒
 			autoLoad: true, //视频是否自动加载
 			loadNext: 0, //多段视频预加载的段数，设置成0则全部加载
-			// definition: true, //是否使用清晰度组件
+			definition: true, //是否使用清晰度组件
 			smartRemove: true, //是否使用智能清理，使用该功能则在多段时当前播放段之前的段都会被清除出内存，减少对内存的使用
 			bufferTime: 200, //缓存区的长度，单位：毫秒,不要小于100
 			click: true, //是否支持屏幕单击暂停
@@ -54,7 +54,7 @@ function ckplayerConfig() {
 			playCorrect: false, //是否需要错误修正，这是针对rtmp的
 			timeCorrect: true, //http视频播放时间错误纠正，有些因为视频格式的问题导致视频没有实际播放结束视频文件就返回了stop命令
 			m3u8Definition: { //m3u8自动清晰度时按关键字来进行判断
-				//tags:['200k','110k','400k','600k','1000k']
+				tags:['400k','650k','1000k','1500k']
 			},
 			m3u8MaxBufferLength: 30, //m3u8每次缓冲时间，单位：秒数
 			timeStamp: '', //一个地址，用来请求当前时间戳，用于播放器内部时间效准
@@ -176,7 +176,7 @@ function ckplayerConfig() {
 			type: '', //视频格式
 			crossorigin: '', //设置html5视频的crossOrigin属性
 			crossdomain: '', //安全策略文件地址
-			unescape: false, //默认flashplayer里需要解码
+			unescape:false,//默认flashplayer里需要解码
 			debug: false //是否开启调试模式
 		},
 		vars: {},
@@ -191,7 +191,7 @@ function ckplayerConfig() {
 			escMute: '取消静音',
 			front: '上一集',
 			next: '下一集',
-			definition: '点击选择清晰度',
+			definition: '点击选择清晰度111',
 			error: '加载出错'
 		},
 		//全局变量/变量类型：Array/功能：右键菜单：[菜单标题,类型(link:链接，default:灰色，function：调用函数，javascript:调用js函数),执行内容(包含链接地址，函数名称),[line(间隔线)]]
@@ -217,7 +217,7 @@ function ckplayerConfig() {
 			['010', 'Ajax.status:[error]']
 		],
 		//全局变量/变量类型：String/功能：定义logo
-		logo: '',
+		logo: 'ckplayer',
 		//全局变量/变量类型：Boolean/功能：是否加载了播放器
 		loaded: false,
 		//全局变量/变量类型：计时器/功能：监听视频加载出错的状态
@@ -905,14 +905,7 @@ function ckplayerConfig() {
 			this.getByElement(pauseCenterID).innerHTML = this.newCanvas(pauseCenterID, 80, 80); //构建中间暂停按钮
 			this.getByElement(loadingID).innerHTML = this.newCanvas(loadingID, 60, 60); //构建中间缓冲时显示的图标
 			this.getByElement(errorTextID).innerHTML = this.language['error']; //构建错误时显示的文本框
-			if(this.ckplayerConfig['style']['logo']['file']) {
-				var logoFile = this.ckplayerConfig['style']['logo']['file'];
-				if(logoFile.substr(0, 15) == 'data:image/png;' || logoFile.substr(0, 15) == 'data:image/jpg;' || logoFile.substr(0, 15) == 'data:image/jpeg;') {
-					this.getByElement(logoID).innerHTML = '<img src="' + logoFile + '" border="0">'; //构建logo
-				}
-			} else {
-				this.getByElement(logoID).innerHTML = this.vars['logo'] || this.logo || ''; //构建logo
-			}
+			this.getByElement(logoID).innerHTML = this.vars['logo'] || this.logo; //构建logo
 			//CB:Object：全局变量，将一些全局需要用到的元素统一放在CB对象里
 			var pd = this.PD;
 			this.CB = {
@@ -2301,7 +2294,7 @@ function ckplayerConfig() {
 					thisTemp.css(thisTemp.CB['timeBoBg'], 'display', 'block');
 					thisTemp.changeVolume(thisTemp.volume);
 					thisTemp.changeLoad();
-					if(!thisTemp.timerBuffer) {
+					if(!thisTemp.timerBuffer){
 						thisTemp.bufferEdHandler();
 					}
 				} else {
@@ -3764,36 +3757,6 @@ function ckplayerConfig() {
 				this.V.videoRotation(n);
 				return;
 			}
-			if(this.isUndefined(n)) {
-				n = 0;
-			}
-			var tf = this.css(this.V, 'transform');
-			if(this.isUndefined(tf) && !tf) {
-				tf = 'rotate(0deg)';
-			}
-			var reg = tf.match(/rotate\([^)]+\)/);
-			reg = reg ? reg[0].replace('rotate(', '').replace('deg)', '') : '';
-			if(reg == '') {
-				reg = 0;
-			} else {
-				reg = parseInt(reg);
-			}
-			if(n == -1) {
-				reg -= 90;
-			} else if(n == 1) {
-				reg += 90;
-			} else {
-				if(n != 90 && n != 180 && n != 270 && n != -90 && n != -180 && n != -270) {
-					reg = 0;
-				}
-				else{
-					reg=n;
-				}
-			}
-			n = reg;
-			tf = tf.replace(/rotate\([^)]+\)/, '') + ' rotate(' + n + 'deg)';
-			this.css(this.V, 'transform', tf);
-			return;
 		},
 		videoBrightness: function(n) {
 			if(!this.loaded) {
@@ -3839,19 +3802,6 @@ function ckplayerConfig() {
 				this.V.videoZoom(n);
 				return;
 			}
-			if(this.isUndefined(n)) {
-				n = 1;
-			}
-			if(n<0){
-				n=0;
-			}
-			if(n>2){
-				n=2;
-			}
-			var tf = this.css(this.V, 'transform');
-			tf = tf.replace(/scale\([^)]+\)/, '') + ' scale(' + n + ')';
-			this.css(this.V, 'transform', tf);
-			return;
 		},
 		videoProportion: function(w, h) {
 			if(!this.loaded) {
@@ -4088,8 +4038,9 @@ function ckplayerConfig() {
 					d = '';
 					w = '';
 				}
-			} else {
-				f = encodeURIComponent(decodeURIComponent(video));
+			}
+			else{
+				f=encodeURIComponent(decodeURIComponent(video));
 			}
 			if(v['preview'] != null) {
 				v['previewscale'] = v['preview']['scale'];

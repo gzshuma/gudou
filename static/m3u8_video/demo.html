@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<div id="videoWrap"></div>
+<script type="text/javascript" src="ckplayer.js" charset="utf-8"></script>
+<script type="text/javascript">
+showPlayer('http://static.guojiang.tv/pc/video/sound/1/playlist.m3u8','videoWrap')
+function showPlayer(src, id){
+     //player
+   var flashvars={
+        f : 'http://static.guojiang.tv/pc/js/ckplayer/m3u8.swf',
+        a : src,
+        c : 0,
+        s:4,
+        lv:0//注意，如果是直播，需设置lv:1
+    };
+    var params={bgcolor:'#FFF',allowFullScreen:true,allowScriptAccess:'always',wmode:'transparent'};
+    var video=[src];
+    ckplayer.embed('http://static.guojiang.tv/pc/js/ckplayer/ckplayer.swf',id ,'ck-video','100%','100%',false, flashvars ,video, params);
+ 
+}
+</script>
+</body>
+</html>

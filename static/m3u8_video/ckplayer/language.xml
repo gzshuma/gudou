@@ -11,7 +11,7 @@
 			<escFull>退出全屏</escFull>
 			<previousPage>上一集</previousPage>
 			<nextPage>下一集</nextPage>
-			<!-- <definition>点击选择清晰度</definition> -->
+			<definition>点击选择清晰度</definition>
 		</buttonOver>
 		<volumeSliderOver>
 			音量：[$volume]%
@@ -40,5 +40,5 @@
 			<streamNotFound>加载失败</streamNotFound>
 			<formatError>视频格式错误</formatError>
 		</error>
-		<!-- <definition>自动</definition> -->
+		<definition>自动</definition>
 	</language>

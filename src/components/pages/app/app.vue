@@ -165,8 +165,8 @@ export default {
     -moz-transition:color 1s;
     -webkit-transition:color 1s;
     -o-transition:color 1s; }
-.back-top i:hover { color:#ccc; }
-.back-top i { border-radius:6px; display:block; height:64px; width:56px; margin-bottom:5px;
+.back-top i:hover { color:#FFD114; }
+.back-top i { border-radius:6px; display:block; height:64px; width:56px; margin-bottom:5px;color: #F7931E;
     /*使用CSS3中的transition属性给<span>标签背景颜色添加渐变效果*/
     -moz-transition:background 1s;
     -webkit-transition:background 1s;

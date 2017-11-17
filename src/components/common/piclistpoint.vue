@@ -78,5 +78,6 @@ export default {
 .picpoint-txt { font-size: 20px; line-height: 45px; height: 45px; overflow: hidden; }
 .picpoint-top { position: relative; }
 .picpoint-top .more { position: absolute; top: 15px; right: 15px; font-size: 16px; cursor: pointer; }
+.picpoint-top .more:hover{ color: #ff9c01 }
 .picpoint-top .more i { font-family: Simsun; }
 </style>

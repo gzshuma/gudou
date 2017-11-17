@@ -73,6 +73,9 @@ export default {
 
 <style scoped>
 .classic-bd { margin: 25px 0; }
+/*  */
+.classic-bd .classic-box span:hover{ color: #ff9c01; }
+
 .classic-list { padding: 15px 15px 0 25px; border-bottom: #e1e1e1 1px solid; }
 .classic-name { width: 80px; color: #888; }
 .classic-box { font-size: 0; width: 1070px; }

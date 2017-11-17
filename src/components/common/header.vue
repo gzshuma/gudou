@@ -199,7 +199,7 @@ export default {
 <style scoped>
 header { position: fixed; top: 0; left: 0; background: rgba(0,0,0,.7); width: 100%; height: 55px; color: #fff; z-index: 10; }
 .header-wrap { display: flex; align-items: center; }
-.logo { margin: 0; width: 165px; height: 29px; background: url(/static/common/images/logo1.png) no-repeat; }
+.logo { margin: 0; width: 165px; height: 29px; background: url(/static/common/images/logo1.png) no-repeat; cursor: pointer; }
 .nav-box { position: relative; float: left; padding: 0 0 0 10px; line-height: 55px; font-size: 0; }
 .nav-box .list { position: relative; display: inline-block; vertical-align: middle; font-size: 14px; margin: 0 10px; }
 .header-ri { position: absolute; right: 0; top: 0; line-height: 55px; font-size: 0; width: 340px; }
@@ -210,7 +210,7 @@ header { position: fixed; top: 0; left: 0; background: rgba(0,0,0,.7); width: 10
 .header a:active, .header a:visited, .header a:link { color: #fff; }
 .header a:hover { color: #ff9c01; }
 .header .mode-active:active, .header .mode-active:visited, .header .mode-active:link, .header .mode-active .m-txt { color: #ff9c01; }
-.more-list { position: absolute; top: 65px; right: -25px; }
+.more-list { position: absolute; top: 65px; right: -18px; }
 .more-hover .content { padding: 8px 0; width: 90px; background: rgba(0,0,0,.7); color: #fff; font-size: 14px; border-radius: 5px; text-align: center; }
 .more-list-1 { width: 272px; left: -95px; right: auto; }
 .more-list-1 .content { text-align: left; padding: 8px 0; width: 272px; background: rgba(0,0,0,.7); color: #fff; font-size: 14px; border-radius: 5px; text-align: center; }
@@ -245,6 +245,6 @@ header .el-dropdown-menu { }
 .transition-view { position: relative; height: 100%; transition: all .3s cubic-bezier(.55,0,.1,1); }  
 .slide-left-enter, .slide-right-leave-active { opacity: 1; -webkit-transform: translate(100%, 0); transform: translate(100%, 0); }  
 .slide-left-leave-active, .slide-right-enter { opacity: 0; -webkit-transform: translate(-100%, 0); transform: translate(-100%, 0); }
-.more-hover { top: 55px; padding-top: 15px; display: none; }
+.more-hover { top: 49px; padding-top: 15px; display: none; }
 .dis-block, .dis-block1 { display: block; }
 </style>

@@ -32,6 +32,7 @@ export default {
 <style scoped>
 .sub-menu-bd { position: absolute; top:0; right: 0; font-size: 0; z-index: 10; }
 .sub-menu-bd span { display: inline-block; vertical-align: middle; padding: 0 15px; border-right: #ddd 1px solid; font-size: 14px; height: 16px; line-height: 16px; cursor: pointer; }
+.sub-menu-bd span:hover{ color: #ff9c01 }
 .sub-menu-bd span.cur { color: #ff9c01; }
 .sub-menu-bd span:last-child { border-right: 0; padding-right: 0; }
 </style>

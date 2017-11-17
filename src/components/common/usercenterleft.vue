@@ -6,10 +6,10 @@
             <p>sumaviron</p>
             <router-link class="color-u"   tag="div" to="/user">
                  <p>个人资料</p>
-           </router-link>
-            <router-link class="color-u" tag="div" to="/user/password">
-                <p >修改密码</p>
             </router-link>
+            <!-- <router-link class="color-u" tag="div" to="/user/password">
+                <p >修改密码</p>
+            </router-link> -->
         </div>
         <div class="u-tab-list">
             <router-link tag="div" class="u-menu" to="/user/viewrecord">

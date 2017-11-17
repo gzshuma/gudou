@@ -1,5 +1,5 @@
 <template>
-  <section class="wrap search-wrap clearfix">
+  <section class="wrap search-wrap reset-mark clearfix">
     <searchtop @searchKeyListen="keyWordRecive"></searchtop>
     <div class="search-title" v-if="!isShow">搜索热词</div>
     <div class="key-hot-bd" v-if="!isShow">
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-// import $ from 'jquery'
+import $ from 'jquery'
 // 图文
 import searchlist from 'components/common/searchlist'
 import pagination from 'components/common/pagination'
@@ -89,6 +89,13 @@ export default {
   mounted () {
     this._getHot()
     this._getSearchCon()
+    // alert($('#app').height())
+    // if($('.reset-mark').length>0) {
+    //   if($('#app').height()<$(window).height()) {
+    //     alert(1)
+    //     $('footer').addClass('reset-footer')
+    //   }
+    // }
   },
   created () {
     const self = this
@@ -242,4 +249,5 @@ export default {
 .time-start { margin-left: 20px; }
 .search-icon { font-size: 60px; color: #c1c1c1; margin-bottom: 40px; }
 .search-live-link { cursor: pointer; }
+footer { display: none; }
 </style>

@@ -43,6 +43,7 @@ export default {
 .pic-btm { height: 72px; line-height: 72px; color: #445560; font-size: 24px; padding: 0 20px; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .movie-bd { width: 100%; overflow: hidden; }
+.movie-bd ul { overflow: hidden; }
 .movie-bd li { float: left; width: 180px; height: 308px; background: #f0f0f0; margin: 0 24px 24px 0; cursor: pointer; overflow: hidden; }
 .movie-bd li:nth-child(6n+6) { margin: 0 0 24px 0; }
 .movie-bd .pic-ri-top { position: relative; width: 100%; height: 270px; }

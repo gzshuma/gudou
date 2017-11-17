@@ -9,7 +9,8 @@
       <ul>
         <li class="collArr1" v-for="(v, index) in orderList">
 			<span class="order-close" @click="deleteDom(v,$event)"><i class="el-icon-close"></i></span>
-			<router-link tag="div" :to="{name: 'detail', params: { id: v.programID }}" :key="v.id">
+			<!-- <router-link tag="div" :to="{name: 'detail', params: { id: v.programID }}" :key="v.id"> -->
+			<div @click="urlDirect(v.programID, v.channelID)">
 				<div class="pic-ri-top">
 					<img v-lazy="item" alt="" v-for="item in v.imageUrl[0]">
 					<span class="pic-mask">
@@ -23,7 +24,8 @@
 				<div class="pic-btm">
 				{{v.programName}}
 				</div>
-			</router-link>
+			</div>
+			<!-- </router-link> -->
         </li>
       </ul>
     </div>
@@ -159,6 +161,16 @@ export default {
 				alert(res.data.errorMessage)
 			})
 		},
+	    urlDirect ($id, $channelId) {
+	      // console.log($id)
+	      this.$router.push({
+	        name: 'livedetail',
+	        params: {
+	          id: this.$md5($id),
+	          channelid: $channelId + '_channel'
+	        }
+	      })
+	    },
 	}
 }
 </script> 
@@ -178,7 +190,7 @@ export default {
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .myorderBar { width: 100%; overflow: hidden; }
 .myorderBar ul { padding: 50px 0 0 28px; }
-.myorderBar li { position: relative; float: left; width: 165px; height: 280px; background: #f0f0f0; margin: 0 24px 24px 0; overflow: hidden; }
+.myorderBar li { cursor: pointer; position: relative; float: left; width: 165px; height: 280px; background: #f0f0f0; margin: 0 24px 24px 0; overflow: hidden; }
 .myorderBar li:nth-child(5n+5) { margin: 0 0 24px 0; }
 .myorderBar .pic-ri-top { position: relative; width: 100%; height: 245px; }
 .myorderBar li img { width: 100%; height: 100%; }

@@ -269,7 +269,7 @@ export default {
 .episodes-crumb span:last-child .el-icon-arrow-right { display: none; }
 .episodes-crumb .el-icon-arrow-right { font-size: 12px; color: #888; }
 .infodiscrib-rest-bd .infodiscrib-bd, .infodiscrib-rest-bd .episodes-bd, .infodiscrib-rest-bd .infodiscrib-con { display: block; float: none; width: 100%; height: auto; padding-top: 0; }
-.palyer-le { position: relative; width: 812px; height: 100%; }
+.palyer-le { position: relative; width: 812px; height: 415px; margin-bottom: 15px; background: #000; overflow: hidden; }
 .palyer-box { color: #f00; }
 .yuding{ color: #ff9c01; }
 .player-bd { padding: 10px 0 25px; background: #212121; min-width: 1200px; overflow: hidden;}
@@ -315,5 +315,5 @@ export default {
 .juji-box .el-tabs__active-bar { background: #ff9c01; height: 2px; }
 .el-tabs__content { width: 365px; border: #363636 2px solid; border-bottom-width: 1px; overflow: hidden; }
 .el-tabs__header { border-bottom-color: #48576a; }
-.tips-style { position: absolute; top: 0; left: 0; width: 100%; height: 415px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; }
+.tips-style { position: absolute; top: 0; left: 0; width: 100%; height: 425px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; background: #000; }
 </style>

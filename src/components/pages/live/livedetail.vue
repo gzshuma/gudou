@@ -19,12 +19,12 @@
 				<div class="fl palyer-le" @mouseover="iframeMouseover" @mouseleave="iframeMouseleave">
 					<div v-if="!CA" class="tips-style">{{caText}}</div>
 	        		<iframe name="iframeDom" :src="'/static/player_m3u8/index.html'+playerUrl" id="iframeBox" width="100%" height="415" scrolling="no" frameborder="0"></iframe>
-					<div class="video-malv" id="videoMalv" v-if="OK">
+					<!-- <div class="video-malv" id="videoMalv" v-if="OK">
 					    <ul>
 					        <li v-for="v in playerStr" @click="malvClick(v.url)">{{v.text}}</li>
 					    </ul>
 					    <div class="videoMalv-selected">标清</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="fr palyer-ri">
 					<div class="player-tabs-box">
@@ -364,9 +364,10 @@ export default {
 				this.num +=1
 
 				var self = this
-				// 点播地址	
+				// 地址	
 				var data = {}
 				var data = val.historyUrl[1]
+				console.log(data)
 				for(var v in data){
 				    data = data[v]
 				}
@@ -640,7 +641,7 @@ export default {
 .episodes-crumb span:last-child .el-icon-arrow-right { display: none; }
 .episodes-crumb .el-icon-arrow-right { font-size: 12px; color: #888; }
 .infodiscrib-rest-bd .infodiscrib-bd, .infodiscrib-rest-bd .episodes-bd, .infodiscrib-rest-bd .infodiscrib-con { display: block; float: none; width: 100%; height: auto; padding-top: 0; }
-.palyer-le { position: relative; width: 812px; height: 100%; margin-bottom: 15px; background: #000; }
+.palyer-le { position: relative; width: 812px; height: 415px; margin-bottom: 15px; background: #000; overflow: hidden; }
 .palyer-box { color: #f00; }
 .yuding{ color: #ff9c01; }
 .player-bd { padding: 0; background: #212121; min-width: 1200px; overflow: hidden; }

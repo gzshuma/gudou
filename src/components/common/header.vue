@@ -6,7 +6,7 @@
 			<router-link class="list hover" tag="div" to="/"><span class="m-txt">首页</span></router-link>
 			<router-link class="list hover" tag="div" to="/tv"><span class="m-txt">电视</span></router-link>
 			<!-- <router-link class="list hover" tag="div" to="/point"><span class="m-txt">点播</span></router-link> -->
-			<router-link class="list hover" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index<3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
+			<router-link class="list catlist hover" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index<3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
 			<div class="list hover more-sub" @mouseenter="showMore" @mouseleave="hideMore">
 				<span class="el-dropdown-link hover">
 					更多<i class="el-icon-arrow-down"></i></i>
@@ -14,7 +14,7 @@
 				<div class="more-list more-hover" :class="isShow?'dis-block':''">
 					<div class="content">
 						<span class="arrow-up"></span>
-						<router-link class="sub-menu" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index>=3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
+						<router-link class="sub-menu catlist" tag="div" :to="{name: 'pointsplay', params: { id: item.id }}" v-for="(item, index) in navData" v-if="index>=3" :key="item.id"><span class="m-txt">{{item.columnName}}</span></router-link>
 					</div>
 				</div>
 			</div>

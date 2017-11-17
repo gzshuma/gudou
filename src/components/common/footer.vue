@@ -16,7 +16,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 footer { position: relative; padding: 30px 0; width: 100%; min-width: 1200px; background: rgba(0,0,0,.7); text-align: center; color: #fff; font-size: 16px; line-height: 40px; overflow: hidden; }
 .font-reset { font-size: 14px; }
 </style>

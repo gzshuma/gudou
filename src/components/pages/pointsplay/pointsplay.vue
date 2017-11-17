@@ -3,9 +3,10 @@
 		<banner class="clearfix" :bannerData="bannerList"></banner>
 		<div class="wrap live-box">
 			<selectmenu :classicData="classicData" @showSortTypeVal="showSortTypeVal" @showCategoryID="showCategoryID" @showYearVal="showYearVal" @showAreaVal="showAreaVal"></selectmenu>
+			<loading v-if="!show"></loading>
 			<movielist :movieData="pointData.programs" @showCurrentSizeChange="showCurrentSizeChange"></movielist>
 		</div>
-		<pagination :count="pointData.count" @showCurrentSizeChange="showCurrentSizeChange" @showCurrentPage="showCurrentPage"></pagination>
+		<pagination v-if="show" :count="pointData.count" @showCurrentSizeChange="showCurrentSizeChange" @showCurrentPage="showCurrentPage"></pagination>
 	</section>
 </template>
 
@@ -17,13 +18,15 @@ import banner from 'components/common/banner'
 import movielist from 'components/common/movielist'
 import selectmenu from 'components/common/selectmenu'
 import pagination from 'components/common/pagination'
+import loading from 'components/common/loading'
 
 export default {
 	components: {
     	banner,
 	    movielist,
 	    selectmenu,
-	    pagination
+	    pagination,
+	    loading
 	},
 	data () {
 		return {
@@ -35,7 +38,8 @@ export default {
 			year: '',
 			location:'',
 			currentSizeChange: 24,
-			bannerList: []
+			bannerList: [],
+			show: false
 		}
 	},
     created () {
@@ -44,11 +48,26 @@ export default {
 		this._getClassic()
     },
     mounted () {
-    	$('.nav-box .list').on('click', function(){
-    		$('.classic-select').each(function(){
-    			$(this).find('span').eq(0).click()
-    		})
-    		$('.el-pager li').eq(0).click()
+    	// 切换导航时重置
+    	$(document).on('click', '.nav-box .catlist', function () {
+    		location.reload()
+    	})
+
+    	// 点击页面显示矫正
+    	$(document).on('click', '.el-pager li', function () {
+    		setTimeout(function() {
+    			$('.movie-wrap, .movie-bd ul').click()
+    		}, 200)
+    	})
+    	$(document).on('click', '.btn-next', function () {
+    		setTimeout(function() {
+    			$('.movie-wrap, .movie-bd ul').click()
+    		}, 200)
+    	})
+    	$(document).on('click', '.btn-prev', function () {
+    		setTimeout(function() {
+    			$('.movie-wrap, .movie-bd ul').click()
+    		}, 200)
     	})
     },
     watch: {
@@ -118,6 +137,7 @@ export default {
 			})
 			.then((res) => {
         		if(res.data.status == 0) {
+        			this.show = true
 					const pointData = res.data.data
 					const count = res.data.data.count
 					self.pointData = pointData

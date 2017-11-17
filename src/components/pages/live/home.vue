@@ -5,6 +5,7 @@
 			<crumb :crumbTxt="crumbTxt.txtList1">
 				<submenu :subList="liveSubList" @showCategoryID="showCategoryID"></submenu>
 			</crumb>
+			<loading v-if="!show"></loading>
 			<tvcon :liveConData="liveContent"></tvcon>
 		</div>
 	</section>
@@ -20,13 +21,15 @@ import crumb from 'components/common/crumb'
 import submenu from 'components/common/submenu'
 // 排行
 import tvcon from 'components/common/tvcon'
+import loading from 'components/common/loading'
 
 export default {
 	components: {
 	    banner,
 	    crumb,
 	    submenu,
-	    tvcon
+	    tvcon,
+	    loading
 	},
 	data () {
 		return {
@@ -40,7 +43,8 @@ export default {
 			bannerList: [],
 			crumbTxt: {
 				'txtList1': '电视'
-			}
+			},
+			show: false
 		}
 	},
     mounted () {
@@ -142,6 +146,7 @@ export default {
         })
         .then((res) => {
           if(res.data.status == 0) {
+          	this.show= true
             self.liveSubList = res.data.data.liveCategoryList
             // console.log(self.liveSubList)
           }

@@ -45,7 +45,7 @@ export default {
 		}
 	},
     created () {
-		this._getPointData()
+		// this._getPointData()
 		this._getBnnerData()
 		this._getClassic()
     },
@@ -181,6 +181,8 @@ export default {
 					const classicData = res.data.data.categorys
 					self.classicData = classicData
 					// console.log(self.classicData)
+					self.columnID = self.classicData[0].categoryID
+					self._getPointData()
 				}
 			})
 			.catch((res) => {

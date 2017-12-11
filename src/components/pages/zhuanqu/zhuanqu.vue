@@ -74,7 +74,6 @@ export default {
     		}, 200)
     	})
     	$(document).on('click', '.classic-first span', function () {
-    		console.log(1)
     		$('.classic-second').find('span').eq(0).click()
     	})
     },
@@ -182,9 +181,9 @@ export default {
 					const classicData = res.data.data.categorys
 					self.classicData = classicData
 					// console.log(self.classicData)
-					// alert(self.classicData[0].categoryID)
-					this.columnID = self.classicData[0].categoryID
-					this._getPointData()
+					self.columnID = self.classicData[0].categoryID
+					// alert(self.columnID)
+					self._getPointData()
 				}
 			})
 			.catch((res) => {

@@ -3,7 +3,7 @@
   <div class="pic-list">
     <div class="pic-ribar pic-point-bd">
       <ul>
-        <router-link tag="li" :to="{name: 'pointsplay', params: { id: item.areaID }}" v-for="(item,index) in zhuanquData" :key="item.areaID" v-if="index<1">
+        <router-link tag="li" :to="{name: 'pointsplay', params: { id: item.areaID }}" v-for="(item,index) in zhuanquData" :key="item.areaID" v-if="index < 1">
           <div class="pic-ri-top">
             <img :src="item.areaPosterUrl" alt="">
             <span class="pic-mask">
@@ -11,7 +11,7 @@
             </span>
           </div>
         </router-link>
-        <router-link tag="li" :to="{name: 'zhuanqu', params: { id: item.areaID }}" v-for="(item,index) in zhuanquData" :key="item.areaID" v-if="index>0">
+        <router-link tag="li" :to="{name: 'zhuanqu', params: { id: item.areaID }}" v-for="(item,index) in zhuanquData" :key="item.areaID" v-if="index > 0">
           <div class="pic-ri-top">
             <img :src="item.areaPosterUrl" alt="">
             <span class="pic-mask">

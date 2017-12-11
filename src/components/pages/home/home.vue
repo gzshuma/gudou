@@ -1,7 +1,7 @@
 <template>
   <section class="index-wrap">
     <banner class="clearfix" :bannerData="bannerList"></banner>
-    <div class="wrap">
+    <div class="wrap mar-top">
       <crumb :crumbTxt="crumbTxt.txtList2">
         <submenu :subList="liveSubList" @showCategoryID="showCategoryID"></submenu>
       </crumb>
@@ -10,6 +10,8 @@
         <submenupoint :subList="pointSubList" @showCategoryID="showCategoryID"></submenupoint>
       </crumb>
       <piclistpoint :ContentInfo="pointContent" @showMoreID="showMoreID"></piclistpoint>
+      <crumb :crumbTxt="crumbTxt.txtList3" class="mar-top1"></crumb>
+      <zhuanqupic :zhuanquData="zhuanquData"></zhuanqupic>
     </div>
   </section>
 </template>
@@ -27,6 +29,7 @@ import piclistpoint from 'components/common/piclistpoint'
 // 关联菜单
 import submenu from 'components/common/submenuindex'
 import submenupoint from 'components/common/submenupoint'
+import zhuanqupic from 'components/common/zhuanqupic'
 
 export default {
   components: {
@@ -35,19 +38,22 @@ export default {
     piclist,
     piclistpoint,
     submenu,
-    submenupoint
+    submenupoint,
+    zhuanqupic
   },
   data () {
     return {
       bannerList: [],
       crumbTxt: {
         'txtList1': '点播',
-        'txtList2': '直播'
+        'txtList2': '直播',
+        'txtList3': '专区'
       },
       pointSubList: [],
       liveSubList:[],
       liveContent: [],
       pointContent: [],
+      zhuanquData: [],
       nameData:'',
       flag: false
     }
@@ -56,6 +62,7 @@ export default {
     this._getBnnerData()
     this._getLiveContentInfo()
     this._getPointContentInfo()
+    this._getZhuanquData()
   },
   methods: {
       showCategoryID (val) {
@@ -153,7 +160,6 @@ export default {
             hmac: '',
             nonce: self.GLOBAL.config.nonce,
             timestamp: self.GLOBAL.config.timestamp,
-            puser: '',
             page: 0,
             parentID: '002'
           }
@@ -174,6 +180,40 @@ export default {
         .catch((res) => {
           alert(res.data.errorMessage)
         })
+      },
+
+      // 专区数据
+      _getZhuanquData () {
+        // '/PortalServer-App/new/ptl_ipvp_cmn_cmn017?mediaAreaList=mediaAreaList&puser=freeuser&timestamp=1512634038&locationName=广州&ptn=Y29tLnN1bWF2aXNpb24uc2FucGluZy5ndWRvdQ&ptype=1&plocation=001&hmac=0f7794c51e&ptoken=863272038913423&pserialNumber=863272038913423&pversion=030101&pserverAddress=portal.gcable.cn&countyName=越秀区&pkv=1&nonce=379657'
+        var self = this
+        self.$http({
+          method: 'post',
+          url: '/api/PortalServer-App/new/ptl_ipvp_cmn_cmn017',
+          params: {
+            mediaAreaList: 'mediaAreaList',
+            puser: self.GLOBAL.config.puser,
+            timestamp: self.GLOBAL.config.timestamp,
+            locationName: '',
+            ptn: self.GLOBAL.config.ptoken,
+            ptype: self.GLOBAL.config.ptype,
+            plocation: self.GLOBAL.config.plocation,
+            ptoken: self.GLOBAL.config.ptoken,
+            pserialNumber: self.GLOBAL.config.pserialNumber,
+            pversion:  self.GLOBAL.config.pversion,
+            pserverAddress: self.GLOBAL.config.pserverAddress,
+            countyName: '',
+            nonce: self.GLOBAL.config.nonce,
+          }
+        })
+        .then((res) => {
+          if(res.data.status == 0) {
+            self.zhuanquData = res.data.data.mediaAreaList.mediaAreaList
+            console.log(JSON.stringify(self.zhuanquData))
+          }
+        })
+        .catch((res) => {
+          alert(res.data.errorMessage)
+        })
       }
   }
 }
@@ -181,4 +221,6 @@ export default {
 
 <style scoped>
 .index-wrap { padding-bottom: 30px; min-width: 1200px; }
+.mar-top { margin-top: -30px; }
+.mar-top1 { margin-top: 30px; }
 </style>

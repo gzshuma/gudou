@@ -67,11 +67,13 @@ export default {
           loginparam: self.ruleForm.loginparam,
           Pwd: self.$md5(self.ruleForm.Pwd),
           serialno: self.ruleForm.serialno,
-          terminalID: ''
+          terminalID: self.GLOBAL.config.pserialNumber
+          // terminalID: '2'
         }
       })
       .then((res)=>{
         if(res.data.status == '0' || res.data.status == '0000'){
+          // alert(res.data.data.newToken)
           sessionStorage.setItem('flag',res.data.data.newToken)
           sessionStorage.setItem('user',res.data.data.userName)
           self.$router.replace({ path: '/' })

@@ -367,7 +367,7 @@ export default {
 				// 地址	
 				var data = {}
 				var data = val.historyUrl[1]
-				console.log(data)
+				// console.log(data)
 				for(var v in data){
 				    data = data[v]
 				}
@@ -418,38 +418,38 @@ export default {
 
 						// console.log(playStr)
 
-						self.bitrateValue.forEach(function(item, n) {
-							if(value==item.resolutionID) {
-								if(item.bitrate==1) {
-									dataStr = {
-										url: playStr,
-										text: '流畅'
-									}
-									self.playerStr.push(dataStr)
-								}else if(item.bitrate==2) {
-									dataStr = {
-										url: playStr,
-										text: '标清'
-									}
-									self.playerStr.push(dataStr)
-								}else if(item.bitrate==3) {
-									dataStr = {
-										url: playStr,
-										text: '高清'
-									}
-									self.playerStr.push(dataStr)
-								}else if(item.bitrate==4) {
-									dataStr = {
-										url: playStr,
-										text: '超清'
-									}
-									self.playerStr.push(dataStr)
-								}
-							}
-						})
+						// self.bitrateValue.forEach(function(item, n) {
+						// 	if(value==item.resolutionID) {
+						// 		if(item.bitrate==1) {
+						// 			dataStr = {
+						// 				url: playStr,
+						// 				text: '流畅'
+						// 			}
+						// 			self.playerStr.push(dataStr)
+						// 		}else if(item.bitrate==2) {
+						// 			dataStr = {
+						// 				url: playStr,
+						// 				text: '标清'
+						// 			}
+						// 			self.playerStr.push(dataStr)
+						// 		}else if(item.bitrate==3) {
+						// 			dataStr = {
+						// 				url: playStr,
+						// 				text: '高清'
+						// 			}
+						// 			self.playerStr.push(dataStr)
+						// 		}else if(item.bitrate==4) {
+						// 			dataStr = {
+						// 				url: playStr,
+						// 				text: '超清'
+						// 			}
+						// 			self.playerStr.push(dataStr)
+						// 		}
+						// 	}
+						// })
 					}
 				}
-				console.log(self.playerStr)
+				// console.log(self.playerStr)
 
 				// 鉴权获取
 				let self = this;
@@ -460,17 +460,17 @@ export default {
 						ptype: self.GLOBAL.config.ptype,
 						plocation: self.GLOBAL.config.plocation,
 						puser: self.GLOBAL.config.puser,
-						ptoken: self.GLOBAL.config.ptoken,
+						ptoken: encodeURIComponent(self.GLOBAL.config.ptoken),
 						pversion: self.GLOBAL.config.pversion,
 						pserverAddress: self.GLOBAL.config.pserverAddress,
 						pserialNumber: self.GLOBAL.config.pserialNumber, // 必填
 						pkv: self.GLOBAL.config.pkv,
-						ptn: self.GLOBAL.config.ptoken,
+						ptn: encodeURIComponent(self.GLOBAL.config.ptoken),
 						DRMtoken: '',
 						epgID: '',
 						authType: self.GLOBAL.config.authType,
 						secondAuthid: '',
-						t: self.GLOBAL.config.ptoken,
+						t: encodeURIComponent(self.GLOBAL.config.ptoken),
 						pid: '',
 						cid: self.$route.params.channelid.split('_')[0],
 						u: self.GLOBAL.config.puser,
@@ -487,8 +487,14 @@ export default {
 				})
 				.then((res) => {
 					if(res.data.status == 0) {
+
+						console.log(res.data.data.authResult)
+						
 						let str = res.data.data.authResult.split('?')[1];
+						// console.log(encodeURIComponent(str))
 						// console.log(str)
+
+						// str = encodeURIComponent(str)
 
 						if(val.epgID==this.endTimeArr.epgID) {
 							playStr = playStr + str
@@ -506,6 +512,10 @@ export default {
 							.addClass('player-cur aaa')
 							.siblings('.player-tabs-list').removeClass('player-cur aaa')
 
+						playStr = encodeURIComponent(playStr)
+
+						// console.log(playStr)
+
 						// 判断鉴权中是否有ACL
 						if(GetQueryString(str, 'a=')) {
 							this.CA = true
@@ -519,11 +529,10 @@ export default {
 							Message.warning(txt)
 						}
 						// console.log(self.playerStr)
-						iframeDom.window.childrenUrl(self.playerStr)
+						// iframeDom.window.childrenUrl(self.playerStr)
 					}
 				})
 				.catch((res) => {
-					alert(res.data.errorMessage)
 				})
 				
 				// 获取面包削标题

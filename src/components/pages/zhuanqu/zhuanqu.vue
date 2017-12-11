@@ -2,7 +2,7 @@
 	<section class="live-wrap clearfix" id="live-wrap" @click="_getPointData();_getClassic()">
 		<banner class="clearfix" :bannerData="bannerList"></banner>
 		<div class="wrap live-box">
-			<selectmenu :classicData="classicData" @showSortTypeVal="showSortTypeVal" @showCategoryID="showCategoryID" @showYearVal="showYearVal" @showAreaVal="showAreaVal"></selectmenu>
+			<selectmenu :classicData="classicData" :classicSecondData="classicSecondData" @showColumnID="showColumnID" @showCategoryID="showCategoryID"></selectmenu>
 			<loading v-if="!show"></loading>
 			<movielist :movieData="pointData.programs" @showCurrentSizeChange="showCurrentSizeChange"></movielist>
 		</div>
@@ -13,10 +13,10 @@
 <script>
 import $ from 'jquery'
 // banner
-import banner from 'components/common/banner'
+import banner from 'components/common/bannerzhuanqu'
 // 电影图文
-import movielist from 'components/common/movielist'
-import selectmenu from 'components/common/selectmenu'
+import movielist from 'components/common/zqmovielist'
+import selectmenu from 'components/common/selectmenuzq'
 import pagination from 'components/common/pagination'
 import loading from 'components/common/loading'
 
@@ -31,9 +31,11 @@ export default {
 	data () {
 		return {
 			pointData: [],
-			classicData: {},
+			classicData: [],
+			classicSecondData: [],
 			currentPage: 1,
 			categoryID: '',
+			columnID: '', // 一二级栏目
 			sortType: 0,
 			year: '',
 			location:'',
@@ -71,6 +73,9 @@ export default {
     			$('.movie-wrap, .movie-bd ul').click()
     		}, 200)
     	})
+    	$(document).on('click', '.classic-first span', function () {
+    		$('.classic-second').find('span').eq(0).click()
+    	})
     },
     watch: {
         $route (to, from) {
@@ -80,36 +85,35 @@ export default {
     },
 	methods: {
 	    _getBnnerData () {
-	      let self = this
-	      self.$http({
-	        method: 'post',
-	        url: '/banner/RSWeb/gd/getContentListByColumnID',
-	        params: {
+	        var self = this
+	        self.$http({
+	          method: 'post',
+	          url: '/api/PortalServer-App/new/ptl_ipvp_cmn_cmn017',
+	          params: {
+	            mediaAreaList: 'mediaAreaList',
+	            puser: self.GLOBAL.config.puser,
+	            timestamp: self.GLOBAL.config.timestamp,
+	            locationName: '',
+	            ptn: self.GLOBAL.config.ptoken,
 	            ptype: self.GLOBAL.config.ptype,
 	            plocation: self.GLOBAL.config.plocation,
-	            puser: self.GLOBAL.config.puser,
 	            ptoken: self.GLOBAL.config.ptoken,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
 	            pserialNumber: self.GLOBAL.config.pserialNumber,
 	            pversion:  self.GLOBAL.config.pversion,
-	            ptn: self.GLOBAL.config.ptoken,
-	            pkv: self.GLOBAL.config.pkv, 
-	            hmac: '',
+	            pserverAddress: self.GLOBAL.config.pserverAddress,
+	            countyName: '',
 	            nonce: self.GLOBAL.config.nonce,
-	            timestamp: self.GLOBAL.config.timestamp,
-				columnID: '002',
-				count: '6'
-	        }
-	      })
-	      .then((res) => {
-	        if(res.data.status == 0) {
-	          self.bannerList = res.data.data.contentInfos
-	        }
-	      })
-	      .catch((res) => {
-	        alert(res.data.errorMessage)
-	      })
-	    },
+	          }
+	        })
+	        .then((res) => {
+	          if(res.data.status == 0) {
+	            self.bannerList = res.data.data.mediaAreaList.mediaAreaList
+	          }
+	        })
+	        .catch((res) => {
+	          alert(res.data.errorMessage)
+	        })
+	      },
 		_getPointData () {
 			let self = this
 			self.$http({
@@ -128,12 +132,12 @@ export default {
 		            hmac: '',
 		            nonce: self.GLOBAL.config.nonce,
 		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: 0? '' : self.$route.params.id,
+					columnID: self.columnID,
 					categoryID: self.categoryID,
 					start: (self.currentPage-1) * self.currentSizeChange,
 					end: (self.currentPage) * self.currentSizeChange,
+					// end: '1000',
 					sortType: self.sortType,
-					year: self.year,
 					location: self.location
 				}
 			})
@@ -143,6 +147,7 @@ export default {
 					const pointData = res.data.data
 					const count = res.data.data.count
 					self.pointData = pointData
+					// console.log(self.pointData)
 					self.count = count
 				}
 			})
@@ -154,7 +159,7 @@ export default {
 			let self = this
 			self.$http({
 				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod010',
+				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
 				params: {
 		            ptype: self.GLOBAL.config.ptype,
 		            plocation: self.GLOBAL.config.plocation,
@@ -168,13 +173,45 @@ export default {
 		            hmac: '',
 		            nonce: self.GLOBAL.config.nonce,
 		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: self.$route.params.id
+					columnID: this.$route.params.id,
 				}
 			})
 			.then((res) => {
         		if(res.data.status == 0) {
-					const classicData = res.data.data
+					const classicData = res.data.data.categorys
 					self.classicData = classicData
+					// console.log(self.classicData)
+				}
+			})
+			.catch((res) => {
+				alert(res.data.errorMessage)
+			})
+		},
+		_getClassic1 () {
+			let self = this
+			self.$http({
+				method: 'get',
+				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
+				params: {
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
+					columnID: self.columnID
+				}
+			})
+			.then((res) => {
+        		if(res.data.status == 0) {
+					const classicSecondData = res.data.data.categorys
+					self.classicSecondData = classicSecondData
 					// console.log(self.classicData)
 				}
 			})
@@ -189,9 +226,15 @@ export default {
 			this.currentSizeChange = val
 		},
 		showCategoryID (val) {
+			this.columnID = ''
+			this.columnID = val
+			this._getClassic1 ()
+			this._getPointData()
+		},
+		showColumnID (val) {
 			this.categoryID = ''
 			this.categoryID = val
-			this._getPointData ()
+			this._getPointData()
 		},
 		showSortTypeVal (val) {
 			this.sortType = 0
@@ -221,6 +264,6 @@ export default {
 .vue-tablist, .vue-tabpanel { overflow: hidden; margin-bottom: 20px; }
 .tabs-box .vue-tablist li[aria-selected=true] { border-bottom: #ff9c01 2px solid; color: #ff9c01; }
 .tabs-box .rank-bd li { margin-bottom: 20px; }
-.live-box .live-crumb { margin-top: 10px; }
-.live-box { margin-top: -20px; }
+.live-box .live-crumb { margin-top: 10px; } 
+.live-box { margin-top: -35px; }
 </style>

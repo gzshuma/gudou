@@ -1,13 +1,14 @@
 <template>
 	<el-carousel class="swiper-container" trigger="click" :interval="5000" type="card" arrow="hover">
       <el-carousel-item v-for="v in bannerData" :key="v.value">
-        <a class="carousel-box" @click="urlDirect(v.id, v.contentID.split('_')[0])">
-        	<img v-lazy="v.imageUrl">
-        	<span class="carousel-mask">{{v.contentName}}</span>
-        </a>
+        <router-link class="carousel-box" :to="{name: 'zhuanqu', params: { id: v.areaID }}">
+        	<img v-lazy="v.areaPosterUrl">
+        	<span class="carousel-mask">{{v.areaName}}</span>
+        </router-link>
       </el-carousel-item>
     </el-carousel>
 </template>
+
 <script type="text/ecmascript-6">
 export default {
 	data () {
@@ -19,25 +20,13 @@ export default {
 		bannerData: {
 			type: Array
 		}
-	},
-	methods: {
-		urlDirect($id,$channelId) {
-			// localStorage.setItem('channelIdData',$channelId)
-			this.$router.push({
-				name: 'livedetail',
-				params: {
-					id: this.$md5($id),
-					channelid: $channelId + '_channel'
-				}
-			})
-		}
 	}
 }
 </script>
 
 <style>
 .swiper-container a { cursor: pointer; }
-.swiper-container { position: relative; height: 400px; z-index: 1; }
+.swiper-container { position: relative; height: 380px; z-index: 1; }
 .swiper-container .el-carousel__container { height: 100%; position: relative}
 .swiper-container .el-carousel__container:before {  content: ''; display: block; position: absolute;
 	left: 0; right: 0; top: 0; bottom: 0; margin: auto; width: 100%; opacity: 0.5; z-index: 5; }

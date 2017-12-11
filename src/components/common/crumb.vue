@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style>
-.crumb-bd { position: relative; font-size: 0; margin: 60px 0 30px; }
+.crumb-bd { position: relative; font-size: 0; margin: 50px 0 30px; }
 .crumb-bd .crumb-title, .crumb-bd .icon-enter-arror { display: inline-block; vertical-align: middle; font-size: 27px; color: #445560; font-weight: 400; }
 .crumb-bd .icon-enter-arror { font-size: 18px; color: #9ba2a7; }
 </style>

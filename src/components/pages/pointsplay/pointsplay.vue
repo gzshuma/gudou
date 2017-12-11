@@ -3,8 +3,9 @@
 		<banner class="clearfix" :bannerData="bannerList"></banner>
 		<div class="wrap live-box">
 			<selectmenu :classicData="classicData" @showSortTypeVal="showSortTypeVal" @showCategoryID="showCategoryID" @showYearVal="showYearVal" @showAreaVal="showAreaVal"></selectmenu>
-			<loading v-if="!show"></loading>
+			<loading v-if="!showLoading"></loading>
 			<movielist :movieData="pointData.programs" @showCurrentSizeChange="showCurrentSizeChange"></movielist>
+			<nodata v-if="!show"></nodata>
 		</div>
 		<pagination v-if="show" :count="pointData.count" @showCurrentSizeChange="showCurrentSizeChange" @showCurrentPage="showCurrentPage"></pagination>
 	</section>
@@ -19,6 +20,7 @@ import movielist from 'components/common/movielist'
 import selectmenu from 'components/common/selectmenu'
 import pagination from 'components/common/pagination'
 import loading from 'components/common/loading'
+import nodata from 'components/common/nodata'
 
 export default {
 	components: {
@@ -26,7 +28,8 @@ export default {
 	    movielist,
 	    selectmenu,
 	    pagination,
-	    loading
+	    loading,
+	    nodata
 	},
 	data () {
 		return {
@@ -39,7 +42,8 @@ export default {
 			location:'',
 			currentSizeChange: 24,
 			bannerList: [],
-			show: false
+			show: false,
+			showLoading: false
 		}
 	},
     created () {
@@ -52,7 +56,7 @@ export default {
     	$(document).on('click', '.nav-box .catlist', function () {
     		setTimeout(function() {
     			location.reload()
-    		}, 200)
+    		}, 50)
     	})
 
     	// 点击页面显示矫正
@@ -138,13 +142,18 @@ export default {
 				}
 			})
 			.then((res) => {
-        		if(res.data.status == 0) {
-        			this.show = true
+				self.showLoading = true
+    			if(res.data.data.programs.length>0) {
+        			self.show = true
 					const pointData = res.data.data
 					const count = res.data.data.count
 					self.pointData = pointData
+					// console.log(self.pointData)
 					self.count = count
-				}
+    			}else {
+					self.pointData = []
+					self.show = false
+    			}
 			})
 			.catch((res) => {
 				alert(res.data.errorMessage)
@@ -176,6 +185,10 @@ export default {
 					const classicData = res.data.data
 					self.classicData = classicData
 					// console.log(self.classicData)
+					self.year = classicData.year[0].yearID
+					self.columnID = ''
+					self.location = classicData.location[0].locationID
+					self.sortType = '0'
 				}
 			})
 			.catch((res) => {
@@ -191,22 +204,22 @@ export default {
 		showCategoryID (val) {
 			this.categoryID = ''
 			this.categoryID = val
-			this._getPointData ()
+			// this._getPointData ()
 		},
 		showSortTypeVal (val) {
 			this.sortType = 0
 			this.sortType = val
-			this._getPointData ()
+			// this._getPointData ()
 		},
 		showYearVal (val) {
 			this.year = 0
 			this.year = val
-			this._getPointData ()
+			// this._getPointData ()
 		},
 		showAreaVal (val) {
 			this.location = 0
 			this.location = val
-			this._getPointData ()
+			// this._getPointData ()
 		}
 	}
 }

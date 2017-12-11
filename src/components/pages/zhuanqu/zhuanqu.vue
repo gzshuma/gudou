@@ -3,8 +3,9 @@
 		<banner class="clearfix" :bannerData="bannerList"></banner>
 		<div class="wrap live-box">
 			<selectmenu :classicData="classicData" :classicSecondData="classicSecondData" @showColumnID="showColumnID" @showCategoryID="showCategoryID"></selectmenu>
-			<loading v-if="!show"></loading>
+			<loading v-if="!showLoading"></loading>
 			<movielist :movieData="pointData.programs" @showCurrentSizeChange="showCurrentSizeChange"></movielist>
+			<nodata v-if="!show"></nodata>
 		</div>
 		<pagination v-if="show" :count="pointData.count" @showCurrentSizeChange="showCurrentSizeChange" @showCurrentPage="showCurrentPage"></pagination>
 	</section>
@@ -19,6 +20,7 @@ import movielist from 'components/common/zqmovielist'
 import selectmenu from 'components/common/selectmenuzq'
 import pagination from 'components/common/pagination'
 import loading from 'components/common/loading'
+import nodata from 'components/common/nodata'
 
 export default {
 	components: {
@@ -26,7 +28,8 @@ export default {
 	    movielist,
 	    selectmenu,
 	    pagination,
-	    loading
+	    loading,
+	    nodata
 	},
 	data () {
 		return {
@@ -35,19 +38,21 @@ export default {
 			classicSecondData: [],
 			currentPage: 1,
 			categoryID: '',
-			columnID: '', // 一二级栏目
+			columnID: 'default', // 一二级栏目
 			sortType: 0,
 			year: '',
 			location:'',
 			currentSizeChange: 24,
 			bannerList: [],
-			show: false
+			show: false,
+			showLoading: false
 		}
 	},
     created () {
-		// this._getPointData()
 		this._getBnnerData()
-		this._getClassic()
+		this._getClassic(function(){
+			this._getPointData()
+		})
     },
     mounted () {
     	// 切换导航时重置
@@ -143,12 +148,18 @@ export default {
 			})
 			.then((res) => {
         		if(res.data.status == 0) {
-        			this.show = true
-					const pointData = res.data.data
-					const count = res.data.data.count
-					self.pointData = pointData
-					// console.log(self.pointData)
-					self.count = count
+					self.showLoading = true
+        			if(res.data.data.programs.length>0) {
+	        			self.show = true
+						const pointData = res.data.data
+						const count = res.data.data.count
+						self.pointData = pointData
+						// console.log(self.pointData)
+						self.count = count
+        			}else {
+						self.pointData = []
+						self.show = false
+        			}
 				}
 			})
 			.catch((res) => {
@@ -181,8 +192,8 @@ export default {
 					const classicData = res.data.data.categorys
 					self.classicData = classicData
 					// console.log(self.classicData)
-					self.columnID = self.classicData[0].categoryID
-					self._getPointData()
+					// self.columnID = self.classicData[0].categoryID
+					// self._getPointData()
 				}
 			})
 			.catch((res) => {
@@ -231,27 +242,12 @@ export default {
 			this.columnID = ''
 			this.columnID = val
 			this._getClassic1 ()
-			this._getPointData()
+			// this._getPointData()
 		},
 		showColumnID (val) {
 			this.categoryID = ''
 			this.categoryID = val
-			this._getPointData()
-		},
-		showSortTypeVal (val) {
-			this.sortType = 0
-			this.sortType = val
-			this._getPointData ()
-		},
-		showYearVal (val) {
-			this.year = 0
-			this.year = val
-			this._getPointData ()
-		},
-		showAreaVal (val) {
-			this.location = 0
-			this.location = val
-			this._getPointData ()
+			// this._getPointData()
 		}
 	}
 }

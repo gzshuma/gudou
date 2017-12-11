@@ -10,6 +10,14 @@
 						{{v.programName}}
 					</div>
 				</li>
+				<!-- <li v-for="(v, index) in movieData" @click="urlDirect(v.programID)">
+					<div class="pic-ri-top">
+						<img v-lazy="x" alt="" v-for="x in v.imageUrl[0]">
+					</div>
+					<div class="pic-btm">
+						{{v.programName}}
+					</div>
+				</li> -->
 			</ul>
 		</div>
 	</div>

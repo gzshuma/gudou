@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 // import user from './user'
 import player from './models/player'
 import userData from './models/userData'
-import select from './models/select'
 Vue.use(Vuex)
 
 const state = {
@@ -31,7 +30,6 @@ export default new Vuex.Store({
 	modules: {
 		// user,
 		player,
-		userData,
-		select
+		userData
 	}
 })

@@ -1,7 +1,7 @@
 <template>
 	<div class="movie-wrap">
 		<div class="movie-bd">
-			<ul v-if="movieData.length > 0">
+			<ul>
 				<li v-for="(v, index) in movieData" @click="urlDirect(v.programID)">
 					<div class="pic-ri-top">
 						<img v-lazy="x" alt="" v-for="x in v.imageUrl[0]">
@@ -43,7 +43,7 @@ export default {
 .pic-btm { height: 72px; line-height: 72px; color: #445560; font-size: 24px; padding: 0 20px; }
 .progress-bar { position: absolute; width: 100%; height: 4px; bottom: 0; left: 0; background: #ff9c01; }
 .movie-bd { width: 100%; overflow: hidden; }
-.movie-bd ul { display: block; overflow: hidden; min-height: 400px; background: #fff; }
+.movie-bd ul { overflow: hidden; }
 .movie-bd li { float: left; width: 180px; height: 308px; background: #f0f0f0; margin: 0 24px 24px 0; cursor: pointer; overflow: hidden; }
 .movie-bd li:nth-child(6n+6) { margin: 0 0 24px 0; }
 .movie-bd .pic-ri-top { position: relative; width: 100%; height: 270px; }
@@ -58,5 +58,4 @@ export default {
 .movie-num { font-size: 26px; font-style: italic; }
 .movie-bd .icon-arror { color: #888; font-size: 18px; }
 .movie-bd li:nth-child(4n+4) .rank-num, .rank-bd li:nth-child(5n+5) .rank-num { color: #888; }
-.nodata { font-size: 22px; color: #999; height: 200px; line-height: 200px; margin: 0 0 30px; text-align: center; font-weight: 700; }
 </style>

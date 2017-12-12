@@ -28,8 +28,8 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 	modules: {
-		// user,
-		player,
-		userData
+			// user,
+			player,
+			userData,
 	}
 })

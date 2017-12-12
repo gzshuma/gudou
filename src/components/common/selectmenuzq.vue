@@ -3,13 +3,14 @@
 		<div class="classic-list clearfix">
 			<div class="fl classic-name">一级栏目</div>
 			<div class="fl classic-box classic-select classic-first" >
-				<span class="first-list" @click="categoryIDChange(v.categoryID, index)" v-for="(v,index) in classicData" :class="{cur:index === nowIndex0}">{{v.categoryName}}</span>
+				<span @click="categoryIDChange(v.categoryID, index)" v-for="(v,index) in classicData" :class="{cur:index === nowIndex0}">{{v.categoryName}}</span>
 			</div>
 		</div>
 		<div class="classic-list clearfix">
 			<div class="fl classic-name">二级栏目</div>
 			<div class="fl classic-box classic-select classic-second">
-				<span class="second-list" @click="columnIDChange(v.categoryID, index)" v-for="(v,index) in classicSecondData" :class="{cur:index === nowIndex1}">{{v.categoryName}}</span>
+				<span @click="columnIDChange('', index)" :class="{cur:index === nowIndex1}">全部</span>
+				<span @click="columnIDChange(v.categoryID, index)" v-for="(v,index) in classicSecondData" :class="{cur:index === nowIndex1}">{{v.categoryName}}</span>
 			</div>
 		</div>
 	</div>
@@ -37,17 +38,15 @@ export default {
 	},
 	mounted () {
     	setTimeout(function() {
-    		$('.first-list').eq(0).click()
-    	},200)
+    		$('.classic-first span').eq(0).click();
+    	},800)
 	},
 	methods: {
 		categoryIDChange (val, index) {
-			// console.log(index)
 			this.nowIndex0 = index
 			this.$emit('showCategoryID', val)
 		},
 		columnIDChange (val, index) {
-			// alert(index)
 			this.nowIndex1 = index
 			this.$emit('showColumnID', val)
 		}

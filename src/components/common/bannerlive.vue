@@ -4,7 +4,6 @@
         <a class="carousel-box" @click="urlDirect(v.id, v.contentID.split('_')[0])">
         	<img v-lazy="v.imageUrl">
         	<span class="carousel-mask">{{v.contentName}}</span>
-        	<span class="mask-pop"></span>
         </a>
       </el-carousel-item>
     </el-carousel>
@@ -53,7 +52,4 @@ export default {
 .swiper-container .is-active{ z-index: 9; }
 .swiper-container .el-carousel__item {  width: 50%; }
 .swiper-container .el-carousel__item img { height: auto; width: 100%; max-height: 400px; }
-.swiper-container .is-active a {  position: relative; position: relative; z-index: 3; }
-.swiper-container .is-active .mask-pop {  position: relative; position: relative; z-index: 4; }
-.mask-pop { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 3; }
 </style>

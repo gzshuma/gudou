@@ -1,18 +1,10 @@
 <template>
 	<el-carousel class="swiper-container" trigger="click" :interval="5000" type="card" arrow="hover">
-      <el-carousel-item v-for="(v,index) in bannerData" :key="v.value">
-        <!-- <router-link class="carousel-box" :to="{name: 'zhuanqu', params: { id: v.areaID }}"> -->
-        <a class="carousel-box"  @click="urlDirect1(v.areaID)" v-if="index<1">
+      <el-carousel-item v-for="v in bannerData" :key="v.value">
+        <router-link class="carousel-box" :to="{name: 'zhuanqu', params: { id: v.areaID }}">
         	<img v-lazy="v.areaPosterUrl">
-        	<span class="carousel-mask">{{v.areaName}}-{{v.areaID}}</span>
-        	<span class="mask-pop"></span>
-        </a>
-        <a class="carousel-box"  @click="urlDirect(v.areaID)" v-if="index>0">
-        	<img v-lazy="v.areaPosterUrl">
-        	<span class="carousel-mask">{{v.areaName}}-{{v.areaID}}</span>
-        	<span class="mask-pop"></span>
-        </a>
-        <!-- </router-link> -->
+        	<span class="carousel-mask">{{v.areaName}}</span>
+        </router-link>
       </el-carousel-item>
     </el-carousel>
 </template>
@@ -28,33 +20,13 @@ export default {
 		bannerData: {
 			type: Array
 		}
-	},
-	methods: {
-	    urlDirect ($id) {
-			this.$router.push({
-				name: 'zhuanqu',
-				params: { id: $id }
-			})
-			setTimeout(function(){
-				location.reload()
-			}, 100)
-	    },
-	    urlDirect1 ($id) {
-			this.$router.push({
-				name: 'pointsplay',
-				params: { id: $id }
-			})
-			setTimeout(function(){
-				location.reload()
-			}, 100)
-	    }
 	}
 }
 </script>
 
 <style>
 .swiper-container a { cursor: pointer; }
-.swiper-container { position: relative; height: 400px; z-index: 1; }
+.swiper-container { position: relative; height: 380px; z-index: 1; }
 .swiper-container .el-carousel__container { height: 100%; position: relative}
 .swiper-container .el-carousel__container:before {  content: ''; display: block; position: absolute;
 	left: 0; right: 0; top: 0; bottom: 0; margin: auto; width: 100%; opacity: 0.5; z-index: 5; }
@@ -69,7 +41,4 @@ export default {
 .swiper-container .is-active{ z-index: 9; }
 .swiper-container .el-carousel__item {  width: 50%; }
 .swiper-container .el-carousel__item img { height: auto; width: 100%; max-height: 400px; }
-.swiper-container .is-active a {  position: relative; position: relative; z-index: 3; }
-.swiper-container .is-active .mask-pop {  position: relative; position: relative; z-index: 4; }
-.mask-pop { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 3; }
 </style>

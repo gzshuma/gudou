@@ -113,8 +113,9 @@ export default [
     component: resolve => require(['components/pages/pointsplay/home'], resolve)
   },
 
-  // 点播
+  // 专区
   {
+    // path: '/zhuanqu/:id/:cid',
     path: '/zhuanqu/:id',
     name: 'zhuanqu',
     // component: pointsplay

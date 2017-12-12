@@ -1,14 +1,29 @@
 <template>
-	<div class="infodiscrib-bd clearfix" v-if="detailData.programDes">
+	<div class="infodiscrib-bd clearfix">
 		<div><h3 class="txt-bold">简介</h3></div>
 		<div class="infodiscrib-con">
 			<p v-if="detailData.location">地区：{{detailData.location}}</p>
 			<!-- <p>语言：</p> -->
-			<p>类型：{{detailData.categoryName}}</p>
-			<p>主演：{{detailData.actors}}</p>
-			<p>导演：{{detailData.director}}</p>
+			<p>
+				类型：
+				<span v-if="detailData.categoryName">{{detailData.categoryName}}</span>
+				<span v-else>无</span>
+			</p>
+			<p>
+				主演：
+				<span v-if="detailData.actors">{{detailData.actors}}</span>
+				<span v-else>无</span>
+			</p>
+			<p>
+				导演：
+				<span v-if="detailData.director">{{detailData.director}}</span>
+				<span v-else>无</span>
+			</p>
 			<p>剧情介绍：</p>
-			<p>{{detailData.programDes}}</p>
+			<p>
+				<span v-if="detailData.programDes">{{detailData.programDes}}</span>
+				<span v-else>无</span>
+			</p>
 		</div>
 	</div>
 </template>

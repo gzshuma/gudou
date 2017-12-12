@@ -3,9 +3,9 @@
 		<banner class="clearfix" :bannerData="bannerList"></banner>
 		<div class="wrap live-box">
 			<selectmenu :classicData="classicData" :classicSecondData="classicSecondData" @showColumnID="showColumnID" @showCategoryID="showCategoryID"></selectmenu>
-			<loading v-if="!showLoading"></loading>
+			<!-- <loading v-if="!showLoading"></loading> -->
 			<movielist :movieData="pointData.programs" @showCurrentSizeChange="showCurrentSizeChange"></movielist>
-			<nodata v-if="!show"></nodata>
+			<nodata class="nodata-div"></nodata>
 		</div>
 		<pagination v-if="show" :count="pointData.count" @showCurrentSizeChange="showCurrentSizeChange" @showCurrentPage="showCurrentPage"></pagination>
 	</section>
@@ -37,7 +37,7 @@ export default {
 			classicData: [],
 			classicSecondData: [],
 			currentPage: 1,
-			categoryID: '',
+			categoryID: 'default',
 			columnID: 'default', // 一二级栏目
 			sortType: 0,
 			year: '',
@@ -45,22 +45,20 @@ export default {
 			currentSizeChange: 24,
 			bannerList: [],
 			show: false,
-			showLoading: false
+			showLoading: false,
+			showData: false
 		}
 	},
     created () {
 		this._getBnnerData()
-		this._getClassic(function(){
-			this._getPointData()
+		this._getClassic(function() {
+			setTimeout(function() {
+    			$('.classic-first span').eq(0).click()
+			},100)
 		})
+		this._getPointData()
     },
     mounted () {
-    	// 切换导航时重置
-    	$(document).on('click', '.nav-box .catlist', function () {
-    		setTimeout(function() {
-    			location.reload()
-    		}, 200)
-    	})
 
     	// 点击页面显示矫正
     	$(document).on('click', '.el-pager li', function () {
@@ -78,14 +76,45 @@ export default {
     			$('.movie-wrap, .movie-bd ul').click()
     		}, 200)
     	})
-    	$(document).on('click', '.classic-first span', function () {
-    		$('.classic-second').find('span').eq(0).click()
+    	// setTimeout(function() {
+    	// 	$('.second-list').eq(0).click();
+    	// },800)
+    	
+    	$(document).on('click', '.first-list', function () {
+    		setTimeout(function() {
+    			$('.second-list').eq(0).click()
+    		}, 600)
+    	})
+    	setTimeout(function() {
+			$('.classic-first span').eq(0).click()
+		},500)
+    	
+    	$(document).on('click', '.first-list', function () {
+    		$('.nodata-div').hide()
+    		setTimeout(function() {
+	    		if($('.movie-bd ul').length>0) {
+	    			$('.nodata-div').hide()
+	    		}else {
+	    			$('.nodata-div').show()
+	    		}
+	    	}, 800)
+    	})
+    	
+    	$(document).on('click', '.second-list', function () {
+    		$('.nodata-div').hide()
+    		setTimeout(function() {
+	    		if($('.movie-bd ul').length>0) {
+	    			$('.nodata-div').hide()
+	    		}else {
+	    			$('.nodata-div').show()
+	    		}
+	    	}, 800)
     	})
     },
     watch: {
         $route (to, from) {
-        	this._getPointData(),
-        	this._getClassic()
+        	this._getClassic(),
+        	this._getPointData()
         }
     },
 	methods: {
@@ -150,6 +179,7 @@ export default {
         		if(res.data.status == 0) {
 					self.showLoading = true
         			if(res.data.data.programs.length>0) {
+						// self.showLoading = true
 	        			self.show = true
 						const pointData = res.data.data
 						const count = res.data.data.count
@@ -157,8 +187,11 @@ export default {
 						// console.log(self.pointData)
 						self.count = count
         			}else {
-						self.pointData = []
+						self.pointData = {
+							programs: []
+						}
 						self.show = false
+						self.showLoading = false
         			}
 				}
 			})
@@ -184,16 +217,14 @@ export default {
 		            hmac: '',
 		            nonce: self.GLOBAL.config.nonce,
 		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: this.$route.params.id,
+					columnID: self.$route.params.id,
 				}
 			})
 			.then((res) => {
         		if(res.data.status == 0) {
 					const classicData = res.data.data.categorys
 					self.classicData = classicData
-					// console.log(self.classicData)
-					// self.columnID = self.classicData[0].categoryID
-					// self._getPointData()
+					self._getClassic1()
 				}
 			})
 			.catch((res) => {
@@ -242,7 +273,6 @@ export default {
 			this.columnID = ''
 			this.columnID = val
 			this._getClassic1 ()
-			// this._getPointData()
 		},
 		showColumnID (val) {
 			this.categoryID = ''
@@ -264,4 +294,5 @@ export default {
 .tabs-box .rank-bd li { margin-bottom: 20px; }
 .live-box .live-crumb { margin-top: 10px; } 
 .live-box { margin-top: -35px; }
+.nodata-div { display: none; }
 </style>

@@ -1,8 +1,9 @@
 <template>
-	<section class="live-wrap clearfix" id="live-wrap" @click="_getPointData();_getClassic()">
+	<section class="live-wrap clearfix" id="live-wrap" @click="_getPointData();_getClassic();_getClassic1();_getClassic2()">
+	<!-- <section class="live-wrap clearfix" id="live-wrap" @click="_getPointData();_getClassic();_getClassic1();_getClassic2()"> -->
 		<banner class="clearfix" :bannerData="bannerList"></banner>
 		<div class="wrap live-box">
-			<selectmenu :classicData="classicData" :classicSecondData="classicSecondData" @showColumnID="showColumnID" @showCategoryID="showCategoryID"></selectmenu>
+			<selectmenu :classicData="classicData" :classicSecondData="classicSecondData" :classicThirdData="classicThirdData" :classicFourthData="classicFourthData" @showColumnID="showColumnID" @showColumnID1="showColumnID1" @showColumnID2="showColumnID2" @showCategoryID="showCategoryID"></selectmenu>
 			<!-- <loading v-if="!showLoading"></loading> -->
 			<movielist :movieData="pointData.programs" @showCurrentSizeChange="showCurrentSizeChange"></movielist>
 			<nodata class="nodata-div"></nodata>
@@ -35,10 +36,16 @@ export default {
 		return {
 			pointData: [],
 			classicData: [],
+			classicData1: [],
+			classicData2: [],
 			classicSecondData: [],
+			classicThirdData: [],
+			classicFourthData: [],
 			currentPage: 1,
 			categoryID: 'default',
 			columnID: 'default', // 一二级栏目
+			columnID1: '',
+			columnID2: '',
 			sortType: 0,
 			year: '',
 			location:'',
@@ -76,40 +83,69 @@ export default {
     			$('.movie-wrap, .movie-bd ul').click()
     		}, 200)
     	})
-    	// setTimeout(function() {
-    	// 	$('.second-list').eq(0).click();
-    	// },800)
     	
     	$(document).on('click', '.first-list', function () {
     		setTimeout(function() {
     			$('.second-list').eq(0).click()
-    		}, 600)
+    			if($('.second-list').length>0) {
+    				$('.second-wrap').show()
+    			}else {
+    				$('.second-wrap, .third-wrap, .fourth-wrap').hide()
+    			}
+    		}, 200)
+
+    		$('.nodata-div').hide()
+    		setTimeout(function() {
+	    		if($('.movie-bd ul').length>0) {
+	    			$('.nodata-div').hide()
+	    		}else {
+	    			$('.nodata-div').show()
+	    		}
+	    	}, 800)
+    	})
+
+    	$(document).on('click', '.second-list', function () {
+    		setTimeout(function() {
+    			$('.third-list').eq(0).click()
+    			if($('.third-list').length>0) {
+    				$('.third-wrap').show()
+    			}else {
+    				$('.third-wrap, .fourth-wrap').hide()
+    			}
+    		}, 200)
+
+    		$('.nodata-div').hide()
+    		setTimeout(function() {
+	    		if($('.movie-bd ul').length>0) {
+	    			$('.nodata-div').hide()
+	    		}else {
+	    			$('.nodata-div').show()
+	    		}
+	    	}, 800)
+    	})
+    	
+    	$(document).on('click', '.third-list', function () {
+    		setTimeout(function() {
+    			$('.fourth-list').eq(0).click()
+    			if($('.fourth-list').length>0) {
+    				$('.fourth-wrap').show()
+    			}else {
+    				$('.fourth-wrap').hide()
+    			}
+    		}, 200)
+
+    		$('.nodata-div').hide()
+    		setTimeout(function() {
+	    		if($('.movie-bd ul').length>0) {
+	    			$('.nodata-div').hide()
+	    		}else {
+	    			$('.nodata-div').show()
+	    		}
+	    	}, 800)
     	})
     	setTimeout(function() {
 			$('.classic-first span').eq(0).click()
 		},500)
-    	
-    	$(document).on('click', '.first-list', function () {
-    		$('.nodata-div').hide()
-    		setTimeout(function() {
-	    		if($('.movie-bd ul').length>0) {
-	    			$('.nodata-div').hide()
-	    		}else {
-	    			$('.nodata-div').show()
-	    		}
-	    	}, 800)
-    	})
-    	
-    	$(document).on('click', '.second-list', function () {
-    		$('.nodata-div').hide()
-    		setTimeout(function() {
-	    		if($('.movie-bd ul').length>0) {
-	    			$('.nodata-div').hide()
-	    		}else {
-	    			$('.nodata-div').show()
-	    		}
-	    	}, 800)
-    	})
     },
     watch: {
         $route (to, from) {
@@ -166,7 +202,7 @@ export default {
 		            hmac: '',
 		            nonce: self.GLOBAL.config.nonce,
 		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: self.columnID,
+					// columnID: self.columnID,
 					categoryID: self.categoryID,
 					start: (self.currentPage-1) * self.currentSizeChange,
 					end: (self.currentPage) * self.currentSizeChange,
@@ -224,7 +260,7 @@ export default {
         		if(res.data.status == 0) {
 					const classicData = res.data.data.categorys
 					self.classicData = classicData
-					self._getClassic1()
+					// self._getClassic1()
 				}
 			})
 			.catch((res) => {
@@ -256,13 +292,77 @@ export default {
         		if(res.data.status == 0) {
 					const classicSecondData = res.data.data.categorys
 					self.classicSecondData = classicSecondData
-					// console.log(self.classicData)
+					// console.log(self.classicSecondData)
+					// console.log(self.classicSecondData[0].categoryName)
 				}
 			})
 			.catch((res) => {
 				alert(res.data.errorMessage)
 			})
 		},
+		_getClassic2 () {
+			let self = this
+			self.$http({
+				method: 'get',
+				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
+				params: {
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
+					columnID: self.columnID1
+				}
+			})
+			.then((res) => {
+        		if(res.data.status == 0) {
+					const classicThirdData = res.data.data.categorys
+					self.classicThirdData = classicThirdData
+				}
+			})
+			.catch((res) => {
+				alert(res.data.errorMessage)
+			})
+		},
+		_getClassic3 () {
+			let self = this
+			self.$http({
+				method: 'get',
+				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
+				params: {
+		            ptype: self.GLOBAL.config.ptype,
+		            plocation: self.GLOBAL.config.plocation,
+		            puser: self.GLOBAL.config.puser,
+		            ptoken: self.GLOBAL.config.ptoken,
+		            pserverAddress: self.GLOBAL.config.pserverAddress,
+		            pserialNumber: self.GLOBAL.config.pserialNumber,
+		            pversion:  self.GLOBAL.config.pversion,
+		            ptn: self.GLOBAL.config.ptoken,
+		            pkv: self.GLOBAL.config.pkv, 
+		            hmac: '',
+		            nonce: self.GLOBAL.config.nonce,
+		            timestamp: self.GLOBAL.config.timestamp,
+					columnID: self.columnID2
+				}
+			})
+			.then((res) => {
+        		if(res.data.status == 0) {
+					const classicFourthData = res.data.data.categorys
+					self.classicFourthData = classicFourthData
+				}
+			})
+			.catch((res) => {
+				alert(res.data.errorMessage)
+			})
+		},
+
 		showCurrentPage (val) {
 			this.currentPage = val
 		},
@@ -273,11 +373,47 @@ export default {
 			this.columnID = ''
 			this.columnID = val
 			this._getClassic1 ()
+			var self = this
+			setTimeout(function() {
+				if($('.classic-second').html() == '') {
+					self.categoryID = val
+					self._getPointData()
+				}
+			}, 100)
 		},
 		showColumnID (val) {
+			this.columnID1 = ''
+			this.columnID1 = val
+			this._getClassic2 ()
+			var self = this
+			setTimeout(function() {
+				if($('.classic-third').html() == '') {
+					self.categoryID = val
+					self._getPointData()
+				}
+			}, 100)
+		},
+		showColumnID1 (val) {
+			this.columnID2 = ''
+			this.columnID2 = val
+			this._getClassic3 ()
+			var self = this
+			setTimeout(function() {
+				if($('.classic-fourth').html() == '') {
+					self.categoryID = val
+					self._getPointData()
+				}
+			}, 100)
+		},
+		showColumnID2 (val) {
 			this.categoryID = ''
 			this.categoryID = val
-			// this._getPointData()
+			var self = this
+			setTimeout(function() {
+				if($('.classic-fourth').html() == '') {
+					self._getPointData()
+				}
+			}, 100)
 		}
 	}
 }

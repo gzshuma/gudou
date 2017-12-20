@@ -1,15 +1,27 @@
 <template>
 	<div class="classic-bd">
-		<div class="classic-list clearfix">
+		<div class="classic-list first-wrap clearfix">
 			<div class="fl classic-name">一级栏目</div>
-			<div class="fl classic-box classic-select classic-first" >
+			<div class="fl classic-box classic-select classic-first">
 				<span class="first-list" @click="categoryIDChange(v.categoryID, index)" v-for="(v,index) in classicData" :class="{cur:index === nowIndex0}">{{v.categoryName}}</span>
 			</div>
 		</div>
-		<div class="classic-list clearfix">
+		<div class="classic-list second-wrap clearfix">
 			<div class="fl classic-name">二级栏目</div>
 			<div class="fl classic-box classic-select classic-second">
 				<span class="second-list" @click="columnIDChange(v.categoryID, index)" v-for="(v,index) in classicSecondData" :class="{cur:index === nowIndex1}">{{v.categoryName}}</span>
+			</div>
+		</div>
+		<div class="classic-list third-wrap clearfix">
+			<div class="fl classic-name">三级栏目</div>
+			<div class="fl classic-box classic-select classic-third">
+				<span class="third-list" @click="columnIDChange1(v.categoryID, index)" v-for="(v,index) in classicThirdData" :class="{cur:index === nowIndex2}">{{v.categoryName}}</span>
+			</div>
+		</div>
+		<div class="classic-list fourth-wrap clearfix">
+			<div class="fl classic-name">四级栏目</div>
+			<div class="fl classic-box classic-select classic-fourth">
+				<span class="fourth-list" @click="columnIDChange2(v.categoryID, index)" v-for="(v,index) in classicFourthData" :class="{cur:index === nowIndex3}">{{v.categoryName}}</span>
 			</div>
 		</div>
 	</div>
@@ -25,6 +37,12 @@ export default {
 		},
 		classicSecondData: {
 			type: Array
+		},
+		classicThirdData: {
+			type: Array
+		},
+		classicFourthData: {
+			type: Array
 		}
 	},
     created () {
@@ -32,13 +50,24 @@ export default {
 	data () {
 		return {
 			nowIndex0: 0,
-			nowIndex1: 0
+			nowIndex1: 0,
+			nowIndex2: 0,
+			nowIndex3: 0
 		}
 	},
 	mounted () {
     	setTimeout(function() {
     		$('.first-list').eq(0).click()
+    	},100)
+    	setTimeout(function() {
+    		$('.second-list').eq(0).click()
     	},200)
+    	setTimeout(function() {
+    		$('.third-list').eq(0).click()
+    	},300)
+    	setTimeout(function() {
+    		$('.fourth-list').eq(0).click()
+    	},400)
 	},
 	methods: {
 		categoryIDChange (val, index) {
@@ -50,6 +79,16 @@ export default {
 			// alert(index)
 			this.nowIndex1 = index
 			this.$emit('showColumnID', val)
+		},
+		columnIDChange1 (val, index) {
+			// alert(index)
+			this.nowIndex2 = index
+			this.$emit('showColumnID1', val)
+		},
+		columnIDChange2 (val, index) {
+			// alert(index)
+			this.nowIndex3 = index
+			this.$emit('showColumnID2', val)
 		}
 	}
 }

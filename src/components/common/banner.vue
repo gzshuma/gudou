@@ -34,7 +34,7 @@ export default {
 .swiper-container .el-carousel__button { width: 10px; height: 10px; border-radius: 50%; background: #fff; }
 .swiper-container .is-active .el-carousel__button { background: #f00; }
 .swiper-container .is-active .el-carousel__button:hover { background: #f00; }
-.swiper-container .el-carousel__arrow { top: 165px; width: 65px; height: 65px; background-color: rgba(31,45,61,.7); }
+.swiper-container .el-carousel__arrow { top: 165px; width: 65px; height: 65px; background-color: rgba(31,45,61,.7); box-shadow: 0 0 20px #ddd; }
 .swiper-container .el-carousel__arrow .el-icon-arrow-left, .swiper-container .el-carousel__arrow .el-icon-arrow-right { font-size: 20px; }
 .carousel-box { position: relative; display: block; }
 .swiper-container .el-carousel__indicators { left: auto; right: 0; display: none;}

@@ -21,6 +21,7 @@
 
 <script>
 import $ from 'jquery'
+import { setPassWordFetch } from '@/axios/api'
 export default {
   data() {
       var validatePass = (rule, value, callback) => {
@@ -78,38 +79,15 @@ export default {
       //修改密码
       _setPassWord(){
         var self = this;
-        this.$http({
-            method: 'post',
-            url: '/api/PortalServer-App/new/aaa_usr_usr004',
-            params: {
-              ptype: self.GLOBAL.config.ptype,
-              plocation: self.GLOBAL.config.plocation,
-              puser: self.GLOBAL.config.puser,
-              ptoken: self.GLOBAL.config.ptoken,
-              pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.GLOBAL.config.pserialNumber,
-              pversion:  self.GLOBAL.config.pversion,
-              ptn: self.GLOBAL.config.ptoken,
-              pkv: self.GLOBAL.config.pkv, 
-              hmac: '',
-              nonce: self.GLOBAL.config.nonce,
-              timestamp: self.GLOBAL.config.timestamp,
-
-                oldPassword: self.ruleForm2.passold,
-                newPassword: self.ruleForm2.checkPass,
-                phoneNumber: self.puser,
-            },
-            })
-            .then((res) => {
-                if(res.data.status == 0) {
-                    this.$message.success('修改密码成功')
-                }else{
-                    this.$message.error(res.data.errorMessage)
-                }
-            })
-            .catch((res) => {
-                // this.$message.error(res.data.errorMessage)
-            })
+        setPassWordFetch(self).then(res => {
+            if(res.data.status == 0) {
+                this.$message.success('修改密码成功')
+            }else{
+                this.$message.error(res.data.errorMessage)
+            }
+        }).catch((res) => {
+          console.log(res.data.errorMessage)
+        })
       },
     }
   

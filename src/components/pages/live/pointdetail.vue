@@ -15,35 +15,42 @@
 		</div>
 		<div class="player-bd clearfix">
 			<div class="wrap clearfix">
-				<div class="fl palyer-le">
+				<div class="fl palyer-le" @mouseover="iframeMouseover" @mouseleave="iframeMouseleave">
+					<!-- <player></player> -->
 					<div v-if="!CA" class="tips-style">{{caText}}</div>
-	        		<iframe name="iframeDom" src="/static/player_m3u8/index.html" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
+	        		<iframe name="iframeDom" src="/static/m3u8player/index1.html" id="iframeBox" width="100%" height="420" scrolling="no" frameborder="0"></iframe>
+					<div class="video-malv" id="videoMalv" v-if="OK" @mouseleave="videoMalvBlur">
+					    <ul>
+					        <li v-for="(v, index) in playerArray" @click="malvClick(index, v.url)">{{v.text}}</li>
+					    </ul>
+					    <div class="videoMalv-selected" @mouseover="videoMalvSlect">{{malvSet}}</div>
+					</div>
 	        	</div>
 	        	<div class="fr palyer-ri">
 					<div class="episodes-reset" :class="episodesData.length>1 ? '':'dis-hide'">
 						<el-tabs class="juji-box">
-							<el-tab-pane label="1-24">
+							<el-tab-pane label="1-24" v-if="episodesData.length>0">
 								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index<24" :key="v.programID" @click="getUrl(v,index,$event)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
 									</el-tooltip>
 								</span>
 							</el-tab-pane>
-							<el-tab-pane label="25-48">
+							<el-tab-pane label="25-48" v-if="episodesData.length>24">
 								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=24&&index<48" :key="v.programID" @click="getUrl(v,index,$event)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
 									</el-tooltip>
 								</span>
 							</el-tab-pane>
-							<el-tab-pane label="49-72" v-if="episodesData.length>=48&&episodesData.length<72">
+							<el-tab-pane label="49-72" v-if="episodesData.length>48">
 								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=48&&index<72" :key="v.programID" @click="getUrl(v,$event,index)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
 									</el-tooltip>
 								</span>
 							</el-tab-pane>
-							<el-tab-pane label="73-96" v-if="episodesData.length>=72&&episodesData.length<96">
+							<el-tab-pane label="73-96" v-if="episodesData.length>72">
 								<span class="juji-list" :class="{cur:nowIndex==index}" v-for="(v,index) in episodesData" v-if="index>=72&&index<96" :key="v.programID" @click="getUrl(v,$event,index)">
 									<el-tooltip class="item" effect="dark" :content="v.titleName" placement="top">
 										<el-button>{{index+1}}</el-button>
@@ -65,15 +72,19 @@ import { Message } from 'element-ui'
 import player from 'components/common/player'
 import infodiscrib from 'components/common/infodiscrib'
 import share from 'components/common/share'
-import {GetQueryString, getParamValue} from '@/util'
+// import {GetQueryString, getParamValue} from '@/util'
+import {getDay, Monday,dateComparate, GetQueryString, getParamValue} from '@/util'
+import { pointDetailData, pointJujiData, malvDataFetch, authorityFetch } from '@/axios/api'
 export default {
 	components: {
 		player,
 		infodiscrib,
-		share
+		share,
+		player
 	},
 	data () {
 		return {
+			OK: false,
 			CA: false,
 			caText: '',
 			detailData: {},
@@ -81,12 +92,16 @@ export default {
 			playerUrl: '',
 			nowIndex: 0,
 			episodesNum: [
-			]
+			],
+			bitrateValue: '',
+			playerArray: [],
+			malvSet: this.malvSet ?  this.malvSet : '流畅'
 		}
 	},
     mounted () {
 		this._getDetailData()
 		this._getEpisodes (0)
+		this._getMalvData()
 
 		// 进入点击播放列表第一集
 		setTimeout(function() {
@@ -100,69 +115,42 @@ export default {
 
 		// 获取详情信息
 		_getDetailData () {
-			let self = this
-			self.$http({
-				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod013',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					programID: this.$route.params.id
-				}
-			})
-			.then((res) => {
-				// alert(1)
+			var self = this
+			pointDetailData(self).then( res => {
         		if(res.data.status == 0) {
 					const detailData = res.data.data.programinfo
-					this.detailData = detailData
+					self.detailData = detailData
 					//alert(this.detailData)
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+			}).catch( res => {
+				console.log(res.data.errorMessage)
 			})
 		},
 
 		// 获取集数
 		_getEpisodes () {
 			let self = this
-			self.$http({
-				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod012',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					programID: this.$route.params.id
-				}
-			})
-			.then((res) => {
+
+			pointJujiData(self).then( res => {
         		if(res.data.status == 0) {
 					const episodesData = res.data.data.programItems
-					this.episodesData = episodesData
+					self.episodesData = episodesData
 				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
 			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+		},
+
+		// 码率接口
+		_getMalvData () {
+			var self = this
+
+			malvDataFetch().then( res => {
+        		if(res.data.status == 0) {
+					self.bitrateValue = res.data.data.resolutions;
+				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
 			})
 		},
 
@@ -170,7 +158,9 @@ export default {
 		getUrl (val, index, el)  {
 			this.nowIndex = index
 			var data = {}
+			// console.log(val)
 			var data = val.movieUrl[0] // 点播地址
+			// console.log(data)
 			for(var v in data){
 			    data = data[v]
 			}
@@ -186,53 +176,86 @@ export default {
 
 			let pid = this.$route.params.id.split('_')
 			pid = pid[1]
-			// console.log(pid)
+
+
+			var playerStr = []
+
+			let playStr = ''
+			
+			// 循环播放源
+			var dataStr = {
+				url: '',
+				text: ''
+			}
+
+			// console.log(val.movieUrl)
+
+			for(var v in val.movieUrl) {
+					for(var value in val.movieUrl[v]) {
+						// alert(value)
+						var dataAdress = val.movieUrl[v][value]
+						playStr = val.movieUrl[v][value]
+
+						this.bitrateValue.forEach(function(item, n) {
+							// console.log(item.resolutionID)
+							if(value==item.resolutionID) {
+								// alert(item.bitrate)
+								// alert(playStr)
+								if(item.bitrate==1) {
+									dataStr = {
+										url: playStr,
+										text: '流畅'
+									}
+									playerStr.push(dataStr)
+								}else if(item.bitrate==2) {
+									dataStr = {
+										url: playStr,
+										text: '标清'
+									}
+									playerStr.push(dataStr)
+								}else if(item.bitrate==3) {
+									dataStr = {
+										url: playStr,
+										text: '高清'
+									}
+									playerStr.push(dataStr)
+								}else if(item.bitrate==4) {
+									dataStr = {
+										url: playStr,
+										text: '超清'
+									}
+									playerStr.push(dataStr)
+								}else if(item.bitrate==4) {
+									dataStr = {
+										url: playStr,
+										text: '超清'
+									}
+									playerStr.push(dataStr)
+								}
+							}
+						})
+
+						this.playerArray = playerStr;
+					}
+			}
 
 			// 鉴权获取
 			let self = this;
-			this.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/aaa_aut_aut002',
-				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.GLOBAL.config.puser,
-					ptoken: self.GLOBAL.config.ptoken,
-					pversion: self.GLOBAL.config.pversion,
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.GLOBAL.config.pserialNumber, // 必填
-					pkv: self.GLOBAL.config.pkv,
-					ptn: self.GLOBAL.config.ptoken,
-					DRMtoken: '',
-					epgID: '',
-					authType: self.GLOBAL.config.zero,
-					secondAuthid: '',
-					t: self.GLOBAL.config.ptoken,
-					pid: pid,
-					cid: '',
-					u: self.GLOBAL.config.puser,
-					p: self.GLOBAL.config.ptype,
-					l: self.GLOBAL.config.plocation,
-					d: self.GLOBAL.config.pserialNumber, // 必填 跟pserialNumber一样
-					n: meizi, //dongfang_800
-					v:  self.GLOBAL.config.v,
-					ot: self.GLOBAL.config.ot,
-					hmac: '',
-					timestamp: self.GLOBAL.config.timestamp,
-					nonce: self.GLOBAL.config.nonce
-				}
-			})
-			.then((res) => {
+			authorityFetch(self, pid, meizi).then( res => {
+				var self = this
 				if(res.data.status == 0) {
 					let str = res.data.data.authResult.split('?')[1]
 					// console.log(str)
-
+					// alert(GetQueryString(str, 'errorReason=0'))
+					var flag = GetQueryString(str, 'errorReason=0');
 					// 判断是否存在ACL
-					if(GetQueryString(str, 'a=')) {
+					if( GetQueryString(str, 'a=') && flag ){
 						// console.log('0')
 						this.CA = true
 						// iframe赋值
 						this.playerUrl = b+'?'+str
+
+						// console.log(b+'?'+str)
 
 						// 赋值给iframe
 						iframeDom.window.childrenFun(b+'?'+str)
@@ -240,17 +263,74 @@ export default {
 						// console.log(getParamValue(str, 'errorcode')[1])
 						var num = getParamValue(str, 'errorcode')[1]
 						this.CA = false
-						var txt = '无法播放错误代码 ' + num
+						var txt = '';
+						if(num == '9980') {
+							txt = '您还未登录，请登录后再试'
+						}else {
+							txt = '无法播放错误代码 ' + num
+						}
+						// var txt = '无法播放错误代码 ' + num
 						this.caText = txt
 						Message.warning(txt)
 					}
 					// console.log(this.playerUrl)
 						// this.playerUrl = b+'?'+str
 				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
 			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+		},
+
+		iframeMouseover() {
+			this.OK = true
+		},
+		iframeMouseleave() {
+			this.OK = false
+		},
+		malvClick(sindex, src) {
+			let meizi = src.split('.m3u8')[0]
+			// console.log(meizi) 
+			var index = meizi.lastIndexOf("\/");
+			// console.log(index) 
+			meizi  = meizi.substring(index + 1, meizi.length);
+			meizi = meizi.split('.')[0];
+			// alert(meizi)
+			$('.videoMalv-selected').html($('#videoMalv li').eq(sindex).html());
+			$('.videoMalv-selected').removeClass('selected-class');
+			this.malvSet = $('#videoMalv li').eq(sindex).html();
+			$('#videoMalv li').hide();
+			// alert(this.malvSet)
+			// console.log(meizi)
+			// 鉴权获取
+
+			let pid = this.$route.params.id.split('_')
+			pid = pid[1]
+
+			let self = this;
+			authorityFetch(self, pid, meizi).then( res => {
+				var self = this
+				if(res.data.status == 0) {
+					let str = res.data.data.authResult.split('?')[1];
+					// console.log(str)
+					var playStr = src + '?' +str
+					// alert(playStr)
+					iframeDom.window.childrenFun(playStr)
+				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
 			})
+		},
+
+		// 点击选择码率
+		videoMalvSlect() {
+			$('#videoMalv li').show();
+			$('.videoMalv-selected').addClass('selected-class');
+		},
+
+		// 移开消失
+		videoMalvBlur() {
+			$('#videoMalv li').hide();
+			$('.videoMalv-selected').removeClass('selected-class');
 		}
 	}
 }
@@ -315,5 +395,11 @@ export default {
 .juji-box .el-tabs__active-bar { background: #ff9c01; height: 2px; }
 .el-tabs__content { width: 365px; border: #363636 2px solid; border-bottom-width: 1px; overflow: hidden; }
 .el-tabs__header { border-bottom-color: #48576a; }
-.tips-style { position: absolute; top: 0; left: 0; width: 100%; height: 425px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; background: #000; }
+.tips-style { z-index: 101; position: absolute; top: 0; left: 0; width: 100%; height: 425px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; background: #000; }
+.video-malv { /*display: none;*/ position: absolute; bottom: 5px; right: 180px; z-index: 100; cursor: pointer; }
+.videoMalv-selected { background: #f00; border-radius: 3px; width: 70px; height: 27px; line-height: 27px; text-align: center; font-size: 14px; color: #fff; }
+.selected-class { border-radius: 0 0 3px 3px; }
+.video-malv li { display: none; width: 70px; height: 27px; line-height: 27px; background: #ccc; text-align: center; }
+.video-malv li:first-child { border-radius: 3px 3px 0 0; }
+.video-malv li:hover { background: #333; color: #fff; }
 </style>

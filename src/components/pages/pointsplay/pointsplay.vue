@@ -21,6 +21,7 @@ import selectmenu from 'components/common/selectmenu'
 import pagination from 'components/common/pagination'
 import loading from 'components/common/loading'
 import nodata from 'components/common/nodata'
+import { pListContrentData, pointContentFetch, pointClassicData } from '@/axios/api'
 
 export default {
 	components: {
@@ -84,64 +85,23 @@ export default {
     },
 	methods: {
 	    _getBnnerData () {
-	      let self = this
-	      self.$http({
-	        method: 'post',
-	        url: '/banner/RSWeb/gd/getContentListByColumnID',
-	        params: {
-	            ptype: self.GLOBAL.config.ptype,
-	            plocation: self.GLOBAL.config.plocation,
-	            puser: self.GLOBAL.config.puser,
-	            ptoken: self.GLOBAL.config.ptoken,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
-	            pserialNumber: self.GLOBAL.config.pserialNumber,
-	            pversion:  self.GLOBAL.config.pversion,
-	            ptn: self.GLOBAL.config.ptoken,
-	            pkv: self.GLOBAL.config.pkv, 
-	            hmac: '',
-	            nonce: self.GLOBAL.config.nonce,
-	            timestamp: self.GLOBAL.config.timestamp,
-				columnID: '002',
-				count: '6'
-	        }
-	      })
-	      .then((res) => {
-	        if(res.data.status == 0) {
-	          self.bannerList = res.data.data.contentInfos
-	        }
-	      })
-	      .catch((res) => {
-	        alert(res.data.errorMessage)
-	      })
+			let self = this
+			pointContentFetch().then(res => {
+				if(res.data.status == 0) {
+					const dataCard = res.data.data.cards
+					dataCard.forEach(function (value, key) {
+					if(value.type === 'carousel') {
+						self.bannerList =  value.contents
+					}
+					})
+				}
+			}).catch((res) => {
+				console.log(res.data.errorMessage)
+			})
 	    },
 		_getPointData () {
 			let self = this
-			self.$http({
-				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod011',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: 0? '' : self.$route.params.id,
-					categoryID: self.categoryID,
-					start: (self.currentPage-1) * self.currentSizeChange,
-					end: (self.currentPage) * self.currentSizeChange,
-					sortType: self.sortType,
-					year: self.year,
-					location: self.location
-				}
-			})
-			.then((res) => {
+			pListContrentData(self).then(res => {
 				self.showLoading = true
     			if(res.data.data.programs.length>0) {
         			self.show = true
@@ -154,33 +114,13 @@ export default {
 					self.pointData = []
 					self.show = false
     			}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+			}).catch((res) => {
+				console.log(res.data.errorMessage)
 			})
 		},
 		_getClassic () {
 			let self = this
-			self.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod010',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: self.$route.params.id
-				}
-			})
-			.then((res) => {
+			pointClassicData(self).then(res => {
         		if(res.data.status == 0) {
 					const classicData = res.data.data
 					self.classicData = classicData
@@ -190,9 +130,8 @@ export default {
 					self.location = classicData.location[0].locationID
 					self.sortType = '0'
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+			}).catch((res) => {
+				console.log(res.data.errorMessage)
 			})
 		},
 		showCurrentPage (val) {

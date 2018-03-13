@@ -14,6 +14,7 @@ import banner from 'components/common/banner'
 // 面包title
 import crumb from 'components/common/crumb'
 import piclistpoint from 'components/common/piclistpoint'
+import { pointContentFetch, pointClassListFetch } from '@/axios/api'
 
 export default {
 	components: {
@@ -37,67 +38,29 @@ export default {
 	methods: {
 	    _getBnnerData () {
 	      var self = this
-	      self.$http({
-	        method: 'post',
-	        url: '/banner/RSWeb/gd/getContentListByColumnID',
-	        params: {
-	            ptype: self.GLOBAL.config.ptype,
-	            plocation: self.GLOBAL.config.plocation,
-	            puser: self.GLOBAL.config.puser,
-	            ptoken: self.GLOBAL.config.ptoken,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
-	            pserialNumber: self.GLOBAL.config.pserialNumber,
-	            pversion:  self.GLOBAL.config.pversion,
-	            ptn: self.GLOBAL.config.ptoken,
-	            pkv: self.GLOBAL.config.pkv, 
-	            hmac: '',
-	            nonce: self.GLOBAL.config.nonce,
-	            timestamp: self.GLOBAL.config.timestamp,
-				columnID: '003',
-				count: '6'
-	        }
-	      })
-	      .then((res) => {
+	      pointContentFetch().then(res => {
 	        if(res.data.status == 0) {
-	          self.bannerList = res.data.data.contentInfos
-	          // alert(self.bannerList)
+	            const dataCard = res.data.data.cards
+	            dataCard.forEach(function (value, key) {
+	              if(value.type === 'carousel') {
+	                self.bannerList =  value.contents
+
+	                console.log(value.contents)
+	              }
+	            })
 	        }
-	      })
-	      .catch((res) => {
-	        alert(res.data.errorMessage)
+	      }).catch((res) => {
+	        console.log(res.data.errorMessage)
 	      })
 	    },
 		_getPointList () {
 			var self = this
-			self.$http({
-			  method: 'post',
-			  url: '/banner/RSWeb/gd/getCards',
-			  params: {
-	            ptype: self.GLOBAL.config.ptype,
-	            plocation: self.GLOBAL.config.plocation,
-	            puser: self.GLOBAL.config.puser,
-	            ptoken: self.GLOBAL.config.ptoken,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
-	            pserialNumber: self.GLOBAL.config.pserialNumber,
-	            pversion:  self.GLOBAL.config.pversion,
-	            ptn: self.GLOBAL.config.ptoken,
-	            pkv: self.GLOBAL.config.pkv, 
-	            hmac: '',
-	            nonce: self.GLOBAL.config.nonce,
-	            timestamp: self.GLOBAL.config.timestamp,
-			    parentID: self.$route.params.id,
-			    page: 0,
-			    contentSize: ''
-			  }
-			})
-			.then((res) => {
+			pointClassListFetch(self).then(res => {
 				if(res.data.status == 0) {
 					self.pointList = res.data.data.cards
-					// alert(self.pointList)
 				}
-			})
-			.catch((res) => {
-			  alert(res.data.errorMessage)
+			}).catch((res) => {
+				console.log(res.data.errorMessage)
 			})
 		},
 		showCategoryID (val) {

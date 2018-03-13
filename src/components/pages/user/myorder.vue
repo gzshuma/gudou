@@ -38,6 +38,8 @@
 import ucenterpic from 'components/common/ucenterpic'
 import pagination from 'components/common/pagination'
 import $ from 'jquery'
+import { Message } from 'element-ui'
+import { queryAppointFetch, paramFunction, delleteAppointUrl } from '@/axios/api'
 export default {
 	components: {
 	    //ucenterpic,
@@ -65,26 +67,7 @@ export default {
 	methods: {
 	    _getReserve(){
 			let self = this
-			let url = '/api/PortalServer-App/new/ptl_ipvp_live_live023'
-			self.$http({
-				method: 'get',
-				url: url,
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-				}
-			})
-			.then((res)=>{
+			queryAppointFetch().then(res => {
 				if(res.data.status == 0){
 					this.orderList = res.data.data.reminds;
 					// console.log(res.data.data.reminds);
@@ -94,7 +77,7 @@ export default {
 						$( 'myorderBar ' ).html( '您暂时没有预定数据' )
 					}
 				}
-			})
+			}) 
 	    },
 		deleteDom(val,el){//删除按钮  单个
 			this.delAllPlay1( val )	
@@ -128,24 +111,11 @@ export default {
 
 		},
 		delAllPlay1( val ){ //点播预约清空
-			 var self = this;
+			var self = this;
 			this.$http({
 				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live025',
-				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.puser,
-					ptoken: self.ptoken,
-					pversion: '03010',
-					locationName: '',
-					countyName: '',
-					hmace: '125456',
-					timestamp: new Date().getTime(),
-					nonce: Math.random().toString().slice(2),
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.ptoken,     
-				},
+				url: delleteAppointUrl(),
+				params: paramFunction(''),
 				//post用data
 				data:{
 					channelID: val.channelID,
@@ -154,7 +124,8 @@ export default {
 			})
 			.then((res) => {
 			if(res.data.status == 0) {
-					console.log( '取消预定' )  
+					// console.log( '取消预定' )
+					this.$message( '成功删除预订' );
 				}
 			})
 			.catch((res) => {

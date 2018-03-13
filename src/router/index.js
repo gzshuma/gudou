@@ -62,7 +62,7 @@ export default [
         path: '',
         name: 'listHome',
         meta: {
-          title: '直播'
+          title: '点播'
         },
         // component: liveHome
         component: resolve => require(['components/pages/live/list'], resolve)

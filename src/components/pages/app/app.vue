@@ -15,6 +15,7 @@ import $ from 'jquery'
 // 头部组件
 import header from 'components/common/header'
 import footer from 'components/common/footer'
+import { NavDataFetch, userInfoFetch, userBitrateFetch } from '@/axios/api'
 export default {
   components: {
     'm-header': header,
@@ -55,92 +56,40 @@ export default {
   },
   methods: {
     _getNavData () {
-      this.$http({
-        method: 'post',
-        url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod008',
-        params: {
-          ptype: this.GLOBAL.config.ptype,
-          plocation: this.GLOBAL.config.plocation,
-          puser: '',
-          pserverAddress: this.GLOBAL.config.pserverAddress
-        }
-      })
-      .then((res) => {
+      NavDataFetch().then( res => {
         if(res.data.status == 0) {
           // alert(1)
           const navData = res.data.data.columns
           this.navData = navData
         }
-      })
-      .catch((res) => {
+      }).catch((res) => {
+
       })
     },
 
     //获取用户信息
-    _getUserInfo( ){
-    var self = this;
-    this.$http({
-      method: 'get',
-      url: '/api/PortalServer-App/new/aaa_usr_usr008',
-      params: {
-              ptype: self.GLOBAL.config.ptype,
-              plocation: self.GLOBAL.config.plocation,
-              puser: self.GLOBAL.config.puser,
-              ptoken: self.GLOBAL.config.ptoken,
-              pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.GLOBAL.config.pserialNumber,
-              pversion:  self.GLOBAL.config.pversion,
-              ptn: self.GLOBAL.config.ptoken,
-              pkv: self.GLOBAL.config.pkv, 
-              hmac: '',
-              nonce: self.GLOBAL.config.nonce,
-              timestamp: self.GLOBAL.config.timestamp
-      },
-        })
-        .then((res) => {
-        if(res.data.status == 0) {
-
-          // this.$store.dispatch('addUser' , res.data.data);
-          this.userList = res.data.data;
-
+    _getUserInfo( ) {
+      var self = this;
+      userInfoFetch().then( res => {
+          if(res.data.status == 0) {
+            this.userList = res.data.data;
           }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
-        })
+      }).catch((res) => {
+        console.log(res.data.errorMessage)
+      })
     },
 
     //获取用户信息
-    _getBitrate( ){
-    var self = this;
-    this.$http({
-      method: 'get',
-      url: '/api/PortalServer-App/new/ptl_ipvp_cmn_cmn009',
-      params: {
-              ptype: self.GLOBAL.config.ptype,
-              plocation: self.GLOBAL.config.plocation,
-              puser: self.GLOBAL.config.puser,
-              ptoken: self.GLOBAL.config.ptoken,
-              pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.GLOBAL.config.pserialNumber,
-              pversion:  self.GLOBAL.config.pversion,
-              ptn: self.GLOBAL.config.ptoken,
-              pkv: self.GLOBAL.config.pkv, 
-              hmac: '',
-              nonce: self.GLOBAL.config.nonce,
-              timestamp: self.GLOBAL.config.timestamp
-      },
-        })
-        .then((res) => {
+    _getBitrate() {
+      var self = this;
+      userBitrateFetch().then( res => {
         if(res.data.status == 0) {
-            // console.log(res.data.data.resolutions)
-            localStorage.setItem('bitrateValue',JSON.stringify(res.data.data.resolutions))
-
-          }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
-        })
+          // console.log(res.data.data.resolutions)
+          localStorage.setItem('bitrateValue',JSON.stringify(res.data.data.resolutions))
+        }
+      }).catch((res) => {
+        alert(res.data.errorMessage)
+      })
     }
   },
   watch: {

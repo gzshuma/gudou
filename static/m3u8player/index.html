@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>ckplayer</title>
+		<script type="text/javascript" src="ckplayer/ckplayer.js?v=5" charset="UTF-8"></script>
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0px;
+				font-family: "Microsoft YaHei", YaHei, "微软雅黑", SimHei, "黑体";
+				font-size: 14px
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div id="video" class="video"></div>
+		<script type="text/javascript">
+
+		var player = '';
+var flag = false;
+var tagLive = false;
+function videoNew(videoUrl) {
+	if(videoUrl.indexOf('starttime') > -1) {
+		tagLive = false;
+	}else {
+		tagLive = true;
+	}
+    var videoObject = {
+        container: '.video', // 容器
+        variable: 'player', //该属性必需设置，值等于下面的new chplayer()的对象
+        autoplay: true, // 自动播放
+        flashplayer: true,
+        html5m3u8: false,
+        live: tagLive, // 去掉直播文字
+        volume: '0.5', // 初始音量设置
+        poster: '', // 封面图设置
+        seek: 0, // 视频开始播放时要跳转的时间，该值主要用来做跳过片头等功能
+        duration: 0, // 视频在默认不加载的情况下显示总时间
+        rotation: 0, // 该功能只支持90，180，270，-90，-180，-270。如果视频的所在域相对于播放器域没有权限，则不能使用该属性
+        loaded:'loadedHandler',//监听播放器加载成功
+        controlBarShow: true,
+        allowFullscreen: true,
+		debug: false, //是否开启调试模式
+		playbackrate:1,//默认速度的编号，只对html5有效,设置成-1则不显示倍速
+		// cktrack: 'material/srt.srt', //字幕文件
+        // definition:false,
+        video: videoUrl, //视频地址
+    };
+    player = new ckplayer(videoObject);
+}
+
+
+    	// alert(3)
+
+function childrenFun(val) {
+    videoNew(val);
+    $('#url-val').val(val);
+    flag = true;
+}
+
+// function childrenUrl(val) {
+//     // console.log(val)
+//     var html = '';
+//     for(var i =0; i<val.length; i++) {
+//         html += '<li data-src="'+val[i].url+'">'+val[i].text+'</li>';
+//     }
+//     $('#videoMalv').find('ul').html(html);
+// }
+</script>
+
+<style type="text/css">
+.video { width: 812px;height: 415px; }
+.video-malv { /*display: none;*/ position: absolute; bottom: 10px; right: 49px; z-index: 100; }
+.videoMalv-selected { background: #f00; border-radius: 3px; width: 70px; height: 27px; line-height: 27px; text-align: center; font-size: 14px; color: #fff; }
+.fiilScreen { background: rgba(0,0,0,0); width: 50px; height: 50px; position: absolute; bottom: 0; right: 0; }
+</style>
+	</body>
+</html>

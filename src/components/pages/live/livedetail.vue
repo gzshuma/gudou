@@ -18,35 +18,46 @@
 			<div class="wrap clearfix">
 				<div class="fl palyer-le" @mouseover="iframeMouseover" @mouseleave="iframeMouseleave">
 					<div v-if="!CA" class="tips-style">{{caText}}</div>
-	        		<iframe name="iframeDom" :src="'/static/player_m3u8/index.html'+playerUrl" id="iframeBox" width="100%" height="415" scrolling="no" frameborder="0"></iframe>
-					<!-- <div class="video-malv" id="videoMalv" v-if="OK">
+	        		<iframe name="iframeDom" :src="'/static/m3u8player/index.html'+playerUrl" id="iframeBox" width="100%" height="415" scrolling="no" frameborder="0"></iframe>
+					<div class="video-malv" id="videoMalv" v-if="OK" @mouseleave="videoMalvBlur">
 					    <ul>
-					        <li v-for="v in playerStr" @click="malvClick(v.url)">{{v.text}}</li>
+					        <li v-for="(v, index) in playerStr" @click="malvClick(index, v.url)">{{v.text}}</li>
 					    </ul>
-					    <div class="videoMalv-selected">标清</div>
-					</div> -->
+					    <div class="videoMalv-selected" @mouseover="videoMalvSlect">{{malvSet}}</div>
+					</div>
 				</div>
 				<div class="fr palyer-ri">
+					<div class="scroll-left" @click="tabLeftChange"></div>
+					<div class="scroll-right" @click="tabRightChange"></div>
 					<div class="player-tabs-box">
 						<div class="player-tabs-header clearfix">
-							<span class="tabs-hd-list"  v-for="index in 7" :class="{ cur:index == nowIndex }" @click="changeTab(index,monday(index))">
-								<i v-if="getDay==index">今天</i>
-								<i v-else>
-									<span v-if="index==1">周一</span>
-									<span v-if="index==2">周二</span>
-									<span v-if="index==3">周三</span>
-									<span v-if="index==4">周四</span>
-									<span v-if="index==5">周五</span>
-									<span v-if="index==6">周六</span>
-									<span v-if="index==7">周日</span>
-								</i>
-								<i>
-									{{monday(index).substr(4,2)}}.{{monday(index).substr(6,2)}}
-								</i>
-							</span>
+							<div class="player-tabs-pos" id="player-tabs-pos">
+								<span class="tabs-hd-list"  v-for="index in 14" :class="{ cur:index-8 == nowIndex }" @click="changeTab(index-8,monday(index-8))">
+									<i v-if="getDay==index-8">今天</i>
+									<i v-else>
+										<span v-if="index==1">周日</span>
+										<span v-if="index==2">周一</span>
+										<span v-if="index==3">周二</span>
+										<span v-if="index==4">周三</span>
+										<span v-if="index==5">周四</span>
+										<span v-if="index==6">周五</span>
+										<span v-if="index==7">周六</span>
+										<span v-if="index==8">周日</span>
+										<span v-if="index==9">周一</span>
+										<span v-if="index==10">周二</span>
+										<span v-if="index==11">周三</span>
+										<span v-if="index==12">周四</span>
+										<span v-if="index==13">周五</span>
+										<span v-if="index==14">周六</span>
+									</i>
+									<i>
+										{{monday(index-8).substr(4,2)}}.{{monday(index-8).substr(6,2)}}
+									</i>
+								</span>
+							</div>
 						</div>
 						<div class="player-tabs-con">
-							<div class="player-tabchange" :class="{'block':item === nowIndex}" v-for="item in 7">
+							<div class="player-tabchange" :class="{'block':item-8 === nowIndex}" v-for="item in 14">
 								<div class="player-tabs-list" @click="changeMovies(v,index,$event)"  v-for="(v,index) in detailData"  :class=" v.epgID == endTimeArr.epgID && isok ? 'player-cur aaa':'' ">
 									<span class="p-tabs-time">
 										{{v.startTime.substr(8,2)}}.{{v.startTime.substr(10,2)}}
@@ -72,6 +83,7 @@ import { Message } from 'element-ui'
 import share from 'components/common/share'
 import {getDay, Monday,dateComparate, GetQueryString, getParamValue} from '@/util'
 import player from 'components/common/player'
+import { paramFunction, malvDataFetch, authorityLiveFetch, liveDetailData, queryAppointFetch, addAppointFetch, queryCollectFetch, addAppointUrl, delleteAppointUrl } from '@/axios/api'
 
 export default {
 	components: {
@@ -111,8 +123,10 @@ export default {
 				channelName: '',
 				epgName: ''
 			},
-			bitrateValue: JSON.parse(localStorage.getItem('bitrateValue')),
-			playerStr: []
+			// bitrateValue: JSON.parse(localStorage.getItem('bitrateValue')),
+			bitrateValue: '',
+			playerStr: [],
+			malvSet: this.malvSet ?  this.malvSet : '流畅'
 		}
 	},
 	created () {
@@ -121,6 +135,7 @@ export default {
 		this.queryCollect();
 		this.queryAppoint();
 		this._getDetailData();
+		this._getMalvData();
 		setTimeout(function() {
 			this.startAppoint.forEach(function(item,index){
 				$( '[appoint='+item.programID+']' ).addClass( 'yuding' )
@@ -130,6 +145,7 @@ export default {
 		setTimeout(function() {
 			$('.player-tabchange.block .player-cur').click()
 		},800)
+		// alert(JSON.stringify(this.bitrateValue));
     },
     computed:{
 		//计算属性
@@ -144,6 +160,7 @@ export default {
 						}
 					}.bind(this)
 				);
+				// console.log(JSON.stringify(arr))
 				return arr.pop() || {};
 			} else {
 				return false;
@@ -164,37 +181,14 @@ export default {
 	methods: {
 		_getDetailData () {
 			let self = this
-			self.$http({
-				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live008',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					channelID: this.$route.params.channelid.split('_')[0],
-					startTime: this.startTime,
-					endTime: this.endTime
-
-				}
-			})
-			.then((res) => {
+			liveDetailData(self).then( res => {
         		if(res.data.status == 0) {
 					const detailData = res.data.data.epgs
-					this.detailData = detailData
+					self.detailData = detailData
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			}).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
 		dateData (date,startAppoint) {
 			startAppoint = startAppoint || [];
@@ -227,35 +221,13 @@ export default {
 		//查询预定提醒
 		queryAppoint( ){
 			var self = this;
-			self.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live023',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					start: '',
-					end: ''
-					
-				}
-			})
-			.then((res) => {
+			queryAppointFetch().then( res => {
 				if(res.data.status == 0) {
 					this.appointData = res.data.data.reminds
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			}).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
 		changeTab(index, date) {
 			this.nowIndex = index;
@@ -268,25 +240,12 @@ export default {
 		//添加预定提醒
 		addAppoint( val ){
 			var self = this;
-			this.$http({
+			
+			self.$http({
 				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live024',
-				params: {     
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					locationName: '',
-					countyName: '',
-				},
+				// url: '/api/PortalServer-App/new/ptl_ipvp_live_live024',
+				url: addAppointUrl(),
+				params: paramFunction(),
 				//post用data
 				data:{
 					channelID: self.$route.params.channelid.split('_')[0],
@@ -308,23 +267,9 @@ export default {
 			var self = this;
 			this.$http({
 				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live025',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					locationName: '',
-					countyName: '',   
-				},
+				// url: '/api/PortalServer-App/new/ptl_ipvp_live_live025',
+				url: delleteAppointUrl(),
+				params: paramFunction(),
 				//post用data
 				data:{
 					channelID: self.$route.params.channelid.split('_')[0],
@@ -366,11 +311,12 @@ export default {
 				var self = this
 				// 地址	
 				var data = {}
-				var data = val.historyUrl[1]
-				// console.log(data)
+				var data = val.historyUrl[0]
+				// console.log(val.historyUrl[0])
 				for(var v in data){
 				    data = data[v]
 				}
+
 				// console.log(data)
 
 				// 获取媒资
@@ -379,12 +325,20 @@ export default {
 				meizi  = meizi[0].substring(index + 1, meizi[0].length);
 				meizi = meizi.split('.')[0]
 
+				// console.log(meizi)
+
 				// 当前直播和回播的视频源
 				let url = data.split('?')
 				let movieUrl = url[0].split('8070')
 				let playStr = '', playStr_1 = ''
+
+				// console.log(movieUrl[1])
+
 				playStr = 'http://172.16.149.223:8060' + movieUrl[1] + '?'
 				playStr_1 = 'http://172.16.149.223:8060' + movieUrl[1] + '?' + url[1] + '&'
+
+
+				// console.log(playStr)
 
 				// 
 				this.playerStr = []
@@ -393,6 +347,11 @@ export default {
 					url: '',
 					text: ''
 				}
+
+
+				// console.log(val.historyUrl)
+
+				var playStr_mlv;
 				for(var v in val.historyUrl) {
 						// console.log(v)
 					for(var value in val.historyUrl[v]) {
@@ -408,87 +367,58 @@ export default {
 						// console.log(movieSource)
 
 						if(val.epgID==self.endTimeArr.epgID) {
-							playStr = movieSource
+							playStr_mlv = movieSource
 							$(el.target).addClass('player-cur')
 						}else if(self.num == 1) {
-							playStr = movieSource
+							playStr_mlv = movieSource
 						}else {
-							playStr = movieSource_1
+							playStr_mlv = movieSource_1
 						}
 
 						// console.log(playStr)
 
-						// self.bitrateValue.forEach(function(item, n) {
-						// 	if(value==item.resolutionID) {
-						// 		if(item.bitrate==1) {
-						// 			dataStr = {
-						// 				url: playStr,
-						// 				text: '流畅'
-						// 			}
-						// 			self.playerStr.push(dataStr)
-						// 		}else if(item.bitrate==2) {
-						// 			dataStr = {
-						// 				url: playStr,
-						// 				text: '标清'
-						// 			}
-						// 			self.playerStr.push(dataStr)
-						// 		}else if(item.bitrate==3) {
-						// 			dataStr = {
-						// 				url: playStr,
-						// 				text: '高清'
-						// 			}
-						// 			self.playerStr.push(dataStr)
-						// 		}else if(item.bitrate==4) {
-						// 			dataStr = {
-						// 				url: playStr,
-						// 				text: '超清'
-						// 			}
-						// 			self.playerStr.push(dataStr)
-						// 		}
-						// 	}
-						// })
+						self.bitrateValue.forEach(function(item, n) {
+							if(value==item.resolutionID) {
+								if(item.bitrate==1) {
+									dataStr = {
+										url: playStr_mlv,
+										text: '流畅'
+									}
+									self.playerStr.push(dataStr)
+								}else if(item.bitrate==2) {
+									dataStr = {
+										url: playStr_mlv,
+										text: '标清'
+									}
+									self.playerStr.push(dataStr)
+								}else if(item.bitrate==3) {
+									dataStr = {
+										url: playStr_mlv,
+										text: '高清'
+									}
+									self.playerStr.push(dataStr)
+								}else if(item.bitrate==4) {
+									dataStr = {
+										url: playStr_mlv,
+										text: '超清'
+									}
+									self.playerStr.push(dataStr)
+								}
+							}
+						})
 					}
 				}
-				// console.log(self.playerStr)
+
+
+				// console.log(playStr)
 
 				// 鉴权获取
 				let self = this;
-				this.$http({
-					method: 'get',
-					url: '/api/PortalServer-App/new/aaa_aut_aut002',
-					params: {
-						ptype: self.GLOBAL.config.ptype,
-						plocation: self.GLOBAL.config.plocation,
-						puser: self.GLOBAL.config.puser,
-						ptoken: encodeURIComponent(self.GLOBAL.config.ptoken),
-						pversion: self.GLOBAL.config.pversion,
-						pserverAddress: self.GLOBAL.config.pserverAddress,
-						pserialNumber: self.GLOBAL.config.pserialNumber, // 必填
-						pkv: self.GLOBAL.config.pkv,
-						ptn: encodeURIComponent(self.GLOBAL.config.ptoken),
-						DRMtoken: '',
-						epgID: '',
-						authType: self.GLOBAL.config.authType,
-						secondAuthid: '',
-						t: encodeURIComponent(self.GLOBAL.config.ptoken),
-						pid: '',
-						cid: self.$route.params.channelid.split('_')[0],
-						u: self.GLOBAL.config.puser,
-						d: self.GLOBAL.config.pserialNumber, // 必填 跟pserialNumber一样
-						p: self.GLOBAL.config.ptype,
-						l: self.GLOBAL.config.plocation,
-						n: meizi, // dongfang_800
-						v: self.GLOBAL.config.v,
-						ot: self.GLOBAL.config.ot,
-						hmac: '',
-						timestamp: self.GLOBAL.config.timestamp,
-						nonce: self.GLOBAL.config.nonce
-					}
-				})
-				.then((res) => {
+
+				authorityLiveFetch(self, meizi).then( res => {
 					if(res.data.status == 0) {
 
-						console.log(res.data.data.authResult)
+						// console.log(res.data.data.authResult)
 						
 						let str = res.data.data.authResult.split('?')[1];
 						// console.log(encodeURIComponent(str))
@@ -512,12 +442,14 @@ export default {
 							.addClass('player-cur aaa')
 							.siblings('.player-tabs-list').removeClass('player-cur aaa')
 
-						playStr = encodeURIComponent(playStr)
-
 						// console.log(playStr)
 
+						playStr = encodeURIComponent(playStr)
+
+						var flag = GetQueryString(str, 'errorReason=0');
+
 						// 判断鉴权中是否有ACL
-						if(GetQueryString(str, 'a=')) {
+						if(GetQueryString(str, 'a=') && flag) {
 							this.CA = true
 							// 赋值给iframe
 							iframeDom.window.childrenFun(playStr)
@@ -531,9 +463,11 @@ export default {
 						// console.log(self.playerStr)
 						// iframeDom.window.childrenUrl(self.playerStr)
 					}
+				}).catch( res => {
+					console.log(res.data.errorMessage)
 				})
-				.catch((res) => {
-				})
+
+				this.malvSet = '流畅'
 				
 				// 获取面包削标题
 				this.subData.channelName = val.channelName
@@ -544,34 +478,25 @@ export default {
 		//查询直播收藏
 		queryCollect( ){
 			var self = this;
-			this.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live026',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					start: '',
-					end: ''
-					
-				},
-			})
-			.then((res) => {
-			if(res.data.status == 0) {
-				this.collectData.collectArr =  res.data.data.live 
-			 }
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+			queryCollectFetch().then(res => {
+				if(res.data.status == 0) {
+					this.collectData.collectArr =  res.data.data.live 
+				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
+	        })
+		},
+
+		// 码率接口
+		_getMalvData () {
+			var self = this
+
+			malvDataFetch().then( res => {
+        		if(res.data.status == 0) {
+					self.bitrateValue = res.data.data.resolutions;
+				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
 			})
 		},
 		iframeMouseover() {
@@ -580,59 +505,53 @@ export default {
 		iframeMouseleave() {
 			this.OK = false
 		},
-		malvClick(src) {
+		malvClick(sindex, src) {
 			let meizi = src.split('.m3u8')[0]
 			// console.log(meizi) 
 			var index = meizi.lastIndexOf("\/");
 			// console.log(index) 
 			meizi  = meizi.substring(index + 1, meizi.length);
-			meizi = meizi.split('.')[0]
+			meizi = meizi.split('.')[0];
+			$('.videoMalv-selected').html($('#videoMalv li').eq(sindex).html());
+			$('.videoMalv-selected').removeClass('selected-class');
+			this.malvSet = $('#videoMalv li').eq(sindex).html();
+			$('#videoMalv li').hide();
+			// alert(this.malvSet)
 			// console.log(meizi)
+
 			// 鉴权获取
 			let self = this;
-			this.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/aaa_aut_aut002',
-				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.GLOBAL.config.puser,
-					ptoken: self.GLOBAL.config.ptoken,
-					pversion: self.GLOBAL.config.pversion,
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.GLOBAL.config.pserialNumber, // 必填
-					pkv: self.GLOBAL.config.pkv,
-					ptn: self.GLOBAL.config.ptoken,
-					DRMtoken: '',
-					epgID: '',
-					authType: self.GLOBAL.config.authType,
-					secondAuthid: '',
-					t: self.GLOBAL.config.ptoken,
-					pid: '',
-					cid: self.$route.params.channelid.split('_')[0],
-					u: self.GLOBAL.config.puser,
-					d: self.GLOBAL.config.pserialNumber, // 必填 跟pserialNumber一样
-					p: self.GLOBAL.config.ptype,
-					l: self.GLOBAL.config.plocation,
-					n: meizi, // dongfang_800
-					v: self.GLOBAL.config.v,
-					ot: self.GLOBAL.config.ot,
-					hmac: '',
-					timestamp: self.GLOBAL.config.timestamp,
-					nonce: self.GLOBAL.config.nonce
-				}
-			})
-			.then((res) => {
+			authorityLiveFetch(self, meizi).then( res => {
+				// var self = this
 				if(res.data.status == 0) {
 					let str = res.data.data.authResult.split('?')[1];
 					// console.log(str)
 					var playStr = src +str
 					iframeDom.window.childrenFun(playStr)
 				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
 			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+		},
+
+		// 点击选择码率
+		videoMalvSlect() {
+			$('#videoMalv li').show();
+			$('.videoMalv-selected').addClass('selected-class');
+		},
+
+		// 移开消失
+		videoMalvBlur() {
+			$('#videoMalv li').hide();
+			$('.videoMalv-selected').removeClass('selected-class');
+		},
+
+		// 点击切换tab
+		tabLeftChange() {
+			$('#player-tabs-pos').css('left', 0);
+		},
+		tabRightChange() {
+			$('#player-tabs-pos').css('left', '-370px');
 		}
 	}
 }
@@ -671,8 +590,8 @@ export default {
 .player-bd ::-webkit-scrollbar-thumb { border-radius: 2.5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #aaa; }
 .url-box { color: #fff; }
-.palyer-ri { width: 370px; height: 495px; color: #f0f0f0; overflow: hidden; }
-.tabs-hd-list { float: left; width: 14.285714%; text-align: center; cursor: pointer; }
+.palyer-ri { position: relative; width: 370px; height: 495px; color: #f0f0f0; /*overflow: hidden;*/ }
+.tabs-hd-list { float: left; width: 52.857142857px; text-align: center; cursor: pointer; }
 .tabs-hd-list.cur { color: #ff9c01; }
 .tabs-hd-list i.cur { color: #ff9c01; }
 .tabs-hd-list i { display: block; margin-bottom: 5px; }
@@ -693,9 +612,20 @@ export default {
 .playa.icon-back { right: 10px; }
 .player-tabchange { display: none; }
 .block { display: block; }
-.tips-style { position: absolute; top: 0; left: 0; width: 100%; height: 425px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; background: #000; }
+.tips-style { position: absolute; z-index: 101; top: 0; left: 0; width: 100%; height: 425px; padding: 0; line-height: 415px; font-size: 20px; color: #fff; text-align: center; background: #000; }
 iframe { background: #000; }
-.video-malv { /*display: none;*/ position: absolute; bottom: 7px; right: 49px; z-index: 100; }
+.video-malv { /*display: none;*/ position: absolute; bottom: 5px; right: 180px; z-index: 100; cursor: pointer; }
 .videoMalv-selected { background: #f00; border-radius: 3px; width: 70px; height: 27px; line-height: 27px; text-align: center; font-size: 14px; color: #fff; }
+.selected-class { border-radius: 0 0 3px 3px; }
+.video-malv li { display: none; width: 70px; height: 27px; line-height: 27px; background: #ccc; text-align: center; }
+.video-malv li:first-child { border-radius: 3px 3px 0 0; }
+.video-malv li:hover { background: #333; color: #fff; }
 .fiilScreen { background: rgba(0,0,0,0); width: 50px; height: 50px; position: absolute; bottom: 0; right: 0; }
+
+.player-tabs-header { position: relative; width: 100%; height: 36px; overflow: hidden; }
+.player-tabs-pos { position: absolute; left: -370px; top: 0; width: auto; height: 36px; }
+.scroll-left, .scroll-right { position: absolute; top: 0; width: 18px; height: 36px; opacity: .3; cursor: pointer; z-index: 10; }
+.scroll-left { left: -18px; background: url(/static/common/images/left.png) 5px 5px no-repeat; }
+.scroll-right { right: -18px; background: url(/static/common/images/right.png) 5px 5px no-repeat; }
+.scroll-left:hover, .scroll-right:hover { opacity: 1; }
 </style>

@@ -24,6 +24,8 @@ import submenu from "components/common/submenu";
 // 排行
 import livecon from "components/common/livecon";
 
+import { bannerFetch, liveSubConetnt } from '@/axios/api'
+
 export default {
   components: {
     banner,
@@ -59,70 +61,30 @@ export default {
   methods: {
     _getBnnerData() {
       let self = this;
-      self
-        .$http({
-          method: "post",
-          url: "/banner/RSWeb/gd/getContentListByColumnID",
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            columnID: "003",
-            count: "6"
-          }
-        })
-        .then(res => {
-          if (res.data.status == 0) {
-            self.bannerList = res.data.data.contentInfos;
-            // alert(self.bannerList)
-          }
-        })
-        .catch(res => {
-          alert(res.data.errorMessage);
-        });
+      
+      bannerFetch().then( res => {
+        if (res.data.status == 0) {
+            const dataCard = res.data.data.cards
+            dataCard.forEach(function (value, key) {
+              if(value.type === 'carousel') {
+                self.bannerList =  value.contents
+              }
+            })
+        }
+      }).catch( res => {
+        console.log(res.data.errorMessage)
+      })
     },
     _getliveConData() {
       let self = this
-      self
-        .$http({
-          method: "post",
-          url: "/banner/RSWeb/gd/getCardContents",
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            cardID: self.$route.params.id,
-            page: this.page,
-            contentSize: "10"
-          }
-        })
-        .then(res => {
-          if (res.data.status == 0) {
-            self.liveConData = res.data.data.contents;
-            // alert(self.liveConData)
-          }
-        })
-        .catch(res => {
-          alert(res.data.errorMessage);
-        });
+
+      liveSubConetnt(self).then( res => {
+        if (res.data.status == 0) {
+          self.liveConData = res.data.data.contents;
+        }
+      }).catch( res => {
+        console.log(res.data.errorMessage)
+      })
     },
     showCategoryID(val) {
       this.categoryID = val;
@@ -131,37 +93,14 @@ export default {
     _loadMore() {
       this.page = 1;
       var self = this;
-      // alert(self.categoryID)
-      self
-        .$http({
-          method: "post",
-          url: "/banner/RSWeb/gd/getCardContents",
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            cardID: self.$route.params.id,
-            page: this.page,
-            contentSize: "10"
-          }
-        })
-        .then(res => {
-          if (res.data.status == 0) {
-            self.liveConData1 = res.data.data.contents
-          }
-        })
-        .catch(res => {
-          alert(res.data.errorMessage);
-        });
+
+      liveSubConetnt(self).then( res => {
+        if (res.data.status == 0) {
+          self.liveConData1 = res.data.data.contents;
+        }
+      }).catch( res => {
+        console.log(res.data.errorMessage)
+      })
     }
   }
 };

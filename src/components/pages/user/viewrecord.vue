@@ -36,6 +36,7 @@
 import ucenterpic from 'components/common/ucenterpic'
 import pagination from 'components/common/pagination'
 import $ from 'jquery'
+import { reviewFetch, delleteReviewFetch } from '@/axios/api'
 export default {
 	components: {
 	    //ucenterpic,
@@ -63,31 +64,12 @@ export default {
 	methods: {
 	    _getReserve(){
 			let self = this
-			let url = '/api/PortalServer-App/new/ptl_ipvp_vod_vod028'
-			self.$http({
-				method: 'get',
-				url: url,
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-				}
-			})
-			.then((res)=>{
+			reviewFetch().then(res => {
 				if(res.data.status == 0){
-					this.orderList = res.data.data.historys ;
+					self.orderList = res.data.data.historys ;
 	
-					if( this.orderList.length == 0 ){
-						this.hideDiv = false;
+					if( self.orderList.length == 0 ){
+						self.hideDiv = false;
 						$( 'myorderBar ' ).html( '您暂时没有观看记录' )
 					}
 				}
@@ -125,37 +107,13 @@ export default {
 
 		},
 		delAllPlay1( val ){ //点播预约清空
-			 var self = this;
-			this.$http({
-				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod030',
-				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.puser,
-					ptoken: self.ptoken,
-					pversion: '03010',
-					locationName: '',
-					countyName: '',
-					hmace: '125456',
-					timestamp: new Date().getTime(),
-					nonce: Math.random().toString().slice(2),
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.ptoken,     
-				},
-				//post用data
-				data:{
-					assertID: val.assertID,
-					providerID: val.providerID
-				}
-			})
-			.then((res) => {
-			if(res.data.status == 0) {
+			var self = this;
+			delleteReviewFetch(val).then(res => {
+				if(res.data.status == 0) {
 					console.log( '删除观看记录' )  
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+			}).catch((res) => {
+				console.log(res.data.errorMessage)
 			})
 		},
 	}

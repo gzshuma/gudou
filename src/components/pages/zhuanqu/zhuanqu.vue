@@ -22,6 +22,7 @@ import selectmenu from 'components/common/selectmenuzq'
 import pagination from 'components/common/pagination'
 import loading from 'components/common/loading'
 import nodata from 'components/common/nodata'
+import { zqBannerFetch, zqListFetch, zqClassicFetch, zqClassic1Fetch, zqClassic2Fetch, zqClassic3Fetch } from '@/axios/api'
 
 export default {
 	components: {
@@ -156,62 +157,17 @@ export default {
 	methods: {
 	    _getBnnerData () {
 	        var self = this
-	        self.$http({
-	          method: 'post',
-	          url: '/api/PortalServer-App/new/ptl_ipvp_cmn_cmn017',
-	          params: {
-	            mediaAreaList: 'mediaAreaList',
-	            puser: self.GLOBAL.config.puser,
-	            timestamp: self.GLOBAL.config.timestamp,
-	            locationName: '',
-	            ptn: self.GLOBAL.config.ptoken,
-	            ptype: self.GLOBAL.config.ptype,
-	            plocation: self.GLOBAL.config.plocation,
-	            ptoken: self.GLOBAL.config.ptoken,
-	            pserialNumber: self.GLOBAL.config.pserialNumber,
-	            pversion:  self.GLOBAL.config.pversion,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
-	            countyName: '',
-	            nonce: self.GLOBAL.config.nonce,
-	          }
-	        })
-	        .then((res) => {
+	        zqBannerFetch().then(res => {
 	          if(res.data.status == 0) {
 	            self.bannerList = res.data.data.mediaAreaList.mediaAreaList
 	          }
+	        }).catch( res => {
+	          console.log(res.data.errorMessage)
 	        })
-	        .catch((res) => {
-	          alert(res.data.errorMessage)
-	        })
-	      },
+		},
 		_getPointData () {
 			let self = this
-			self.$http({
-				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod011',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					// columnID: self.columnID,
-					categoryID: self.categoryID,
-					start: (self.currentPage-1) * self.currentSizeChange,
-					end: (self.currentPage) * self.currentSizeChange,
-					// end: '1000',
-					sortType: self.sortType,
-					location: self.location
-				}
-			})
-			.then((res) => {
+			zqListFetch(self).then(res => {
         		if(res.data.status == 0) {
 					self.showLoading = true
         			if(res.data.data.programs.length>0) {
@@ -230,137 +186,54 @@ export default {
 						self.showLoading = false
         			}
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			}).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
 		_getClassic () {
 			let self = this
-			self.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: self.$route.params.id,
-				}
-			})
-			.then((res) => {
+			zqClassicFetch(self).then(res => {
         		if(res.data.status == 0) {
 					const classicData = res.data.data.categorys
 					self.classicData = classicData
 					// self._getClassic1()
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			}).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
 		_getClassic1 () {
 			let self = this
-			self.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: self.columnID
-				}
-			})
-			.then((res) => {
+			zqClassic1Fetch(self).then(res => {
         		if(res.data.status == 0) {
 					const classicSecondData = res.data.data.categorys
 					self.classicSecondData = classicSecondData
-					// console.log(self.classicSecondData)
-					// console.log(self.classicSecondData[0].categoryName)
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			}).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
 		_getClassic2 () {
 			let self = this
-			self.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: self.columnID1
-				}
-			})
-			.then((res) => {
+			zqClassic2Fetch(self).then(res => {
         		if(res.data.status == 0) {
 					const classicThirdData = res.data.data.categorys
 					self.classicThirdData = classicThirdData
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			}).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
 		_getClassic3 () {
 			let self = this
-			self.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod009',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: self.columnID2
-				}
-			})
-			.then((res) => {
+			zqClassic3Fetch(self).then(res => {
         		if(res.data.status == 0) {
 					const classicFourthData = res.data.data.categorys
 					self.classicFourthData = classicFourthData
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			}).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
 
 		showCurrentPage (val) {
@@ -429,6 +302,6 @@ export default {
 .tabs-box .vue-tablist li[aria-selected=true] { border-bottom: #ff9c01 2px solid; color: #ff9c01; }
 .tabs-box .rank-bd li { margin-bottom: 20px; }
 .live-box .live-crumb { margin-top: 10px; } 
-.live-box { margin-top: -35px; }
+/*.live-box { margin-top: 0; }*/
 .nodata-div { display: none; }
 </style>

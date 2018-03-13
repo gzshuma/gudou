@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { serialnoFetch, getCodeFetch, sresetPasswordFetch } from '@/axios/api'
+
 export default {
   data() {
     return {
@@ -55,10 +57,9 @@ export default {
   methods: {
     //获取流水号
     getSerial() {
-      let url = "/api0/AAA/serialNoFromUAP";
-      this.$http.get(url).then(res => {
+      serialnoFetch().then(res => {
         this.ruleForm.serialNo = res.data.data.serialno;
-      });
+      })
     },
 
     //输入时调用只能输入数字
@@ -85,16 +86,7 @@ export default {
         return;
       }
       let self = this;
-      let url = "/api0/AAA/aaaSendRandomCodeUAP";
-      self
-        .$http({
-          methods: "get",
-          url: url,
-          params: {
-            phoneNum: self.ruleForm.phoneNum
-          }
-        })
-        .then(res => {
+      getCodeFetch(self).then(res => {
           if (res.data.status == "0") {
             this.$message.success("验证码发送成功，请注意查收！");
 
@@ -104,7 +96,7 @@ export default {
           } else {
             this.$message.error("验证码发送失败，请重新发送！");
           }
-        });
+      })
     },
 
     //禁用按钮 倒计时
@@ -154,35 +146,24 @@ export default {
         this.ruleForm.newPwd = "";
         return false;
       }
-      let url = "/api0/AAA/aaaResetPasswordUAP";
+      // let url = "/api0/AAA/aaaResetPasswordUAP";
       let self = this;
-      self
-        .$http({
-          method: "post",
-          url: url,
-          params: {
-            phoneNum: self.ruleForm.phoneNum,
-            randomCode: self.ruleForm.randomCode,
-            newPwd: self.$md5(self.ruleForm.newPwd), //密码加密
-            serialNo: self.ruleForm.serialNo
-          }
-        })
-        .then(res => {
+      sresetPasswordFetch(self).then(res => {
           if (res.data.status == "0000") {
-            this.$confirm('重置密码成功,是否跳转到登录页面？')
+            self.$confirm('重置密码成功,是否跳转到登录页面？')
             .then(_ => {
-                this.$router.push({ name: "login" });
+                self.$router.push({ name: "login" });
                 done();
              })
             .catch(_ => {});
 
             
-            this.ruleForm.newPwd = "";
-            this.ruleForm.randomCode = "";
+            self.ruleForm.newPwd = "";
+            self.ruleForm.randomCode = "";
           } else {
-            this.$message.warning(res.data.errorMessage);
+            self.$message.warning(res.data.errorMessage);
           }
-        });
+      })
     }
   }
 };

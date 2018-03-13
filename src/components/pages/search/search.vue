@@ -66,6 +66,7 @@ import $ from 'jquery'
 import searchlist from 'components/common/searchlist'
 import pagination from 'components/common/pagination'
 import searchtop from 'components/common/searchtop'
+import { searchFetch, searchContentFetch } from '@/axios/api'
 
 export default {
   components: {
@@ -89,13 +90,6 @@ export default {
   mounted () {
     this._getHot()
     this._getSearchCon()
-    // alert($('#app').height())
-    // if($('.reset-mark').length>0) {
-    //   if($('#app').height()<$(window).height()) {
-    //     alert(1)
-    //     $('footer').addClass('reset-footer')
-    //   }
-    // }
   },
   created () {
     const self = this
@@ -117,58 +111,17 @@ export default {
       },
       _getHot () {
         var self = this
-        self.$http({
-          method: 'post',
-          url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod001',
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            count: '30'
-          }
-        })
-        .then((res) => {
+        searchFetch().then(res => {
           if(res.data.status == 0) {
             self.hotData = res.data.data.hotSearchInfo
           }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
+        }).catch((res) => {
+          console.log(res.data.errorMessage)
         })
       },
       _getSearchCon () {
         var self = this
-        self.$http({
-          method: 'post',
-          url: '/api/PortalServer-App/new/ptl_ipvp_uba_search003',
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            keyword: self.keyword,
-            start: 0,
-            resultSize: 20,
-          }
-        })
-        .then((res) => {
+        searchContentFetch(self).then(res => {
           if(res.data.status == 0) {
             this.isShow = true
             self.liveSearch = []
@@ -184,9 +137,8 @@ export default {
               }
             })
           }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
+        }).catch((res) => {
+          console.log(res.data.errorMessage)
         })
       },
       urlDirect ($id, $channelId) {

@@ -71,6 +71,7 @@
 <script>
 // import { mapState } from 'vuex'
 import {getCookie, GetDateDiff, getNowFormatDate} from '@/util'
+import { logoutDataFetch } from '@/axios/api'
 export default {
 	name: 'header',
 	components: {
@@ -142,27 +143,8 @@ export default {
 			}, 300)
 		},
 		logout () {
-			let self = this
-			let url = '/api/PortalServer-App/new/aaa_usr_usr003'
-			self.$http({
-				methods: 'get',
-				url: url,
-				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.GLOBAL.config.puser,
-					ptoken: self.GLOBAL.config.ptoken,
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.GLOBAL.config.pserialNumber,
-					pversion:  self.GLOBAL.config.pversion,
-					ptn: self.GLOBAL.config.ptoken,
-					pkv: self.GLOBAL.config.pkv, 
-					hmac: '',
-					nonce: self.GLOBAL.config.nonce,
-					timestamp: self.GLOBAL.config.timestamp
-				}
-			})
-			.then((res)=>{
+			logoutDataFetch().then( res => {
+				let self = this
 				if(res.data.status == '0'){
 					self.$confirm('您确定要退出吗?', '退出登录', {
 						confirmButtonText: '确定',

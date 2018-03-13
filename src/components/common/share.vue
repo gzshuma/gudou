@@ -29,6 +29,7 @@
 <script type="text/ecmascript-6">
 import Vue from 'vue'
 import {getDay, Monday,dateComparate} from '@/util'
+import { paramFunction, addAllPlayLiveUrl, delAllPlayLiveUrl } from '@/axios/api'
 import $ from 'jquery'
 export default {
   props:{
@@ -94,21 +95,8 @@ export default {
         var self = this;
         this.$http({
             method: 'post',
-            url: '/api/PortalServer-App/new/ptl_ipvp_live_live027',
-            params: {
-              ptype: self.GLOBAL.config.ptype,
-              plocation: self.GLOBAL.config.plocation,
-              puser: self.GLOBAL.config.puser,
-              ptoken: self.GLOBAL.config.ptoken,
-              pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.GLOBAL.config.pserialNumber,
-              pversion:  self.GLOBAL.config.pversion,
-              ptn: self.GLOBAL.config.ptoken,
-              pkv: self.GLOBAL.config.pkv, 
-              hmac: '',
-              nonce: self.GLOBAL.config.nonce,
-              timestamp: self.GLOBAL.config.timestamp,
-            },
+            url: addAllPlayLiveUrl(),
+            params: paramFunction(),
             //post用data
             data:{
               channelID: self.collectData.id,
@@ -132,21 +120,8 @@ export default {
          var self = this;
         this.$http({
             method: 'post',
-            url: '/api/PortalServer-App/new/ptl_ipvp_live_live028',
-            params: {
-              ptype: self.GLOBAL.config.ptype,
-              plocation: self.GLOBAL.config.plocation,
-              puser: self.GLOBAL.config.puser,
-              ptoken: self.GLOBAL.config.ptoken,
-              pserverAddress: self.GLOBAL.config.pserverAddress,
-              pserialNumber: self.GLOBAL.config.pserialNumber,
-              pversion:  self.GLOBAL.config.pversion,
-              ptn: self.GLOBAL.config.ptoken,
-              pkv: self.GLOBAL.config.pkv, 
-              hmac: '',
-              nonce: self.GLOBAL.config.nonce,
-              timestamp: self.GLOBAL.config.timestamp,
-            },
+            url: delAllPlayLiveUrl(),
+            params: paramFunction(),
             //post用data
             data:{
               channelID: self.collectData.id,

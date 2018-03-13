@@ -68,8 +68,20 @@ export default {
 .carousel-mask { position: absolute; height: 50px; line-height: 50px; font-size: 18px; width: 100%; position: absolute; left: 0; bottom: 0; background: rgba(0,0,0,.5); color: #fff; text-align: center; z-index: 2; }
 .swiper-container .is-active{ z-index: 9; }
 .swiper-container .el-carousel__item {  width: 50%; }
-.swiper-container .el-carousel__item img { height: auto; width: 100%; max-height: 400px; }
+.swiper-container .el-carousel__item img { height: auto; width: 100%; max-height: 100%; }
 .swiper-container .is-active a {  position: relative; position: relative; z-index: 3; }
 .swiper-container .is-active .mask-pop {  position: relative; position: relative; z-index: 4; }
 .mask-pop { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 3; }
+@media screen and (max-width: 1280px) {
+    .swiper-container { height: 336px; }
+}
+@media screen and (min-width:1280px) and (max-width:1370px){
+    .swiper-container { height: 360px; }
+}
+@media screen and (min-width:1370px) and (max-width:1475px){
+    .swiper-container { height: 378px; }
+}
+@media screen and (min-width:1475px) and (max-width:1920px){
+    .swiper-container { height: 450px; }
+}
 </style>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>文字两端对齐</title>
+
+        <style type="text/css">
+            * { padding: 0; margin: 0; }
+            
+            table {
+                width: 300px;
+            }
+            
+            td {
+                border: 1px #ccc solid;
+                font-size: 13px;
+            }
+            
+            .title {
+                width: 200px;
+                height: 22px;
+                line-height: 22px;
+                float: left;
+                text-align: justify;
+                text-justify: inter-ideograph; /*为了兼容IE*/
+                text-align-last: justify; ie9
+                -moz-text-align-last: justify;/*ff*/
+                -webkit-text-align-last: justify;/*chrome 20+*/
+            }
+            
+            .title:after {
+                content: ".";
+                display: inline-block;
+                width: 100%;
+                overflow: hidden;
+                height: 0;
+            }
+            
+            .maohao {
+                line-height: 22px;
+                width: 10px;
+                float: left;
+            }
+            
+            .detail {
+                float: left;
+                width: 220px;
+                line-height: 22px;
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+            
+            #justify {
+                width: 300px;
+                height: auto;
+                font-size: 13px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <h3>借助表格实现文字两端对齐：</h3>
+        <table>
+            <tr>
+                <td class="title">姓名</td>
+                <td class="maohao">:</td>
+                <td class="detail">好长的名字jkjkjdkajkdjakjdajdkajdaskdjajkdjk</td>
+            </tr>
+            <tr>
+                <td class="title">最高学历最高学历</td>
+                <td class="maohao">:</td>
+                <td class="detail">研究生</td>
+            </tr>
+            <tr>
+                <td class="title">性别</td>
+                <td class="maohao">:</td>
+                <td class="detail">男</td>
+            </tr>
+            <tr>
+                <td class="title">签名</td>
+                <td class="maohao">:</td>
+                <td class="detail">没有签名就是我的签名</td>
+            </tr>
+            <tr>
+                <td class="title">Age</td>
+                <td class="maohao">:</td>
+                <td class="detail">28</td>
+            </tr>
+            <tr>
+                <td class="title">C l a s s</td>
+                <td class="maohao">:</td>
+                <td class="detail">2</td>
+            </tr>
+        </table>
+
+        <h3>文字两端对齐：</h3>
+        <div id="justify">
+            <div class="title">姓名</div>
+            <div class="maohao">：</div>
+            <div class="detail">好长的名字jkjkjdkajkdjakjdajdkajdaskdjajkdjk</div>
+
+            <div class="title">最高学历</div>
+            <div class="maohao">：</div>
+            <div class="detail">研究生</div>
+
+            <div class="title">性别</div>
+            <div class="maohao">：</div>
+            <div class="detail">男</div>
+
+            <div class="title">Class</div>
+            <div class="maohao">：</div>
+            <div class="detail">2</div>
+
+            <div class="title">A g e</div>
+            <div class="maohao">：</div>
+            <div class="detail">28</div>
+
+            <div class="title">签名</div>
+            <div class="maohao">：</div>
+            <div class="detail">没有签名就是我的签名</div>
+        </div>
+
+    </body>
+
+</html>

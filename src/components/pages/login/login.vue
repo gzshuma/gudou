@@ -30,6 +30,7 @@
 <script>
 import Vue from 'vue'
 import { requestLogin } from 'api/api'
+import { serialnoFetch, loginFetch } from '@/axios/api'
 export default {
   data() {
     return {
@@ -59,19 +60,7 @@ export default {
     //获取表单数据
     isLogin(){
       let self = this
-      self.$http({
-        method: 'get',
-        url: '/api0/AAA/loginFromUAP',
-        params: {
-          LoginType: '1',
-          loginparam: self.ruleForm.loginparam,
-          Pwd: self.$md5(self.ruleForm.Pwd),
-          serialno: self.ruleForm.serialno,
-          terminalID: self.GLOBAL.config.pserialNumber
-          // terminalID: '2'
-        }
-      })
-      .then((res)=>{
+      loginFetch(self).then(res => {
         if(res.data.status == '0' || res.data.status == '0000'){
           // alert(res.data.data.newToken)
           sessionStorage.setItem('flag',res.data.data.newToken)
@@ -91,19 +80,13 @@ export default {
          return false;
       }
       let self = this
-      let url = '/api0/AAA/serialNoFromUAP'
-      self.$http({
-        methods: 'get',
-        url: url,
-        params: {}
-      })
-      .then((res)=>{
-          this.ruleForm.serialno = res.data.data.serialno;
-          this.isLogin();
+
+      serialnoFetch().then(res => {
+          self.ruleForm.serialno = res.data.data.serialno;
+          self.isLogin();
       })
     },
     handleSubmit2(){
-      //this.$md5(this.ruleForm.Pwd)
       this.serialnoGet();
     },
   },

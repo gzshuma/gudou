@@ -19,6 +19,7 @@
 <script>
 import Vuex from 'vuex'
 import $ from 'jquery'
+import { bannerFetch, pointContentFetch, zqDataFetch } from '@/axios/api'
 // banner
 import banner from 'components/common/banner'
 // 面包title
@@ -59,7 +60,7 @@ export default {
     }
   },
   mounted () {
-    this._getBnnerData()
+    // this._getBnnerData()
     this._getLiveContentInfo()
     this._getPointContentInfo()
     this._getZhuanquData()
@@ -71,61 +72,9 @@ export default {
       showMoreID (val) {
         this.showMoreID = val
       },
-      _getBnnerData () {
-        var self = this
-        self.$http({
-          method: 'post',
-          url: '/banner/RSWeb/gd/getContentListByColumnID',
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            columnID: '002',
-            count: '6'
-          }
-        })
-        .then((res) => {
-          if(res.data.status == 0) {
-            self.bannerList = res.data.data.contentInfos
-            // alert(self.bannerList)
-          }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
-        })
-      },
       _getLiveContentInfo () {
-        var self = this
-        self.$http({
-          method: 'post',
-          url: '/banner/RSWeb/gd/getCards',
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            page: 0,
-            parentID: '003'
-          }
-        })
-        .then((res) => {
+        bannerFetch().then( res => {
+          var self = this
           if(res.data.status == 0) {
             const dataCard = res.data.data.cards
             dataCard.forEach(function (value, key) {
@@ -137,82 +86,43 @@ export default {
               }
             })
           }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
+        }).catch( res => {
+          console.log(res.data.errorMessage)
         })
       },
       _getPointContentInfo () {
-        var self = this
-        self.$http({
-          method: 'post',
-          url: '/banner/RSWeb/gd/getCards',
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            page: 0,
-            parentID: '002'
-          }
-        })
-        .then((res) => {
+        pointContentFetch().then( res => {
+          var self = this
           if(res.data.status == 0) {
             const dataCard = res.data.data.cards
             dataCard.forEach(function (value, key) {
               if(value.type === 'category') {
                 self.pointSubList = value.contents
               }
+
+              if(value.type === 'carousel') {
+                self.bannerList =  value.contents
+              }
               if(value.type === 'vod') {
                 self.pointContent.push(value)
               }
             })
           }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
+        }).catch( res => {
+          console.log(res.data.errorMessage)
         })
       },
 
       // 专区数据
       _getZhuanquData () {
-        // '/PortalServer-App/new/ptl_ipvp_cmn_cmn017?mediaAreaList=mediaAreaList&puser=freeuser&timestamp=1512634038&locationName=广州&ptn=Y29tLnN1bWF2aXNpb24uc2FucGluZy5ndWRvdQ&ptype=1&plocation=001&hmac=0f7794c51e&ptoken=863272038913423&pserialNumber=863272038913423&pversion=030101&pserverAddress=portal.gcable.cn&countyName=越秀区&pkv=1&nonce=379657'
-        var self = this
-        self.$http({
-          method: 'post',
-          url: '/api/PortalServer-App/new/ptl_ipvp_cmn_cmn017',
-          params: {
-            mediaAreaList: 'mediaAreaList',
-            puser: self.GLOBAL.config.puser,
-            timestamp: self.GLOBAL.config.timestamp,
-            locationName: '',
-            ptn: self.GLOBAL.config.ptoken,
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            countyName: '',
-            nonce: self.GLOBAL.config.nonce,
-          }
-        })
-        .then((res) => {
+        zqDataFetch().then( res => {
+          var self = this
           if(res.data.status == 0) {
             self.zhuanquData = res.data.data.mediaAreaList.mediaAreaList
             console.log(JSON.stringify(self.zhuanquData))
           }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
+        }).catch( res => {
+          console.log(res.data.errorMessage)
         })
       }
   }

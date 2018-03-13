@@ -54,6 +54,8 @@
 
 <script>
 import $ from 'jquery'
+import { Message } from 'element-ui'
+import { paramFunction, delAllPlayUrl, delAllPlayLiveUrl, queryCollectFetch, queryPointCollectFetch, delleteLiveCollectFetch } from '@/axios/api'
 export default {
 	components: {
 	},
@@ -86,68 +88,26 @@ export default {
 	     //查询点播收藏
 		queryCollect2( ){
 			var self = this;
-			self.$http({
-			  method: 'get',
-			  url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod031',
-			  params: {
-			    ptype: self.GLOBAL.config.ptype,
-			    plocation: self.GLOBAL.config.plocation,
-			    puser: self.GLOBAL.config.puser,
-			    ptoken: self.GLOBAL.config.ptoken,
-			    pserverAddress: self.GLOBAL.config.pserverAddress,
-			    pserialNumber: self.GLOBAL.config.pserialNumber,
-			    pversion:  self.GLOBAL.config.pversion,
-			    ptn: self.GLOBAL.config.ptoken,
-			    pkv: self.GLOBAL.config.pkv, 
-			    hmac: '',
-			    nonce: self.GLOBAL.config.nonce,
-			    timestamp: self.GLOBAL.config.timestamp,
-			    start: '',
-			    end: ''
-			  },
-			})
-			.then((res) => {
+			queryPointCollectFetch().then(res => {
 			    if(res.data.status == 0) {
 			      this.orderList2 =  res.data.data.vod 
 			    }
-			})
-			.catch((res) => {
-			  alert(res.data.errorMessage)
+			}).catch(res => {
+				console.log(res.data.errorMessage)
 			})
 		},
 		
 		//查询直播收藏
 		queryCollect( ) {
 			let self = this;
-			self.$http({
-				method: 'get',
-				url: '/api/PortalServer-App/new/ptl_ipvp_live_live026',
-					params: {
-			            ptype: self.GLOBAL.config.ptype,
-			            plocation: self.GLOBAL.config.plocation,
-			            puser: self.GLOBAL.config.puser,
-			            ptoken: self.GLOBAL.config.ptoken,
-			            pserverAddress: self.GLOBAL.config.pserverAddress,
-			            pserialNumber: self.GLOBAL.config.pserialNumber,
-			            pversion:  self.GLOBAL.config.pversion,
-			            ptn: self.GLOBAL.config.ptoken,
-			            pkv: self.GLOBAL.config.pkv, 
-			            hmac: '',
-			            nonce: self.GLOBAL.config.nonce,
-			            timestamp: self.GLOBAL.config.timestamp,
-						start: '',
-						end: ''
-					},
-				})
-				.then((res) => {
-					if(res.data.status == 0) {
-						this.orderList =  res.data.data.live 
-					 }
-				})
-				.catch((res) => {
-					alert(res.data.errorMessage)
-				})
-			},
+			queryCollectFetch().then(res => {
+				if(res.data.status == 0) {
+					this.orderList =  res.data.data.live 
+				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
+	        })
+		},
 		deleteDom( val,el ){//删除按钮  单个
 			if( this.nowIndex == 1 ){//点播
 					this.delAllPlay1( val )
@@ -193,22 +153,8 @@ export default {
 			let self = this;
 			self.$http({
 	            method: 'post',
-	            url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod033',
-	            params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-	                
-	            },
+	            url: delAllPlayUrl(),
+	            params: paramFunction(),
 	            //post用data
 	            data:{
 	              programID: val.programID,
@@ -217,7 +163,8 @@ export default {
           })
           .then((res) => {
 				if(res.data.status == 0) {
-					console.log( '取消点播收藏' )
+					// console.log( '取消点播收藏' )
+					this.$message( '成功删除点播收藏' );
 				}
           })
           .catch((res) => {
@@ -229,21 +176,8 @@ export default {
 			let self = this;
         	self.$http({
 	            method: 'post',
-	            url: '/api/PortalServer-App/new/ptl_ipvp_live_live028',
-	            params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-	            },
+	            url: delAllPlayLiveUrl(),
+	            params: paramFunction(),
 	            //post用data
 	            data:{
 	              channelID: val.channelID,
@@ -251,7 +185,8 @@ export default {
 			})
 			.then((res) => {
 				if(res.data.status == 0) {
-					console.log( '取消直播收藏' )
+					// console.log( '取消直播收藏' )
+					this.$message( '成功删除直播收藏' );
 				}
 			})
 			.catch((res) => {

@@ -72,6 +72,7 @@ import usercenterleft from 'components/common/usercenterleft'
 import bmask from 'components/common/bmask'
 import $ from 'jquery'
 import {gen_base64} from "@/util";
+import { paramFunction, setUserUrl, setUserImgUrl } from '@/axios/api'
 
 export default {
   props:{
@@ -109,9 +110,6 @@ export default {
    
   },
   mounted(){
-
-      // console.log( this.userList )
-
   },
 	methods:{
     fileClick(){
@@ -157,23 +155,11 @@ export default {
      //修改资料
 		_setUserData( ){
       var self = this;
-      this.$http({
+      self.$http({
         method: 'post',
-        url: '/api/PortalServer-App/new/aaa_usr_usr009',
-        params: {
-          ptype: self.GLOBAL.config.ptype,
-          plocation: self.GLOBAL.config.plocation,
-          puser: self.puser,
-          ptoken: self.ptoken,
-          pversion: '03010',
-          pserverAddress: self.GLOBAL.config.pserverAddress,
-          pserialNumber: '862915030592170',
-          pkv:	1,
-          ptn:  self.ptoken,
-          hmace: '125456',
-          timestamp: new Date().getTime(),
-          nonce: Math.random().toString().slice(2),
-        },
+        // url: '/api/PortalServer-App/new/aaa_usr_usr009',
+        url: setUserUrl(),
+        params: paramFunction(''),
         data:{
           nickname: this.nickname,
           sex: '',
@@ -201,22 +187,8 @@ export default {
       var self = this;
       this.$http({
         method: 'post',
-        url: '/api/PortalServer-App/new/aaa_usr_usr010',
-        params: {
-          ptype: self.GLOBAL.config.ptype,
-          plocation: self.GLOBAL.config.plocation,
-          puser: self.GLOBAL.config.puser,
-          ptoken: self.GLOBAL.config.ptoken,
-          pserverAddress: self.GLOBAL.config.pserverAddress,
-          pserialNumber: self.GLOBAL.config.pserialNumber,
-          pversion:  self.GLOBAL.config.pversion,
-          ptn: self.GLOBAL.config.ptoken,
-          pkv: self.GLOBAL.config.pkv, 
-          hmac: '',
-          nonce: self.GLOBAL.config.nonce,
-          timestamp: self.GLOBAL.config.timestamp,
-          pkv:	1,
-        },
+        url: setUserImgUrl(),
+        params: paramFunction(''),
         data:{
           photo: this.base64Img,
         },

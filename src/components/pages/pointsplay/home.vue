@@ -20,6 +20,7 @@ import crumb from 'components/common/crumb'
 import piclistpoint from 'components/common/piclistpoint'
 // 关联菜单
 import submenupoint from 'components/common/submenupoint'
+import { pointListFetch, pointContentFetch } from '@/axios/api'
 
 export default {
 	components: {
@@ -58,72 +59,17 @@ export default {
         '$route': '_getPointData'
     },
 	methods: {
-	    _getBnnerData () {
-	      let self = this
-	      self.$http({
-	        method: 'post',
-	        url: '/banner/RSWeb/gd/getContentListByColumnID',
-	        params: {
-	            ptype: self.GLOBAL.config.ptype,
-	            plocation: self.GLOBAL.config.plocation,
-	            puser: self.GLOBAL.config.puser,
-	            ptoken: self.GLOBAL.config.ptoken,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
-	            pserialNumber: self.GLOBAL.config.pserialNumber,
-	            pversion:  self.GLOBAL.config.pversion,
-	            ptn: self.GLOBAL.config.ptoken,
-	            pkv: self.GLOBAL.config.pkv, 
-	            hmac: '',
-	            nonce: self.GLOBAL.config.nonce,
-	            timestamp: self.GLOBAL.config.timestamp,
-				columnID: '002',
-				count: '6'
-	        }
-	      })
-	      .then((res) => {
-	        if(res.data.status == 0) {
-	          self.bannerList = res.data.data.contentInfos
-	        }
-	      })
-	      .catch((res) => {
-	        alert(res.data.errorMessage)
-	      })
-	    },
 		_getPointData () {
 			let self = this
-			self.$http({
-				method: 'post',
-				url: '/api/PortalServer-App/new/ptl_ipvp_vod_vod011',
-				params: {
-		            ptype: self.GLOBAL.config.ptype,
-		            plocation: self.GLOBAL.config.plocation,
-		            puser: self.GLOBAL.config.puser,
-		            ptoken: self.GLOBAL.config.ptoken,
-		            pserverAddress: self.GLOBAL.config.pserverAddress,
-		            pserialNumber: self.GLOBAL.config.pserialNumber,
-		            pversion:  self.GLOBAL.config.pversion,
-		            ptn: self.GLOBAL.config.ptoken,
-		            pkv: self.GLOBAL.config.pkv, 
-		            hmac: '',
-		            nonce: self.GLOBAL.config.nonce,
-		            timestamp: self.GLOBAL.config.timestamp,
-					columnID: 0? '' : self.$route.params.id,
-					categoryID: self.categoryID,
-					start: (self.currentPage-1) * self.currentSizeChange,
-					end: (self.currentPage) * self.currentSizeChange,
-					sortType: 0
-				}
-			})
-			.then((res) => {
+			pointListFetch(self).then(res => {
         		if(res.data.status == 0) {
 					const pointData = res.data.data
 					const count = res.data.data.count
 					self.pointData = pointData
 					self.count = count
 				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
+			}).catch((res) => {
+				console.log(res.data.errorMessage)
 			})
 		},
 		showCurrentPage (val) {
@@ -137,27 +83,7 @@ export default {
 		},
       _getPointContentInfo () {
         var self = this
-        self.$http({
-          method: 'post',
-          url: '/banner/RSWeb/gd/getCards',
-          params: {
-            ptype: self.GLOBAL.config.ptype,
-            plocation: self.GLOBAL.config.plocation,
-            puser: self.GLOBAL.config.puser,
-            ptoken: self.GLOBAL.config.ptoken,
-            pserverAddress: self.GLOBAL.config.pserverAddress,
-            pserialNumber: self.GLOBAL.config.pserialNumber,
-            pversion:  self.GLOBAL.config.pversion,
-            ptn: self.GLOBAL.config.ptoken,
-            pkv: self.GLOBAL.config.pkv, 
-            hmac: '',
-            nonce: self.GLOBAL.config.nonce,
-            timestamp: self.GLOBAL.config.timestamp,
-            page: 0,
-            parentID: '002'
-          }
-        })
-        .then((res) => {
+        pointContentFetch().then(res => {
           if(res.data.status == 0) {
             const dataCard = res.data.data.cards
             dataCard.forEach(function (value, key) {
@@ -169,10 +95,9 @@ export default {
               }
             })
           }
-        })
-        .catch((res) => {
-          alert(res.data.errorMessage)
-        })
+        }).catch((res) => {
+			console.log(res.data.errorMessage)
+		})
       },
       showCategoryID (val) {
         this.categoryID = val

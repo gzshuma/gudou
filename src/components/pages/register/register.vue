@@ -30,6 +30,7 @@
 
 <script>
 import { requestLogin } from "api/api";
+import { serialnoFetch, registerFetch, getCodeFetch } from '@/axios/api'
 
 export default {
   data() {
@@ -65,10 +66,9 @@ export default {
   methods: {
     //获取流水号
     getSerial() {
-      let url = "/api0/AAA/serialNoFromUAP";
-      this.$http.get(url).then(res => {
+      serialnoFetch().then(res => {
         this.ruleForm.serialno = res.data.data.serialno;
-      });
+      })
     },
 
     //输入时调用只能输入数字
@@ -85,31 +85,16 @@ export default {
         return false;
       }
 
-      let url = "/api0/AAA/registerFromUAP";
+      // let url = "/api0/AAA/registerFromUAP";
       let self = this;
-      self
-        .$http({
-          method: "post",
-          url: url,
-          params: {
-            regtype: 1,
-            assistparam: "",
-            regparam: self.ruleForm.phoneNum, //字符串注册参数根据regtype的不同传具体的值
-            Pwd: self.$md5(self.ruleForm.Pwd), //密码加密
-            serialno: self.ruleForm.serialno,
-            phoneNumber: self.ruleForm.phoneNum,
-            token: self.ruleForm.token
-          }
-        })
-        .then(res => {
-          // console.log(res.data)
+      registerFetch(self).then(res => {
           if (res.data.status == "0000") {
             this.$message("注册成功");
             this.$router.push({ name: "login" });
           } else {
             this.$message.warning(res.data.errorMessage);
           }
-        });
+      })
     },
     //点击注册
     handleSubmit() {
@@ -145,16 +130,7 @@ export default {
         return;
       }
       let self = this;
-      let url = "/api0/AAA/aaaSendRandomCodeUAP";
-      self
-        .$http({
-          methods: "get",
-          url: url,
-          params: {
-            phoneNum: self.ruleForm.phoneNum
-          }
-        })
-        .then(res => {
+      getCodeFetch(self).then(res => {
           if (res.data.status == "0") {
             this.$message.success("验证码发送成功，请注意查收！");
 
@@ -164,7 +140,7 @@ export default {
           } else {
             this.$message.error("验证码发送失败，请重新发送！");
           }
-        });
+      })
     },
     //禁用按钮 倒计时
     getverifytime() {

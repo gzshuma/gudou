@@ -28,6 +28,7 @@ import submenu from 'components/common/submenu'
 // 排行
 import pointcon from 'components/common/pointcon'
 import tabitems from 'components/common/tabitems'
+import { pointContentFetch, pointListData, pListMoreData } from '@/axios/api'
 
 export default {
 	components: {
@@ -59,107 +60,47 @@ export default {
         '$route': '_getliveConData'
     },
 	methods: {
-	    _getBnnerData () {
-	      var self = this
-	      self.$http({
-	        method: 'post',
-	        url: '/banner/RSWeb/gd/getContentListByColumnID',
-	        params: {
-				ptype: self.GLOBAL.config.ptype,
-				plocation: self.GLOBAL.config.plocation,
-				puser: self.GLOBAL.config.puser,
-				ptoken: self.GLOBAL.config.ptoken,
-				pserverAddress: self.GLOBAL.config.pserverAddress,
-				pserialNumber: self.GLOBAL.config.pserialNumber,
-				pversion:  self.GLOBAL.config.pversion,
-				ptn: self.GLOBAL.config.ptoken,
-				pkv: self.GLOBAL.config.pkv, 
-				hmac: '',
-				nonce: self.GLOBAL.config.nonce,
-				timestamp: self.GLOBAL.config.timestamp,
-				columnID: '003',
-				count: '6'
-	        }
-	      })
-	      .then((res) => {
-	        if(res.data.status == 0) {
-	          self.bannerList = res.data.data.contentInfos
-	          // alert(self.bannerList)
-	        }
-	      })
-	      .catch((res) => {
-	        alert(res.data.errorMessage)
-	      })
-	    },
+		// banner
+		_getBnnerData () {
+	        pointContentFetch().then( res => {
+	          var self = this
+	          if(res.data.status == 0) {
+	            const dataCard = res.data.data.cards
+	            dataCard.forEach(function (value, key) {
+	              if(value.type === 'carousel') {
+	                self.bannerList =  value.contents
+	              }
+	            })
+	          }
+	        }).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
+		},
+
+		// 点播列表
 		_getpointConData () {
 			var self = this
-			// alert(self.categoryID)
-			self.$http({
-				method: 'post',
-				url: '/banner/RSWeb/gd/getCardContents',
-				params: {
-					ptype: self.GLOBAL.config.ptype,
-					plocation: self.GLOBAL.config.plocation,
-					puser: self.GLOBAL.config.puser,
-					ptoken: self.GLOBAL.config.ptoken,
-					pserverAddress: self.GLOBAL.config.pserverAddress,
-					pserialNumber: self.GLOBAL.config.pserialNumber,
-					pversion:  self.GLOBAL.config.pversion,
-					ptn: self.GLOBAL.config.ptoken,
-					pkv: self.GLOBAL.config.pkv, 
-					hmac: '',
-					nonce: self.GLOBAL.config.nonce,
-					timestamp: self.GLOBAL.config.timestamp,
-					cardID: self.$route.params.id,
-					page: this.page,
-					contentSize: '100'
-				}
-			})
-			.then((res) => {
-        		if(res.data.status == 0) {
-					self.pointConData = res.data.data.contents
-					// alert(self.liveConData)
-				}
-			})
-			.catch((res) => {
-				alert(res.data.errorMessage)
-			})
+			pointListData(self).then( res => {
+	          if(res.data.status == 0) {
+	            self.pointConData = res.data.data.contents
+	          }
+	        }).catch( res => {
+	          console.log(res.data.errorMessage)
+	        })
 		},
+
+		// 更多
 	    _loadMore() {
 	      this.page = 1;
 	      var self = this;
-	      // alert(self.categoryID)
-	      self
-	        .$http({
-	          method: "post",
-	          url: "/banner/RSWeb/gd/getCardContents",
-	          params: {
-	            ptype: self.GLOBAL.config.ptype,
-	            plocation: self.GLOBAL.config.plocation,
-	            puser: self.GLOBAL.config.puser,
-	            ptoken: self.GLOBAL.config.ptoken,
-	            pserverAddress: self.GLOBAL.config.pserverAddress,
-	            pserialNumber: self.GLOBAL.config.pserialNumber,
-	            pversion:  self.GLOBAL.config.pversion,
-	            ptn: self.GLOBAL.config.ptoken,
-	            pkv: self.GLOBAL.config.pkv, 
-	            hmac: '',
-	            nonce: self.GLOBAL.config.nonce,
-	            timestamp: self.GLOBAL.config.timestamp,
-				cardID: self.$route.params.id,
-				page: this.page,
-				contentSize: '100'
-	          }
-	        })
-	        .then(res => {
-	          if (res.data.status == 0) {
-	            self.pointConData1 = res.data.data.contents
-	            console.log(self.pointConData1.length)
-	          }
-	        })
-	        .catch(res => {
-	          alert(res.data.errorMessage);
-	        });
+
+			pListMoreData(self).then( res => {
+				if(res.data.status == 0) {
+					self.pointConData1 = res.data.data.contents
+				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
+			})
 	    },
 		showCategoryID (val) {
 			this.categoryID = val

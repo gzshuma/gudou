@@ -62,7 +62,7 @@
 					</div>
 				</div>
 			</div>
-			<a target="_blank" href="http://172.16.149.150/download/index.html" class="list hover">aap下载</a>
+			<a target="_blank" href="http://172.16.149.150/download/index.html" class="list hover">app下载</a>
 		</div>
 	</div>
   </header>
@@ -179,7 +179,7 @@ export default {
 </script>
 
 <style scoped>
-header { position: fixed; top: 0; left: 0; background: rgba(0,0,0,.7); width: 100%; height: 55px; color: #fff; z-index: 10; }
+header { position: fixed; top: 0; left: 0; background: rgba(0,0,0,.7); width: 100%; height: 55px; color: #fff; z-index: 102; }
 .header-wrap { display: flex; align-items: center; }
 .logo { margin: 0; width: 165px; height: 29px; background: url(/static/common/images/logo1.png) no-repeat; cursor: pointer; }
 .nav-box { position: relative; float: left; padding: 0 0 0 10px; line-height: 55px; font-size: 0; }

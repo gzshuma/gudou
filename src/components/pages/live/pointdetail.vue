@@ -241,6 +241,7 @@ export default {
 
 			// 鉴权获取
 			let self = this;
+			// alert(meizi)
 			authorityFetch(self, pid, meizi).then( res => {
 				var self = this
 				if(res.data.status == 0) {
@@ -248,6 +249,7 @@ export default {
 					// console.log(str)
 					// alert(GetQueryString(str, 'errorReason=0'))
 					var flag = GetQueryString(str, 'errorReason=0');
+					// iframeDom.window.childrenFun(b+'?'+str);
 					// 判断是否存在ACL
 					if( GetQueryString(str, 'a=') && flag ){
 						// console.log('0')
@@ -272,6 +274,7 @@ export default {
 						// var txt = '无法播放错误代码 ' + num
 						this.caText = txt
 						Message.warning(txt)
+						// iframeDom.window.childrenFun(b+'?'+str)
 					}
 					// console.log(this.playerUrl)
 						// this.playerUrl = b+'?'+str
@@ -309,12 +312,35 @@ export default {
 			let self = this;
 			authorityFetch(self, pid, meizi).then( res => {
 				var self = this
+
 				if(res.data.status == 0) {
 					let str = res.data.data.authResult.split('?')[1];
 					// console.log(str)
-					var playStr = src + '?' +str
-					// alert(playStr)
-					iframeDom.window.childrenFun(playStr)
+
+					var flag = GetQueryString(str, 'errorReason=0');
+					// iframeDom.window.childrenFun(b+'?'+str);
+					// 判断是否存在ACL
+					if( GetQueryString(str, 'a=') && flag ){
+						// console.log('0')
+						this.CA = true
+						var playStr = src + '?' +str
+						// alert(playStr)
+						iframeDom.window.childrenFun(playStr)
+					}else {
+						// console.log(getParamValue(str, 'errorcode')[1])
+						var num = getParamValue(str, 'errorcode')[1]
+						this.CA = false
+						var txt = '';
+						if(num == '9980') {
+							txt = '您还未登录，请登录后再试'
+						}else {
+							txt = '无法播放错误代码 ' + num
+						}
+						// var txt = '无法播放错误代码 ' + num
+						this.caText = txt
+						Message.warning(txt)
+						// iframeDom.window.childrenFun(b+'?'+str)
+					}
 				}
 			}).catch( res => {
 				console.log(res.data.errorMessage)

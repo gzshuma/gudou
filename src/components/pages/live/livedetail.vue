@@ -456,7 +456,12 @@ export default {
 						}else {
 							var num = getParamValue(str, 'errorcode')[1]
 							this.CA = false
-							var txt = '无法播放错误代码 ' + num
+							var txt = ''
+							if(num == '9980') {
+								txt = '您还未登录，请登录后再试'
+							}else {
+								txt = '无法播放错误代码 ' + num
+							}
 							this.caText = txt
 							Message.warning(txt)
 						}
@@ -527,7 +532,26 @@ export default {
 					let str = res.data.data.authResult.split('?')[1];
 					// console.log(str)
 					var playStr = src +str
-					iframeDom.window.childrenFun(playStr)
+
+					var flag = GetQueryString(str, 'errorReason=0');
+
+					// 判断鉴权中是否有ACL
+					if(GetQueryString(str, 'a=') && flag) {
+						this.CA = true
+						// 赋值给iframe
+						iframeDom.window.childrenFun(playStr)
+					}else {
+						var num = getParamValue(str, 'errorcode')[1]
+						this.CA = false
+						var txt = ''
+						if(num == '9980') {
+							txt = '您还未登录，请登录后再试'
+						}else {
+							txt = '无法播放错误代码 ' + num
+						}
+						this.caText = txt
+						Message.warning(txt)
+					}
 				}
 			}).catch( res => {
 				console.log(res.data.errorMessage)

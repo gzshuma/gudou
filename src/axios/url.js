@@ -1,7 +1,13 @@
 export default {
-	portalBanner:'/banner', //接口代理配置
-	portalGcable:'/api', //接口代理配置
-	portalAAA:'/api0', //接口代理配置
+	// dev
+	// portalBanner:'/banner', //接口代理配置
+	// portalGcable:'/api', //接口代理配置
+	// portalAAA:'/api0', //接口代理配置
+
+	// build
+	portalBanner:'', //接口代理配置
+	portalGcable:'', //接口代理配置
+	portalAAA:'', //接口代理配置
 	
 	// 公参
 	ptype: '5',

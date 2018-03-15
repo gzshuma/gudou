@@ -5,7 +5,7 @@
 				<div class="pic-ri-top">
 					<img v-lazy="v.contentImageUrl" alt="">
 		  			<span class="pic-mask">
-		  				<span class="pic-title">{{v.contentName}}</span>
+		  				<span class="pic-title">{{v.extraInfo.channelName}}</span>
 		  				<span class="mask-time">
 		  				{{v.extraInfo.epgStartTime.substr(4,2)}}-{{v.extraInfo.epgStartTime.substr(6,2)}}
 						{{v.extraInfo.epgStartTime.substr(8,2)}}:{{v.extraInfo.epgStartTime.substr(10,2)}}
@@ -13,8 +13,8 @@
 		  				<!-- <span class="progress-bar" :style="{ width: percentNum(dateCompa1(v.extraInfo.epgStartTime),dateCompa(v.extraInfo.epgEndTime,v.extraInfo.epgStartTime)) }"></span> -->
 		  			</span>
 				</div>
-				<div class="pic-btm">
-					{{v.extraInfo.channelName}}
+				<div class="pic-btm" :title="v.contentName">
+					{{v.contentName}}
 				</div>
 			</li>
 			<li v-for="(v, index) in liveConData1" @click.stop="urlDirect(v.contentID, v.extraInfo.channelID)">
@@ -22,13 +22,27 @@
 					<!-- <img v-lazy="v.liveRealImg" alt=""> -->
 					<img v-lazy="v.contentImageUrl" alt="">
 		  			<span class="pic-mask">
-		  				<span class="pic-title">{{v.contentName}}</span>
+		  				<span class="pic-title">{{v.extraInfo.channelName}}</span>
 		  				<span class="mask-time">01-22 19:35</span>
 		  				<!-- <span class="progress-bar" :style="{ width: percentNum(dateCompa1(v.extraInfo.epgStartTime),dateCompa(v.extraInfo.epgEndTime,v.extraInfo.epgStartTime)) }"></span> -->
 		  			</span>
 				</div>
-				<div class="pic-btm">
-					{{v.extraInfo.channelName}}
+				<div class="pic-btm" :title="v.contentName">
+					{{v.contentName}}
+				</div>
+			</li>
+			<li v-for="(v, index) in liveConData2" @click.stop="urlDirect(v.contentID, v.extraInfo.channelID)">
+				<div class="pic-ri-top">
+					<!-- <img v-lazy="v.liveRealImg" alt=""> -->
+					<img v-lazy="v.contentImageUrl" alt="">
+		  			<span class="pic-mask">
+		  				<span class="pic-title">{{v.extraInfo.channelName}}</span>
+		  				<span class="mask-time">01-22 19:35</span>
+		  				<!-- <span class="progress-bar" :style="{ width: percentNum(dateCompa1(v.extraInfo.epgStartTime),dateCompa(v.extraInfo.epgEndTime,v.extraInfo.epgStartTime)) }"></span> -->
+		  			</span>
+				</div>
+				<div class="pic-btm" :title="v.contentName">
+					{{v.contentName}}
 				</div>
 			</li>
 		</ul>
@@ -44,6 +58,9 @@ export default {
 			type: Array
 		},
 		liveConData1: {
+			type: Array
+		},
+		liveConData2: {
 			type: Array
 		}
 	},

@@ -19,10 +19,10 @@
     </div> -->
     <div class="search-result" v-if="liveSearch.length>0 || pointSearch.length>0">
       <div class="search-tab">
-        <span class="tab-list" :class="{cur:1!=nowIndex}" @click="toggleTabs(0)">直播</span>
+        <span v-if="liveSearch.length>0" class="tab-list" :class="{cur:1!=nowIndex}" @click="toggleTabs(0)">直播</span>
         <span class="tab-list" :class="{cur:0!=nowIndex}" @click="toggleTabs(1)">点播</span>
       </div>
-      <div class="search-con search-live-con" v-show="nowIndex===0">
+      <div v-if="liveSearch.length>0" class="search-con search-live-con" v-show="nowIndex===0">
         <ul>
           <li v-for="v, index in liveSearch" @click="urlDirect(v.epgID, v.id)">
             <span class="search-live-link">
@@ -37,7 +37,8 @@
           </li>
         </ul>
       </div>
-      <div class="search-con search-point-con" v-show="nowIndex===1">
+      <div v-if="pointSearch.length>0" class="search-con search-point-con" v-show="nowIndex===1 || liveSearch.length < 1">
+      <!-- <div v-if="pointSearch.length>0" class="search-con search-point-con" v-show="nowIndex===1"> -->
         <ul>
           <router-link tag="li" :to="{name: 'detail', params: { id: v.id }}" v-for="v in pointSearch" :key="v.id">
             <div class="pic">

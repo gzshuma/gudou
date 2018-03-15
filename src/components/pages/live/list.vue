@@ -9,7 +9,7 @@
 					</div>
 				</crumb>
 			</div>
-			<pointcon :pointConData="pointConData" :pointConData1="pointConData1"></pointcon>
+			<pointcon :pointConData="pointConData" :pointConData1="pointConData1" :pointConData2="pointConData2"></pointcon>
 		</div>
 	</section>
 </template>
@@ -53,6 +53,7 @@ export default {
     mounted () {
 		this._getpointConData()
 		this._loadMore()
+		this._loadMore1()
 		this._getBnnerData()
 		let self = this
 	},
@@ -97,6 +98,18 @@ export default {
 			pListMoreData(self).then( res => {
 				if(res.data.status == 0) {
 					self.pointConData1 = res.data.data.contents
+				}
+			}).catch( res => {
+				console.log(res.data.errorMessage)
+			})
+	    },
+	    _loadMore1() {
+	      this.page = 2;
+	      var self = this;
+
+			pListMoreData(self).then( res => {
+				if(res.data.status == 0) {
+					self.pointConData2 = res.data.data.contents
 				}
 			}).catch( res => {
 				console.log(res.data.errorMessage)

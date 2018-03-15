@@ -36,6 +36,21 @@ export function addAppointUrl() {
     return api.portalGcable + '/PortalServer-App/new/ptl_ipvp_live_live024';
 }
 
+// 添加点播收藏url
+export function addAppointCollectionUrl() {
+    return api.portalGcable + '/PortalServer-App/new/ptl_ipvp_vod_vod032';
+}
+
+// 删除点播收藏url
+export function delleteAppointCollectionUrl() {
+    return api.portalGcable + '/PortalServer-App/new/ptl_ipvp_vod_vod033';
+}
+
+// 点赞接口url
+export function praiseUrl() {
+    return api.portalGcable + '/PortalServer-App/new/ptl_ipvp_cmn_cmn014';
+}
+
 export function extend(target, source) {
     for (var obj in source) {
         target[obj] = source[obj];
@@ -55,7 +70,7 @@ export function paramFunction(source) {
         pversion: api.pversion,
         ptn: api.ptoken,
         pkv: api.pkv, 
-        hmac: '',
+        hmac: '6d942857e7',
         nonce: api.nonce,
         timestamp: api.timestamp
     }
@@ -190,7 +205,7 @@ export function liveContentFetch(_self) {
 }
 
 // 直播列表数据接口
-export function liveSubConetnt(_self) {
+export function liveSubContent(_self) {
     var data = {
         cardID: _self.$route.params.id,
         page: _self.page,
@@ -350,20 +365,6 @@ export function delleteLiveCollectFetch(value) {
         }
     })
 }
-
-// 删除观看记录
-// export function delleteReviewFetch(value) {
-//     var source = '';
-//     return fetch({
-//         url: api.portalGcable + '/PortalServer-App/new/ptl_ipvp_vod_vod030',
-//         methods: 'post',
-//         params: paramFunction(source),
-//         data: {
-//             assertID: value.assertID,
-//             providerID: value.providerID
-//         }
-//     })
-// }
 
 // 获取码率接口
 export function malvDataFetch() {

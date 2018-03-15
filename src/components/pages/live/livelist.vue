@@ -9,12 +9,13 @@
 					</div>
 				</crumb>
 			</div>
-			<livecon :liveConData="liveConData" :liveConData1="liveConData1"></livecon>
+			<livecon class="live-box" :liveConData="liveConData" :liveConData1="liveConData1" :liveConData2="liveConData2"></livecon>
 		</div>
 	</section>
 </template>
 
 <script>
+import $ from 'jquery'
 // banner
 import banner from "components/common/bannerlive";
 // 面包title
@@ -24,7 +25,7 @@ import submenu from "components/common/submenu";
 // 排行
 import livecon from "components/common/livecon";
 
-import { bannerFetch, liveSubConetnt } from '@/axios/api'
+import { bannerFetch, liveSubContent } from '@/axios/api'
 
 export default {
   components: {
@@ -40,6 +41,7 @@ export default {
       liveTabData: [],
       liveConData: [],
       liveConData1: [],
+      liveConData2: [],
       liveContent: [],
       categoryID: 46,
       bannerList: [],
@@ -53,12 +55,26 @@ export default {
     this._getliveConData();
     this._getBnnerData();
     this._loadMore();
+    this._loadMore1();
+    // window.addEventListener('scroll', this.handleScroll)
   },
-  created() {},
+  created() {
+  },
   watch: {
     $route: "_getliveConData"
   },
   methods: {
+    handleScroll() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        // console.log(scrollTop)
+      let offsetTop = document.querySelector('.footer').offsetTop
+      // alert(document.body.clientHeight)
+      if (scrollTop + window.innerHeight > document.body.clientHeight-100) {
+        // alert(1)
+        this.page ++;
+        this._loadMore();
+      }
+    },
     _getBnnerData() {
       let self = this;
       
@@ -78,7 +94,7 @@ export default {
     _getliveConData() {
       let self = this
 
-      liveSubConetnt(self).then( res => {
+      liveSubContent(self).then( res => {
         if (res.data.status == 0) {
           self.liveConData = res.data.data.contents;
         }
@@ -94,9 +110,25 @@ export default {
       this.page = 1;
       var self = this;
 
-      liveSubConetnt(self).then( res => {
+      liveSubContent(self).then( res => {
         if (res.data.status == 0) {
           self.liveConData1 = res.data.data.contents;
+
+          // console.log(self.liveConData1.length)
+        }
+      }).catch( res => {
+        console.log(res.data.errorMessage)
+      })
+    },
+    _loadMore1() {
+      this.page = 2;
+      var self = this;
+
+      liveSubContent(self).then( res => {
+        if (res.data.status == 0) {
+          self.liveConData2 = res.data.data.contents;
+
+          // console.log(self.liveConData1.length)
         }
       }).catch( res => {
         console.log(res.data.errorMessage)

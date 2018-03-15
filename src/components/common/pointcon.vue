@@ -6,13 +6,13 @@
 					<!-- <img v-lazy="v.liveRealImg" alt=""> -->
 					<img v-lazy="v.contentImageUrl" alt="">
 		  			<span class="pic-mask">
-		  				<span class="pic-title">{{v.contentName}}</span>
+		  				<span class="pic-title">{{v.extraInfo.subTitle}}</span>
 		  				<span class="mask-time">01-22 19:35</span>
 		  				<!-- <span class="progress-bar" style="width:50%;"></span> -->
 		  			</span>
 				</div>
-				<div class="pic-btm">
-					{{v.extraInfo.channelName}}
+				<div class="pic-btm" :title="v.contentName">
+					{{v.contentName}}
 				</div>
 			</li>
 			<li v-for="(v, index) in pointConData1" @click="urlDirect(v.contentID)">
@@ -20,13 +20,13 @@
 					<!-- <img v-lazy="v.liveRealImg" alt=""> -->
 					<img v-lazy="v.contentImageUrl" alt="">
 		  			<span class="pic-mask">
-		  				<span class="pic-title">{{v.contentName}}</span>
+		  				<span class="pic-title">{{v.extraInfo.subTitle}}</span>
 		  				<span class="mask-time">01-22 19:35</span>
 		  				<!-- <span class="progress-bar" style="width:50%;"></span> -->
 		  			</span>
 				</div>
-				<div class="pic-btm">
-					{{v.extraInfo.channelName}}
+				<div class="pic-btm" :title="v.contentName">
+					{{v.contentName}}
 				</div>
 			</li>
 		</ul>
@@ -41,6 +41,9 @@ export default {
 			type: Array
 		},
 		pointConData1: {
+			type: Array
+		},
+		pointConData2: {
 			type: Array
 		}
 	},

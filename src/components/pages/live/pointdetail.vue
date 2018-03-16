@@ -100,13 +100,18 @@ export default {
 	},
     mounted () {
 		this._getDetailData()
-		this._getEpisodes (0)
+		this._getEpisodes (function() {
+			$('.juji-list').eq(0).click()
+			setTimeout(function() {
+				$('.juji-list').eq(0).click()
+			}, 800)
+		})
 		this._getMalvData()
 
 		// 进入点击播放列表第一集
-		setTimeout(function() {
-			$('.juji-list').eq(0).click()
-		}, 800)
+		// setTimeout(function() {
+		// 	$('.juji-list').eq(0).click()
+		// }, 800)
     },
 	computed: {
 
@@ -128,7 +133,7 @@ export default {
 		},
 
 		// 获取集数
-		_getEpisodes () {
+		_getEpisodes (callback) {
 			let self = this
 
 			pointJujiData(self).then( res => {
@@ -136,6 +141,8 @@ export default {
 					const episodesData = res.data.data.programItems
 					self.episodesData = episodesData
 				}
+
+				callback && callback();
 			}).catch( res => {
 				console.log(res.data.errorMessage)
 			})
@@ -173,10 +180,18 @@ export default {
 			let meizi  = b.substring(Len + 1, b.length);
 			meizi = meizi.split('.')[0]
 			// console.log(meizi)
+			let pid = '';
+			let Length = this.episodesData.length;
+			if(Length > 1) {
+				// alert(1)
+				pid = val.movieAssertID;
+			}else {
+				// alert(2)
+				pid = this.$route.params.id.split('_')
+				pid = pid[1]
+			}
 
-			let pid = this.$route.params.id.split('_')
-			pid = pid[1]
-
+			// let pid = this.$route.params.id.split('_')
 
 			var playerStr = []
 
@@ -241,7 +256,7 @@ export default {
 
 			// 鉴权获取
 			let self = this;
-			// alert(meizi)
+			// alert(pid)
 			authorityFetch(self, pid, meizi).then( res => {
 				var self = this
 				if(res.data.status == 0) {
@@ -268,6 +283,8 @@ export default {
 						var txt = '';
 						if(num == '9980') {
 							txt = '您还未登录，请登录后再试'
+						}else if(num == '1101') {
+							txt = '您还未订购，请订购后重试'
 						}else {
 							txt = '无法播放错误代码 ' + num
 						}
@@ -306,8 +323,15 @@ export default {
 			// console.log(meizi)
 			// 鉴权获取
 
-			let pid = this.$route.params.id.split('_')
-			pid = pid[1]
+			let pid = '';
+			let Length = this.episodesData.length;
+			let detailData = this.episodesData[this.nowIndex];
+			if(Length > 1) {
+				pid = detailData.movieAssertID;
+			}else {
+				pid = this.$route.params.id.split('_')
+				pid = pid[1]
+			}
 
 			let self = this;
 			authorityFetch(self, pid, meizi).then( res => {
